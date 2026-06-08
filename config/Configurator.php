@@ -13,6 +13,11 @@ class Configurator {
         return new VikingoController($this->getVikingoModel(), $this->getRenderer(), new Request());
     }
 
+    public function getUsuarioController()
+    {
+        return new UsuarioController($this->getRenderer(), new Request());
+    }
+
     private function getDatabase()
     {
         return new MyDatabase(

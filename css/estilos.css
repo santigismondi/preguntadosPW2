@@ -1,0 +1,21 @@
+.logo-login{
+    width: 80px;
+    height: auto;
+}
+.login-background{
+    background:
+            linear-gradient(
+                    rgba(0,0,0,0.35),
+                    rgba(0,0,0,0.35)
+            ),
+            url('/preguntadosPW2/img/fondo.png');
+
+    background-size: cover;
+    background-position: center;
+}
+
+@media (min-width:768px){
+    .logo-login{
+        width: 140px;
+    }
+}
