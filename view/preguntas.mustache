@@ -1,0 +1,13 @@
+<div class="card p-4 my-3">
+    <h2>{{pregunta.texto}}</h2>
+</div>
+
+<form action="/juego/responder" method="POST" class="d-grid gap-2">
+    <input type="hidden" name="id_pregunta" value="{{pregunta.id}}">
+
+    {{#pregunta.opciones}}
+        <button type="submit" name="respuesta_id" value="{{id}}" class="btn btn-outline-primary">
+            {{texto}}
+        </button>
+    {{/pregunta.opciones}}
+</form>
