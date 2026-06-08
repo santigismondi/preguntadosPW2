@@ -40,7 +40,7 @@ class Configurator {
 
     public function getRouter()
     {
-        return new Router($this, 'vikingo', 'ver');
+        return new Router($this, 'usuario', 'login');
     }
 
     public function getOrDefault($controllerName, $defaultControllerName)
