@@ -1,0 +1,21 @@
+name: Despliegue automatico a InfinityFree
+
+on:
+  push:
+    branches:
+      - main  # Cambia esto a 'master' si tu rama principal se llama así
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el codigo del repositorio
+        uses: actions/checkout@v4
+      
+      - name: Sincronizar archivos por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /htdocs/  # Obligatorio en InfinityFree para que vaya a la carpeta publica
