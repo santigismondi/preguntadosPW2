@@ -60,14 +60,14 @@ class UsuarioController
         if (!empty($_FILES['foto_perfil']['name'])) {
             $extension   = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
             $foto_perfil = uniqid() . '.' . $extension;
-            move_uploaded_file($_FILES['foto_perfil']['tmp_name'], __DIR__ . '/../img/' . $foto_perfil);
+            move_uploaded_file($_FILES['foto_perfil']['tmp_name'], __DIR__ . '/../img/usuarios/' . $foto_perfil);
         }
  
         $hash = password_hash($contrasena, PASSWORD_DEFAULT);
         $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil);
  
         Log::info("UsuarioController::registrar - registrado: $nombre_usuario");
-        Redirect::to('/preguntadosPW2/index.php?controller=usuario&method=login');
+        Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
     }
  
     public function procesarLogin()
@@ -90,12 +90,15 @@ class UsuarioController
         }
  
         session_start();
-        $_SESSION['usuario_id']     = $usuario['id'];
+        $_SESSION['usuario_id'] = $usuario['id'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
-        $_SESSION['rol']            = $usuario['rol'] ?? 'jugador';
- 
+        $_SESSION['rol'] = $usuario['rol'] ?? 'jugador';
+
+        var_dump($_SESSION);
+        var_dump($usuario);
+        exit();
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        Redirect::to('/preguntadosPW2/index.php?controller=lobby&method=ver');
+        Redirect::to('/preguntadosPW2-main/index.php?controller=lobby&method=ver');
     }
  
     public function logout()
@@ -103,6 +106,6 @@ class UsuarioController
         session_start();
         session_destroy();
         Log::info("UsuarioController::logout");
-        Redirect::to('/preguntadosPW2/index.php?controller=usuario&method=login');
+        Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
     }
 }
