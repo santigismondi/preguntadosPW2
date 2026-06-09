@@ -1,5 +1,8 @@
+/*
+--DESCOMENTAR PARA USAR EN LOCAL
 CREATE SCHEMA preguntadosMundial;
-USE preguntadosMundial;
+ USE preguntadosMundial;
+*/
 
 CREATE TABLE GENERO (
     id          char(1)     PRIMARY KEY,
