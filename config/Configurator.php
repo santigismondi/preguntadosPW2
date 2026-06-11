@@ -18,6 +18,20 @@ class Configurator {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
     }
 
+    public function getJuegoController()
+    {
+        return new JuegoController(
+            $this->getPreguntaModel(),
+            $this->getRenderer(),
+            new Request()
+        );
+    }
+
+    public function getPreguntaModel()
+    {
+        return new PreguntaModel($this->getDatabase());
+    }
+
     private function getUsuarioModel()
     {
         return new UsuarioModel($this->getDatabase());

@@ -67,7 +67,7 @@ class UsuarioController
         $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil);
  
         Log::info("UsuarioController::registrar - registrado: $nombre_usuario");
-        Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
+        Redirect::to('index.php?controller=usuario&method=login');
     }
  
     public function procesarLogin()
@@ -88,17 +88,20 @@ class UsuarioController
             echo $this->renderer->render("login", ['error' => 'Usuario o contraseña incorrectos.']);
             return;
         }
- 
-        session_start();
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION['usuario_id'] = $usuario['id'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
         $_SESSION['rol'] = $usuario['rol'] ?? 'jugador';
 
-        var_dump($_SESSION);
+        /*var_dump($_SESSION);
         var_dump($usuario);
-        exit();
+        exit();*/
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        Redirect::to('/preguntadosPW2-main/index.php?controller=lobby&method=ver');
+        Redirect::to('/index.php?controller=lobby&method=ver');
+        exit();
     }
  
     public function logout()
@@ -106,6 +109,6 @@ class UsuarioController
         session_start();
         session_destroy();
         Log::info("UsuarioController::logout");
-        Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
+        Redirect::to('index.php?controller=usuario&method=login');
     }
 }

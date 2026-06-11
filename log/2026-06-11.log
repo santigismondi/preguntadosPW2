@@ -1,0 +1,137 @@
+[15:18:42] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho00, asfasfk@gmail.com]
+[15:22:58] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho00, asfasfk@gmail.com]
+[15:22:58] [INFO] UsuarioController::registrar - registrado: Nacho00
+[15:23:28] [WARNING] UsuarioController::registrar - nombre_usuario ya existe: Nacho00
+[15:23:58] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho000, safasfas@gmail.com]
+[15:23:58] [INFO] UsuarioController::registrar - registrado: Nacho000
+[15:26:47] [WARNING] UsuarioController::registrar - nombre_usuario ya existe: Nacho00
+[15:27:10] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [aaa, aaa, aaa@gmail.com]
+[15:27:10] [INFO] UsuarioController::registrar - registrado: aaa
+[15:27:15] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:28:54] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:28:54] [INFO] UsuarioController::procesarLogin - login exitoso id=3
+[15:28:59] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:28:59] [INFO] UsuarioController::procesarLogin - login exitoso id=3
+[15:29:32] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [aaaa, aaa1, aaaaaaa@gmail.com]
+[15:29:32] [INFO] UsuarioController::registrar - registrado: aaa1
+[15:29:36] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa1]
+[15:29:36] [INFO] UsuarioController::procesarLogin - login exitoso id=4
+[15:34:30] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa1]
+[15:34:30] [INFO] UsuarioController::procesarLogin - login exitoso id=4
+[15:35:26] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [aaaa, aaa, aaaaaaa@gmail.com]
+[15:35:26] [INFO] UsuarioController::registrar - registrado: aaa
+[15:35:28] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:35:29] [INFO] UsuarioController::procesarLogin - login exitoso id=5
+[15:38:14] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:38:14] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: aaa
+[15:38:17] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:38:17] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: aaa
+[15:38:20] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:38:20] [INFO] UsuarioController::procesarLogin - login exitoso id=5
+[15:38:45] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho00, asfasfk@gmail.com]
+[15:38:45] [INFO] UsuarioController::registrar - registrado: Nacho00
+[15:38:50] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:38:50] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:43:14] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:43:14] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:43:32] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:43:32] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:43:52] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:43:52] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:47:57] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:47:57] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:48:05] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:48:05] [INFO] UsuarioController::procesarLogin - login exitoso id=5
+[15:48:08] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[15:48:09] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: aaa
+[15:48:47] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Ignacio, annn, aaaaasaa@gmail.com]
+[15:48:47] [INFO] UsuarioController::registrar - registrado: annn
+[15:48:53] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [annn]
+[15:48:53] [INFO] UsuarioController::procesarLogin - login exitoso id=7
+[15:54:12] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[15:54:13] [INFO] UsuarioController::procesarLogin - login exitoso id=6
+[15:57:41] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho, nachipascale@gmail.com]
+[15:57:41] [INFO] UsuarioController::registrar - registrado: Nacho
+[15:57:47] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[15:57:47] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[15:57:56] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[15:57:56] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:01:19] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[16:01:19] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:02:25] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Ignacio, aaa, nachipssascale@gmail.com]
+[16:02:25] [INFO] UsuarioController::registrar - registrado: aaa
+[16:02:33] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aaa]
+[16:02:33] [INFO] UsuarioController::procesarLogin - login exitoso id=2
+[16:04:06] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[16:04:06] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:05:15] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[16:05:15] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:07:56] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[16:07:56] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:08:30] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Mariano Acosta, mariano, mariano@gmail.com]
+[16:08:30] [INFO] UsuarioController::registrar - registrado: mariano
+[16:08:36] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mariano]
+[16:08:36] [INFO] UsuarioController::procesarLogin - login exitoso id=3

@@ -15,12 +15,23 @@ class LobbyController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
-            return;
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+         var_dump($_SESSION);
+         exit();
+
+        if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
+            Redirect::to('index.php?controller=usuario&method=login');
+            exit();
         }
 
         $categorias = $this->model->getCategorias();
+
+        if (!$categorias || $categorias === null) {
+            $categorias = [];
+        }
 
         $data = [
             'nombre_usuario' => $_SESSION['nombre_usuario'],

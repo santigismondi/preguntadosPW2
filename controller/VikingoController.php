@@ -92,20 +92,4 @@ class VikingoController
         $this->model->eliminar($id);
         Redirect::toIndex();
     }
-
-    public function probarFeaturePreguntas() {
-        $preguntaModel = new PreguntaModel($this->database);
-        $pregunta = $preguntaModel->getRandomPreguntaByCategoria(3, []);
-        if ($pregunta) {
-            $opciones = $preguntaModel->getOpcionesByPreguntaId($pregunta['id']);
-            echo "Pregunta encontrada: " . $pregunta['texto'] . "<br>";
-            foreach ($opciones as $opcion) {
-                echo "- Opción: " . $opcion['texto'] . " (Correcta: " . ($opcion['es_correcta'] ? 'SÍ' : 'NO') . ")<br>";
-            }
-        } else {
-            echo "No hay preguntas cargadas para esa categoría.";
-        }
-        exit();
-        }
-
 }

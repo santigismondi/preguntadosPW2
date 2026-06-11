@@ -9,38 +9,35 @@ Class PreguntaModel
         $this->database = $database;
     }
 
-    public function getPreguntaCompleta($categoriaId, $idPreguntasJugadas = [])
+    public function getPreguntaAleatoria($categoriaId, $preguntasJugadasIds = [])
     {
-        $pregunta = $this->getPreguntaAleatoria($categoriaId, $idPreguntasJugadas);
-        if (!$pregunta) {
-            return null;
-        }
-        $opciones = $this->getOpcionesByPreguntaId($pregunta['id']);
-        $pregunta['opciones'] = $opciones;
-        return $pregunta;
-    }
-
-    public function getPreguntaAleatoria($categoriaId, $idPreguntasJugadas = [])
-    {
-        if (!empty($idPreguntasJugadas)) {
-            $idsString = implode(',', array_map('intval', $idPreguntasJugadas));
+        if (!empty($preguntasJugadasIds)) {
+            // Pasamos el array [1,2,3] a un string "1,2,3" seguro para SQL
+            $idsString = implode(',', array_map('intval', $preguntasJugadasIds));
             $sql = "SELECT * FROM PREGUNTA 
-                    WHERE categoria_id = " . intval($categoriaId) . " 
-                    AND id NOT IN ($idsString) 
+                    WHERE categoria_id = ? AND estado = 'aprobada' AND id NOT IN ($idsString)
                     ORDER BY RAND() LIMIT 1";
         } else {
             $sql = "SELECT * FROM PREGUNTA 
-                    WHERE categoria_id = " . intval($categoriaId) . " 
+                    WHERE categoria_id = ? AND estado = 'aprobada'
                     ORDER BY RAND() LIMIT 1";
         }
-        $resultado = $this->database->query($sql);
-        return !empty($resultado) ? $resultado[0] : null;
+
+        $filas = $this->database->query($sql, [$categoriaId]);
+        return !empty($filas) ? $filas[0] : null;
     }
 
-    public function getOpcionesByPreguntaId($preguntaId)
+    public function getOpcionesPorPregunta($preguntaId)
     {
-        $sql = "SELECT * FROM OPCION WHERE pregunta_id = " . intval($preguntaId);
-        return $this->database->query($sql);
+        $sql = "SELECT id, texto, es_correcta FROM OPCION WHERE pregunta_id = ?";
+        return $this->database->query($sql, [$preguntaId]);
+    }
+
+    public function getOpcionPorId($opcionId)
+    {
+        $sql = "SELECT * FROM OPCION WHERE id = ?";
+        $filas = $this->database->query($sql, [$opcionId]);
+        return !empty($filas) ? $filas[0] : null;
     }
 }
  ?>
