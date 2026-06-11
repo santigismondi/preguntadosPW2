@@ -25,8 +25,8 @@ class JuegoController {
         $categoriaId = $this->request->get('categoria_id');
         if ($categoriaId) {
             $_SESSION['categoria_actual'] = $categoriaId;
-            $_SESSION['preguntas_respondidas'] = [];
-            $_SESSION['puntaje_partida'] = 0;
+            $_SESSION['preguntas_respondidas_racha'] = [];
+            $_SESSION['respuestas_correctas_racha'] = 0;
         }
 
         $idCategoria = $_SESSION['categoria_actual'] ?? null;
@@ -35,20 +35,22 @@ class JuegoController {
             return;
         }
 
-        $pregunta = $this->model->getPreguntaAleatoria($idCategoria, $_SESSION['preguntas_respondidas']);
+        $pregunta = $this->model->getPreguntaAleatoria($idCategoria, $_SESSION['preguntas_respondidas_racha']);
 
         if (!$pregunta) {
             $data = [
-                'mensaje' => '¡Completaste todas las preguntas de esta categoría!',
-                'puntaje' => $_SESSION['puntaje_partida']
+                'mensaje' => 'No hay suficientes preguntas en esta categoría.',
+                'puntaje' => $_SESSION['puntaje_partida'] ?? 0
             ];
-            echo $this->renderer->render("finPartida", $data);
+            unset($_SESSION['categoria_actual']);
+            echo $this->renderer->render("gameOver", $data);
             return;
-        }
+            }
         $opciones = $this->model->getOpcionesPorPregunta($pregunta['id']);
 
         $data = [
-            'puntaje' => $_SESSION['puntaje_partida'],
+            'puntaje' => $_SESSION['puntaje_partida'] ?? 0,
+            'racha_actual' => $_SESSION['respuestas_correctas_racha'],
             'pregunta' => $pregunta,
             'opciones' => $opciones
         ];
@@ -66,19 +68,40 @@ class JuegoController {
         $opcion = $this->model->getOpcionPorId($opcionId);
 
         if ($opcion && $opcion['es_correcta'] == 1) {
-            // Acierto: sumamos punto y agregamos la pregunta al historial para no repetirla
-            $_SESSION['puntaje_partida']++;
-            $_SESSION['preguntas_respondidas'][] = $preguntaId;
+            $_SESSION['respuestas_correctas_racha']++;
+            $_SESSION['preguntas_respondidas_racha'][] = $preguntaId;
 
-            Redirect::to('/preguntadosPW2-main/index.php?controller=juego&method=jugar');
+            if ($_SESSION['respuestas_correctas_racha'] >= 5) {
+                if (!isset($_SESSION['puntaje_partida'])) {
+                    $_SESSION['puntaje_partida'] = 0;
+                }
+                $_SESSION['puntaje_partida']++;
+                unset($_SESSION['categoria_actual']);
+                unset($_SESSION['preguntas_respondidas_racha']);
+                unset($_SESSION['respuestas_correctas_racha']);
+                Redirect::to('index.php?controller=lobby&method=ver');
+                exit();
+            }
+
+            Redirect::to('index.php?controller=juego&method=jugar');
+            exit();
         } else {
+            $puntajeFinal = $_SESSION['puntaje_partida'] ?? 0;
+
+            $this->model->registrarPartida($_SESSION['usuario_id'], $puntajeFinal);
+
             $data = [
-                'puntajeFinal' => $_SESSION['puntaje_partida']
+                'error' => '¡Respuesta incorrecta! Has perdido la racha.',
+                'puntajeFinal' => $puntajeFinal
             ];
             unset($_SESSION['categoria_actual']);
-            unset($_SESSION['preguntas_respondidas']);
+            unset($_SESSION['preguntas_respondidas_racha']);
+            unset($_SESSION['respuestas_correctas_racha']);
+            $_SESSION['text_success'] = false;
+            $_SESSION['puntaje_partida'] = 0;
 
             echo $this->renderer->render("gameOver", $data);
-            }
+            exit();
         }
+    }
 }

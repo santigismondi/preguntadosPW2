@@ -100,7 +100,7 @@ class UsuarioController
         var_dump($usuario);
         exit();*/
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        Redirect::to('/index.php?controller=lobby&method=ver');
+        Redirect::to('index.php?controller=lobby&method=ver');
         exit();
     }
  

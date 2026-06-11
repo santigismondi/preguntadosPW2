@@ -19,15 +19,21 @@ class LobbyController
             session_start();
         }
 
-         var_dump($_SESSION);
-         exit();
+        // var_dump($_SESSION);
+        // exit();
 
         if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
             Redirect::to('index.php?controller=usuario&method=login');
             exit();
         }
 
+        if (!isset($_SESSION['puntaje_partida'])) {
+            $_SESSION['puntaje_partida'] = 0;
+        }
+
         $categorias = $this->model->getCategorias();
+
+        $recordHistorico = $this->model->getPuntajeMaximo($_SESSION['usuario_id']);
 
         if (!$categorias || $categorias === null) {
             $categorias = [];
@@ -35,6 +41,8 @@ class LobbyController
 
         $data = [
             'nombre_usuario' => $_SESSION['nombre_usuario'],
+            'puntaje_global'  => $_SESSION['puntaje_partida'],
+            'record_historico'=> $recordHistorico,
             'categorias'     => $categorias
         ];
 

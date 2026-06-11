@@ -19,10 +19,14 @@
         <h4 class="text-success m-0">Puntaje: {{puntaje}}</h4>
     </div>
 
-    <h2 class="h4 mb-4 text-center">{{pregunta.texto}}</h2>
 
-    <form action="/preguntadosPW2-main/index.php?controller=juego&method=responder" method="POST" class="d-flex flex-column">
-        <input type="hidden" name="pregunta_id" value="{{pregunta.id}}">
+    {{#pregunta}}
+        <h2 class="h4 mb-4 text-center">{{texto}}</h2>
+    {{/pregunta}}
+    <form action="index.php?controller=juego&method=responder" method="POST" class="d-flex flex-column">
+        {{#pregunta}}
+            <input type="hidden" name="pregunta_id" value="{{id}}">
+        {{/pregunta}}
 
         {{#opciones}}
             <button type="submit" name="opcion_id" value="{{id}}" class="btn btn-outline-secondary btn-opcion">

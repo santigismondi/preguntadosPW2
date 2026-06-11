@@ -33,6 +33,11 @@ Class PreguntaModel
         return $this->database->query($sql, [$preguntaId]);
     }
 
+    public function registrarPartida($usuarioId, $puntaje)
+    {
+        $sql = "INSERT INTO PARTIDA (usuario_id, puntaje, resultado) VALUES (?, ?, 'perdió')";
+        $this->database->execute($sql, [$usuarioId, $puntaje]);
+    }
     public function getOpcionPorId($opcionId)
     {
         $sql = "SELECT * FROM OPCION WHERE id = ?";

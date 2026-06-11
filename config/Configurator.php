@@ -26,10 +26,19 @@ class Configurator {
             new Request()
         );
     }
+    public function getLobbyController()
+    {
+        return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
+    }
 
     public function getPreguntaModel()
     {
         return new PreguntaModel($this->getDatabase());
+    }
+
+    private function getLobbyModel()
+    {
+        return new LobbyModel($this->getDatabase());
     }
 
     private function getUsuarioModel()
