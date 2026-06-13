@@ -1,0 +1,7 @@
+RewriteEngine On
+Options -Indexes
+# Condiciones: Si la URL apunta a un archivo (-f) o directorio (-d) que existe físicamente,
+# se detiene la reescritura. Esto permite cargar Bootstrap, CSS, JS e imágenes sin problemas.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(public)($|/) - [L,NC]
