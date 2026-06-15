@@ -46,6 +46,9 @@ class JuegoController {
             echo $this->renderer->render("gameOver", $data);
             return;
             }
+
+        $_SESSION['pregunta_cargada_at'] = time();
+
         $opciones = $this->model->getOpcionesPorPregunta($pregunta['id']);
 
         $data = [
@@ -61,6 +64,17 @@ class JuegoController {
     public function responder()
     {
         if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+        $tiempoActual = time();
+        $tiempoCargado = $_SESSION['pregunta_cargada_at'] ?? 0;
+        $segundosTranscurridos = $tiempoActual - $tiempoCargado;
+
+        $timeoutPost = $this->request->post('timeout');
+
+        if ($timeoutPost === 'true' || ($tiempoCargado > 0 && $segundosTranscurridos > 11)) {
+            $this->procesarPerdida("¡Te quedaste sin tiempo! Tenés 10 segundos por pregunta.");
+            exit();
+        }
 
         $preguntaId = $this->request->post('pregunta_id');
         $opcionId = $this->request->post('opcion_id');
@@ -86,22 +100,27 @@ class JuegoController {
             Redirect::to('index.php?controller=juego&method=jugar');
             exit();
         } else {
-            $puntajeFinal = $_SESSION['puntaje_partida'] ?? 0;
-
-            $this->model->registrarPartida($_SESSION['usuario_id'], $puntajeFinal);
-
-            $data = [
-                'error' => '¡Respuesta incorrecta! Has perdido la racha.',
-                'puntajeFinal' => $puntajeFinal
-            ];
-            unset($_SESSION['categoria_actual']);
-            unset($_SESSION['preguntas_respondidas_racha']);
-            unset($_SESSION['respuestas_correctas_racha']);
-            $_SESSION['text_success'] = false;
-            $_SESSION['puntaje_partida'] = 0;
-
-            echo $this->renderer->render("gameOver", $data);
+            $this->procesarPerdida("¡Respuesta incorrecta! Has perdido la racha de la categoría.");
             exit();
         }
+    }
+
+    private function procesarPerdida($mensajeError)
+    {
+        $puntajeFinal = $_SESSION['puntaje_partida'] ?? 0;
+        $this->model->registrarPartida($_SESSION['usuario_id'], $puntajeFinal);
+
+        $data = [
+            'error' => $mensajeError,
+            'puntajeFinal' => $puntajeFinal
+        ];
+
+        unset($_SESSION['categoria_actual']);
+        unset($_SESSION['preguntas_respondidas_racha']);
+        unset($_SESSION['respuestas_correctas_racha']);
+        unset($_SESSION['pregunta_cargada_at']);
+        $_SESSION['puntaje_partida'] = 0;
+
+        echo $this->renderer->render("gameOver", $data);
     }
 }
