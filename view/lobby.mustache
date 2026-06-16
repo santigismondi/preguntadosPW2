@@ -6,6 +6,19 @@
     <h1 class="titulo">⚽ Preguntados Mundial 2026</h1>
     <p class="bienvenida">Bienvenido, <strong>{{nombre_usuario}}</strong>. ¡Girá la ruleta para elegir tu categoría!</p>
 
+    <div class="puntaje-display">⭐ Puntaje: {{puntaje}}</div>
+
+    {{#partidaTerminada}}
+    <div class="modal-gameover" id="modalGameover">
+        <div class="modal-contenido">
+            <h2>💥 ¡Partida terminada!</h2>
+            <p>Obtuviste <strong>{{puntajeFinal}}</strong> punto{{#puntajeFinal}}s{{/puntajeFinal}}</p>
+            <p class="respuesta-info">La respuesta correcta era:<br><strong>{{respuestaCorrecta}}</strong></p>
+            <button class="btn-girar" onclick="document.getElementById('modalGameover').style.display='none'">Jugar de nuevo</button>
+        </div>
+    </div>
+    {{/partidaTerminada}}
+
     <div class="ruleta-wrapper">
         <div class="flecha">▼</div>
         <canvas id="ruleta" width="400" height="400"></canvas>
@@ -40,27 +53,21 @@ function obtenerIconoCategoria(nombre) {
     if (nombre.includes("grupo") || nombre.includes("fase")) {
         return "/preguntadosPW2/img/iconos/fase.png";
     }
-
     if (nombre.includes("estadio")) {
         return "/preguntadosPW2/img/iconos/estadios.png";
     }
-
     if (nombre.includes("jugador")) {
         return "/preguntadosPW2/img/iconos/jugadores.png";
     }
-
     if (nombre.includes("seleccion") || nombre.includes("selección")) {
         return "/preguntadosPW2/img/iconos/selecciones.png";
     }
-
     if (nombre.includes("historia")) {
         return "/preguntadosPW2/img/iconos/historia.png";
     }
-
     if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
         return "/preguntadosPW2/img/iconos/estadisticas.png";
     }
-
     return "/preguntadosPW2/img/iconos/fase.png";
 }
 
@@ -74,25 +81,20 @@ let anguloActual = 0;
 let girando = false;
 
 const iconosCategorias = {};
-
 let iconosCargados = 0;
 
 categorias.forEach(cat => {
     const img = new Image();
     img.src = cat.icono;
-
     img.onload = function () {
         iconosCategorias[cat.id] = img;
         iconosCargados++;
-
         if (iconosCargados === categorias.length) {
             dibujarRuleta(anguloActual);
         }
     };
-
     img.onerror = function () {
         iconosCargados++;
-
         if (iconosCargados === categorias.length) {
             dibujarRuleta(anguloActual);
         }
@@ -113,36 +115,22 @@ function dibujarRuleta(angulo) {
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, radio, inicio, fin);
         ctx.closePath();
-
         ctx.fillStyle = cat.color;
         ctx.fill();
-
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 2;
         ctx.stroke();
 
         const anguloMedio = inicio + slice / 2;
-
         const icono = iconosCategorias[cat.id];
 
         if (icono) {
             ctx.save();
-
             ctx.translate(cx, cy);
             ctx.rotate(anguloMedio);
-
             ctx.globalAlpha = 0.5;
-
             const iconSize = 76;
-
-            ctx.drawImage(
-                icono,
-                radio * 0.55 - iconSize / 2,
-                -iconSize / 2,
-                iconSize,
-                iconSize
-            );
-
+            ctx.drawImage(icono, radio * 0.55 - iconSize / 2, -iconSize / 2, iconSize, iconSize);
             ctx.globalAlpha = 1;
             ctx.restore();
         }
@@ -158,7 +146,6 @@ function girarRuleta() {
     document.getElementById('resultado').textContent = '';
 
     const vueltasExtra = (Math.random() * 4 + 6) * 2 * Math.PI;
-    const anguloFinal = anguloActual + vueltasExtra;
     const duracion = 4000;
     const inicio = performance.now();
     const anguloInicio = anguloActual;
@@ -181,14 +168,18 @@ function girarRuleta() {
             const flechaAngulo = (3 * Math.PI) / 2;
             const angNorm = ((flechaAngulo - anguloActual) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
             const indice = Math.floor(angNorm / slice) % categorias.length;
+            const ganadora = categorias[indice];
 
-            document.getElementById('resultado').textContent = '¡Te tocó: ' + categorias[indice].nombre + '!';
+            document.getElementById('resultado').textContent = '¡Te tocó: ' + ganadora.nombre + '!';
+
+            setTimeout(function() {
+                window.location.href = '/preguntadosPW2/index.php?controller=pregunta&method=ver&categoria_id=' + ganadora.id;
+            }, 2000);
         }
     }
 
     requestAnimationFrame(animar);
 }
-
 </script>
 
 {{>footer}}

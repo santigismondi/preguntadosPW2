@@ -1,6 +1,6 @@
 <?php
 
-Class PreguntaModel
+class PreguntaModel
 {
     private $database;
 
@@ -9,40 +9,59 @@ Class PreguntaModel
         $this->database = $database;
     }
 
-    public function getPreguntaAleatoria($categoriaId, $preguntasJugadasIds = [])
+    public function getPreguntaRandom($categoriaId)
     {
-        if (!empty($preguntasJugadasIds)) {
-            // Pasamos el array [1,2,3] a un string "1,2,3" seguro para SQL
-            $idsString = implode(',', array_map('intval', $preguntasJugadasIds));
-            $sql = "SELECT * FROM PREGUNTA 
-                    WHERE categoria_id = ? AND estado = 'aprobada' AND id NOT IN ($idsString)
-                    ORDER BY RAND() LIMIT 1";
-        } else {
-            $sql = "SELECT * FROM PREGUNTA 
-                    WHERE categoria_id = ? AND estado = 'aprobada'
-                    ORDER BY RAND() LIMIT 1";
+        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND estado = 'aprobada' ORDER BY RAND() LIMIT 1";
+        $resultado = $this->database->query($sql, [$categoriaId]);
+        if (!empty($resultado)) {
+            return $resultado[0];
         }
-
-        $filas = $this->database->query($sql, [$categoriaId]);
-        return !empty($filas) ? $filas[0] : null;
+        return null;
     }
 
-    public function getOpcionesPorPregunta($preguntaId)
+    public function getOpciones($preguntaId)
     {
         $sql = "SELECT id, texto, es_correcta FROM OPCION WHERE pregunta_id = ?";
         return $this->database->query($sql, [$preguntaId]);
     }
 
-    public function registrarPartida($usuarioId, $puntaje)
+    public function getCategoria($categoriaId)
     {
-        $sql = "INSERT INTO PARTIDA (usuario_id, puntaje, resultado) VALUES (?, ?, 'perdió')";
-        $this->database->execute($sql, [$usuarioId, $puntaje]);
+        $sql = "SELECT id, nombre, color FROM CATEGORIA WHERE id = ?";
+        $resultado = $this->database->query($sql, [$categoriaId]);
+        if (!empty($resultado)) {
+            return $resultado[0];
+        }
+        return null;
     }
-    public function getOpcionPorId($opcionId)
+
+    public function esRespuestaCorrecta($opcionId)
     {
-        $sql = "SELECT * FROM OPCION WHERE id = ?";
-        $filas = $this->database->query($sql, [$opcionId]);
-        return !empty($filas) ? $filas[0] : null;
+        $sql = "SELECT es_correcta FROM OPCION WHERE id = ?";
+        $resultado = $this->database->query($sql, [$opcionId]);
+        if (!empty($resultado)) {
+            return $resultado[0]['es_correcta'] == 1;
+        }
+        return false;
+    }
+
+    public function getRespuestaCorrecta($preguntaId)
+    {
+        $sql = "SELECT texto FROM OPCION WHERE pregunta_id = ? AND es_correcta = 1";
+        $resultado = $this->database->query($sql, [$preguntaId]);
+        if (!empty($resultado)) {
+            return $resultado[0]['texto'];
+        }
+        return '';
+    }
+
+    public function getOpcionCorrectaId($preguntaId)
+    {
+        $sql = "SELECT id FROM OPCION WHERE pregunta_id = ? AND es_correcta = 1";
+        $resultado = $this->database->query($sql, [$preguntaId]);
+        if (!empty($resultado)) {
+            return $resultado[0]['id'];
+        }
+        return null;
     }
 }
- ?>
