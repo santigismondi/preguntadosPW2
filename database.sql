@@ -75,12 +75,12 @@ VALUES ('M', 'Masculino'),
        ('N', 'Prefiero no cargarlo');
 
 INSERT INTO CATEGORIA (nombre, color)
-VALUES ('Grupos y Fase de Grupos', '#27ae60'),
-       ('Estadios y Sedes', '#e67e22'),
-       ('Jugadores y Figuras', '#e74c3c'),
-       ('Selecciones', '#3498db'),
-       ('Historia del Mundial', '#9b59b6'),
-       ('Récords y Estadísticas', '#f39c12');
+VALUES ('Grupos y Fase de Grupos', '#53f1c8'),
+       ('Estadios y Sedes', '#abde02'),
+       ('Jugadores y Figuras', '#ce0201'),
+       ('Selecciones', '#2635bb'),
+       ('Historia del Mundial', '#ffe400'),
+       ('Récords y Estadísticas', '#6e23ee');
 
 -- CATEGORÍA 1: Grupos y Fase de Grupos
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
