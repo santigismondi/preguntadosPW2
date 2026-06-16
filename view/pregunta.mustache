@@ -1,0 +1,42 @@
+{{>header}}
+
+<main class="pregunta-page" style="background-color: {{colorCategoria}};">
+
+    <section class="pregunta-container">
+
+        <header class="pregunta-header">
+            <div class="categoria-titulo">
+                <img src="{{iconoCategoria}}"
+                     alt="{{nombreCategoria}}"
+                     class="categoria-icono">
+
+                <h1>{{nombreCategoria}}</h1>
+            </div>
+        </header>
+
+        <article class="pregunta-card">
+            <h2>{{textoPregunta}}</h2>
+        </article>
+
+        <form class="respuestas-container"
+              action="/preguntadosPW2/index.php?controller=pregunta&method=responder"
+              method="POST">
+
+            <input type="hidden" name="pregunta_id" value="{{preguntaId}}">
+
+            {{#opciones}}
+                <button type="submit"
+                        name="opcion_id"
+                        value="{{id}}"
+                        class="respuesta-btn">
+                    {{texto}}
+                </button>
+            {{/opciones}}
+
+        </form>
+
+    </section>
+
+</main>
+
+{{>footer}}

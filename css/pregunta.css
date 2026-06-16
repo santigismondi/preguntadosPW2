@@ -1,0 +1,145 @@
+.pregunta-page{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.pregunta-container{
+    width: 100%;
+    max-width: 620px;
+}
+
+.pregunta-header{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.categoria-titulo{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.categoria-icono{
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    opacity: .5;
+    left: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.categoria-titulo h1{
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    color: white;
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0px 1px 5px rgba(0,0,0,.45);
+}
+
+.pregunta-card{
+    min-height: 220px;
+    background: white;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 34px;
+    margin-bottom: 28px;
+    text-align: center;
+    box-shadow:
+            6px 6px 0 rgba(0,0,0,.12),
+            0 15px 35px rgba(0,0,0,.16);
+}
+
+.pregunta-card h2{
+    margin: 0;
+    color: #555;
+    font-size: 1.55rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.respuestas-container{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.respuesta-btn{
+    min-height: 62px;
+    border: none;
+    border-radius: 14px;
+    background: white;
+    color: #555;
+    font-size: 1.25rem;
+    font-weight: 500;
+    box-shadow:
+            0 5px 0 rgba(0,0,0,.18),
+            0 10px 22px rgba(0,0,0,.12);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.respuesta-btn:hover{
+    transform: translateY(-2px);
+    box-shadow:
+            0 7px 0 rgba(0,0,0,.18),
+            0 14px 26px rgba(0,0,0,.18);
+}
+
+@media (max-width: 576px){
+    .pregunta-page{
+        padding: 18px;
+        align-items: flex-start;
+    }
+
+    .pregunta-container{
+        margin-top: 24px;
+    }
+
+    .categoria-icono{
+        width: 85px;
+        height: 85px;
+        left: -75px;
+    }
+
+    .categoria-titulo h1{
+        font-size: 2.1rem;
+        letter-spacing: 1px;
+    }
+
+    .pregunta-card{
+        min-height: 185px;
+        padding: 24px;
+        margin-bottom: 22px;
+    }
+
+    .pregunta-card h2{
+        font-size: 1.2rem;
+    }
+
+    .respuestas-container{
+        gap: 13px;
+    }
+
+    .respuesta-btn{
+        min-height: 54px;
+        font-size: 1.05rem;
+    }
+}
+
+.foto-icono{
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}

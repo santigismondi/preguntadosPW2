@@ -57,4 +57,18 @@ class Configurator {
         $defaultGetter = 'get' . ucfirst($defaultControllerName) . 'Controller';
         return $this->{$defaultGetter}();
     }
+
+    public function getLobbyController()
+    {
+        return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
+    }
+
+    private function getLobbyModel()
+    {
+        return new LobbyModel($this->getDatabase());
+    }
+    public function getPreguntaController()
+    {
+        return new PreguntaController($this->getRenderer());
+    }
 }

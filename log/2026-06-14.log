@@ -1,0 +1,7 @@
+[06:52:13] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Joaquin, Joacogie, luxstore0503@gmail.com]
+[06:52:13] [INFO] UsuarioController::registrar - registrado: Joacogie
+[06:52:18] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joacogie]
+[06:52:18] [INFO] UsuarioController::procesarLogin - login exitoso id=1
