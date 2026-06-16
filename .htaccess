@@ -5,3 +5,6 @@ Options -Indexes
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(public)($|/) - [L,NC]
+    RewriteBase /
+    RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
+    RewriteRule ^([^/]+)$         index.php?controller=$1           [L,QSA]
