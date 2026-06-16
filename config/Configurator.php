@@ -5,7 +5,7 @@ class Configurator {
 
     public function __construct()
     {
-        $this->config = parse_ini_file("config/config.ini");
+        $this->config = parse_ini_file(__DIR__ . '/config.ini');
     }
 
     public function getVikingoController()
@@ -13,7 +13,7 @@ class Configurator {
         return new VikingoController($this->getVikingoModel(), $this->getRenderer(), new Request());
     }
 
-   public function getUsuarioController()
+    public function getUsuarioController()
     {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
     }
@@ -67,8 +67,14 @@ class Configurator {
     {
         return new LobbyModel($this->getDatabase());
     }
+
     public function getPreguntaController()
     {
-        return new PreguntaController($this->getRenderer());
+        return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
+    }
+
+    private function getPreguntaModel()
+    {
+        return new PreguntaModel($this->getDatabase());
     }
 }

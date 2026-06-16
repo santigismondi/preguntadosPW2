@@ -9,8 +9,11 @@
                 <img src="{{iconoCategoria}}"
                      alt="{{nombreCategoria}}"
                      class="categoria-icono">
-
                 <h1>{{nombreCategoria}}</h1>
+            </div>
+            <div class="puntaje-badge">
+                <span class="puntaje-estrella">⭐</span>
+                <span class="puntaje-numero">{{puntaje}}</span>
             </div>
         </header>
 
@@ -18,25 +21,58 @@
             <h2>{{textoPregunta}}</h2>
         </article>
 
-        <form class="respuestas-container"
-              action="/preguntadosPW2/index.php?controller=pregunta&method=responder"
-              method="POST">
-
-            <input type="hidden" name="pregunta_id" value="{{preguntaId}}">
-
+        <div class="respuestas-container">
             {{#opciones}}
-                <button type="submit"
-                        name="opcion_id"
-                        value="{{id}}"
-                        class="respuesta-btn">
+                <button type="button"
+                        class="respuesta-btn"
+                        data-opcion-id="{{id}}"
+                        onclick="responder(this, '{{id}}')">
                     {{texto}}
                 </button>
             {{/opciones}}
-
-        </form>
+        </div>
 
     </section>
 
 </main>
+
+<script>
+    let respondido = false;
+
+    function responder(boton, opcionId) {
+        if (respondido) return;
+        respondido = true;
+
+        const botones = document.querySelectorAll('.respuesta-btn');
+        botones.forEach(b => b.disabled = true);
+
+        const datos = new FormData();
+        datos.append('pregunta_id', '{{preguntaId}}');
+        datos.append('opcion_id', opcionId);
+        datos.append('categoria_id', '{{categoriaId}}');
+
+        fetch('/preguntadosPW2/index.php?controller=pregunta&method=verificar', {
+            method: 'POST',
+            body: datos
+        })
+        .then(r => r.json())
+        .then(data => {
+            const correctaBtn = document.querySelector('[data-opcion-id="' + data.correctaId + '"]');
+
+            if (data.correcta) {
+                boton.classList.add('respuesta-correcta');
+            } else {
+                boton.classList.add('respuesta-incorrecta');
+                if (correctaBtn) {
+                    correctaBtn.classList.add('respuesta-correcta');
+                }
+            }
+
+            setTimeout(function() {
+                window.location.href = data.redirect;
+            }, 1500);
+        });
+    }
+</script>
 
 {{>footer}}
