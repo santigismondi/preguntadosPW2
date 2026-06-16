@@ -51,7 +51,7 @@
         datos.append('opcion_id', opcionId);
         datos.append('categoria_id', '{{categoriaId}}');
 
-        fetch('/preguntadosPW2/index.php?controller=pregunta&method=verificar', {
+        fetch('index.php?controller=pregunta&method=verificar', {
             method: 'POST',
             body: datos
         })
