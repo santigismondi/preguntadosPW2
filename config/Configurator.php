@@ -1,6 +1,5 @@
 <?php
 class Configurator {
-
     private $config;
 
     public function __construct()
@@ -26,19 +25,25 @@ class Configurator {
             new Request()
         );
     }
+
     public function getLobbyController()
     {
         return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
     }
 
-    public function getPreguntaModel()
+    public function getPreguntaController()
     {
-        return new PreguntaModel($this->getDatabase());
+        return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
     }
 
     private function getLobbyModel()
     {
         return new LobbyModel($this->getDatabase());
+    }
+
+    private function getPreguntaModel()
+    {
+        return new PreguntaModel($this->getDatabase());
     }
 
     private function getUsuarioModel()
@@ -79,25 +84,5 @@ class Configurator {
         }
         $defaultGetter = 'get' . ucfirst($defaultControllerName) . 'Controller';
         return $this->{$defaultGetter}();
-    }
-
-    public function getLobbyController()
-    {
-        return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
-    }
-
-    private function getLobbyModel()
-    {
-        return new LobbyModel($this->getDatabase());
-    }
-
-    public function getPreguntaController()
-    {
-        return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
-    }
-
-    private function getPreguntaModel()
-    {
-        return new PreguntaModel($this->getDatabase());
     }
 }
