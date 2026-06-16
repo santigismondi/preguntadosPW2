@@ -31,7 +31,7 @@
     <div class="resultado" id="resultado"></div>
 
     <div class="logout">
-        <a href="/preguntadosPW2/index.php?controller=usuario&method=logout">Cerrar sesión</a>
+        <a href="index.php?controller=usuario&method=logout">Cerrar sesión</a>
     </div>
 </div>
 
@@ -51,24 +51,24 @@ function obtenerIconoCategoria(nombre) {
     nombre = nombre.toLowerCase();
 
     if (nombre.includes("grupo") || nombre.includes("fase")) {
-        return "/preguntadosPW2/img/iconos/fase.png";
+        return "/img/iconos/fase.png";
     }
     if (nombre.includes("estadio")) {
-        return "/preguntadosPW2/img/iconos/estadios.png";
+        return "/img/iconos/estadios.png";
     }
     if (nombre.includes("jugador")) {
-        return "/preguntadosPW2/img/iconos/jugadores.png";
+        return "/img/iconos/jugadores.png";
     }
     if (nombre.includes("seleccion") || nombre.includes("selección")) {
-        return "/preguntadosPW2/img/iconos/selecciones.png";
+        return "/img/iconos/selecciones.png";
     }
     if (nombre.includes("historia")) {
-        return "/preguntadosPW2/img/iconos/historia.png";
+        return "/img/iconos/historia.png";
     }
     if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
-        return "/preguntadosPW2/img/iconos/estadisticas.png";
+        return "/img/iconos/estadisticas.png";
     }
-    return "/preguntadosPW2/img/iconos/fase.png";
+    return "/img/iconos/fase.png";
 }
 
 const canvas = document.getElementById('ruleta');
