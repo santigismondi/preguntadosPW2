@@ -1,41 +1,46 @@
-{{>header}}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntados Mundial - Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/preguntadosPW2-main/css/estilos.css">
+</head>
+<body>
 
 <main class="login-background min-vh-100 d-flex align-items-center justify-content-center px-3 py-3">
-    <section class="card border-0 shadow-lg rounded-4 w-100 registro-card">
+    <section class="card border-0 shadow-lg rounded-4 w-100" style="max-width: 960px;">
         <div class="card-body p-3 p-md-4">
 
-            <div class="text-center mb-3 registro-header">
-                <img src="/preguntadosPW2/img/logo.png"
+            <div class="text-center mb-2">
+                <img src="/preguntadosPW2-main/img/logo.png"
                      alt="Preguntados Mundial"
                      class="logo-login mb-2">
-
                 <h1 class="h4 fw-bold mb-1">Crear cuenta</h1>
                 <p class="text-muted mb-0">Sumate al desafío mundialista 2026</p>
             </div>
 
             {{#error}}
-                <div class="alert alert-danger text-center py-2">{{error}}</div>
+            <div class="alert alert-danger text-center">{{error}}</div>
             {{/error}}
 
-            <form action="/preguntadosPW2/index.php?controller=usuario&method=registrar"
-                  method="POST"
-                  enctype="multipart/form-data">
+            <form action="/preguntadosPW2-main/index.php?controller=usuario&method=registrar" method="POST" enctype="multipart/form-data">
 
-                <div class="row registro-row">
-
+                <div class="row">
                     <div class="col-12 col-md-4 mb-2">
                         <label class="form-label fw-semibold">Nombre completo</label>
-                        <input type="text" class="form-control" name="nombre" placeholder="Ingresá tu nombre completo" required>
+                        <input type="text" class="form-control" name="nombre" required>
                     </div>
 
                     <div class="col-12 col-md-4 mb-2">
                         <label class="form-label fw-semibold">Usuario</label>
-                        <input type="text" class="form-control" name="nombre_usuario" placeholder="Ingresá tu usuario" required>
+                        <input type="text" class="form-control" name="nombre_usuario" required>
                     </div>
 
                     <div class="col-12 col-md-4 mb-2">
                         <label class="form-label fw-semibold">Email</label>
-                        <input type="email" class="form-control" name="email" placeholder="Ingresá tu email" required>
+                        <input type="email" class="form-control" name="email" required>
                     </div>
 
                     <div class="col-6 col-md-4 mb-2">
@@ -53,55 +58,26 @@
                         </select>
                     </div>
 
-                    <div class="col-12 col-md-8 mb-2 ubicacion-registro">
-                        <label class="form-label fw-semibold">Ubicación</label>
-
-                        <div id="mapa"></div>
-
-                        <input type="hidden"
-                               name="coordenadas_ciudad"
-                               id="coordenadas_ciudad"
-                               required>
-                    </div>
-
-                    <div class="col-12 col-md-4 mb-2 foto-registro">
+                    <div class="col-12 col-md-4 mb-2">
                         <label class="form-label fw-semibold">Foto de perfil</label>
-
-                        <div class="foto-upload">
-                            <div class="foto-preview" id="fotoPreview">
-                                <img src="/preguntadosPW2/img/iconos/foto-perfil.png"
-                                     alt="Foto de perfil"
-                                     class="foto-icono">
-                            </div>
-
-                            <input type="file"
-                                   id="fotoPerfil"
-                                   name="foto_perfil"
-                                   accept="image/*"
-                                   hidden>
-
-                            <button type="button"
-                                    class="btn btn-outline-success btn-foto"
-                                    onclick="document.getElementById('fotoPerfil').click()">
-                                Seleccionar foto
-                            </button>
-                        </div>
+                        <input type="file" class="form-control" name="foto_perfil" accept="image/*">
                     </div>
 
                     <div class="col-12 col-md-6 mb-2">
                         <label class="form-label fw-semibold">Contraseña</label>
-                        <input type="password" class="form-control" name="contrasena" placeholder="Ingresá tu contraseña" required>
+                        <input type="password" class="form-control" name="contrasena" required>
                     </div>
 
                     <div class="col-12 col-md-6 mb-3">
                         <label class="form-label fw-semibold">Confirmar contraseña</label>
-                        <input type="password" class="form-control" name="confirmar_contrasena" placeholder="Repetí tu contraseña" required>
+                        <input type="password" class="form-control" name="confirmar_contrasena" required>
                     </div>
-
                 </div>
 
+                <input type="hidden" name="coordenadas_ciudad" id="coordenadas_ciudad">
+
                 <div class="d-grid mt-2">
-                    <button type="submit" class="btn btn-success fw-bold btn-crear">
+                    <button type="submit" class="btn btn-success fw-bold">
                         Crear cuenta
                     </button>
                 </div>
@@ -110,7 +86,7 @@
 
             <div class="text-center mt-3">
                 <span class="text-muted">¿Ya tenés cuenta?</span>
-                <a href="/preguntadosPW2/index.php?controller=usuario&method=login"
+                <a href="/preguntadosPW2-main/index.php?controller=usuario&method=login"
                    class="fw-bold text-decoration-none">
                     Iniciar sesión
                 </a>
@@ -120,49 +96,6 @@
     </section>
 </main>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const inputFoto = document.getElementById('fotoPerfil');
-    const previewFoto = document.getElementById('fotoPreview');
-
-    inputFoto.addEventListener('change', function () {
-        const archivo = this.files[0];
-
-        if (!archivo) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            previewFoto.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-        };
-
-        reader.readAsDataURL(archivo);
-    });
-
-    const mapa = L.map('mapa').setView([-34.6037, -58.3816], 12);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(mapa);
-
-    let marcador;
-
-    mapa.on('click', function(e){
-        if (marcador) {
-            mapa.removeLayer(marcador);
-        }
-
-        marcador = L.marker(e.latlng).addTo(mapa);
-
-        document.getElementById('coordenadas_ciudad').value =
-            e.latlng.lat + ',' + e.latlng.lng;
-    });
-
-    setTimeout(function () {
-        mapa.invalidateSize();
-    }, 300);
-});
-</script>
-
-{{>footer}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

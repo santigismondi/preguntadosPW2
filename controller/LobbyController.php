@@ -15,17 +15,14 @@ class LobbyController
 
     public function ver()
     {
-        session_start();
         if (!isset($_SESSION['usuario_id'])) {
-            Redirect::to('/preguntadosPW2/index.php?controller=usuario&method=login');
+            Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
             return;
         }
 
         $categorias = $this->model->getCategorias();
 
         $data = [
-            'titulo'         => 'Preguntados Mundial - Lobby',
-            'cssExtra' => '/preguntadosPW2/css/lobby.css',
             'nombre_usuario' => $_SESSION['nombre_usuario'],
             'categorias'     => $categorias
         ];

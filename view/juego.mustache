@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mundial 2026 — Jugando</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #111; color: white; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card-juego { background: #222; border: 2px solid #27ae60; border-radius: 15px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 0 20px rgba(39, 174, 96, 0.3); }
+        .btn-opcion { text-align: left; padding: 15px; font-size: 1.1rem; transition: all 0.2s; margin-bottom: 10px; border-color: #444; color: white; }
+        .btn-opcion:hover { background-color: #27ae60; border-color: #27ae60; color: white; transform: scale(1.02); }
+        .timer-badge { font-size: 1.2rem; min-width: 45px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="card-juego">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <span class="text-muted">Preguntados Mundial</span>
+        <div class="d-flex align-items-center gap-3">
+            <span id="timer" class="badge bg-danger timer-badge">10s</span>
+            <h4 class="text-success m-0">Puntaje: {{puntaje}}</h4>
+        </div>
+    </div>
+
+    {{#pregunta}}
+        <h2 class="h4 mb-4 text-center">{{texto}}</h2>
+    {{/pregunta}}
+
+    <form id="formJuego" action="index.php?controller=juego&method=responder" method="POST" class="d-flex flex-column">
+        {{#pregunta}}
+            <input type="hidden" name="pregunta_id" value="{{id}}">
+        {{/pregunta}}
+
+        {{#opciones}}
+            <button type="submit" name="opcion_id" value="{{id}}" class="btn btn-outline-secondary btn-opcion">
+                ⚽ {{texto}}
+            </button>
+        {{/opciones}}
+    </form>
+</div>
+
+<script>
+    let tiempoRestante = 10;
+    const timerElement = document.getElementById('timer');
+    const formElement = document.getElementById('formJuego');
+
+    const cuentaRegresiva = setInterval(() => {
+        tiempoRestante--;
+        timerElement.textContent = tiempoRestante + 's';
+        if (tiempoRestante <= 3) {
+            timerElement.classList.replace('bg-danger', 'bg-warning');
+            timerElement.classList.add('text-dark');
+        }
+        if (tiempoRestante <= 0) {
+            clearInterval(cuentaRegresiva);
+            const inputTiempo = document.createElement('input');
+            inputTiempo.type = 'hidden';
+            inputTiempo.name = 'timeout';
+            inputTiempo.value = 'true';
+            formElement.appendChild(inputTiempo);
+            const botones = formElement.querySelectorAll('button');
+            botones.forEach(b => b.disabled = true);
+            formElement.submit();
+        }
+    }, 1000);
+
+</script>
+</body>
+</html>
