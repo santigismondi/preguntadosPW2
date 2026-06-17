@@ -1,10 +1,17 @@
 RewriteEngine On
 Options -Indexes
-# Condiciones: Si la URL apunta a un archivo (-f) o directorio (-d) que existe físicamente,
-# se detiene la reescritura. Esto permite cargar Bootstrap, CSS, JS e imágenes sin problemas.
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteBase /
+
+# 1. Si la URL apunta a un archivo (-f) o directorio (-d) que existe físicamente,
+# detenemos la reescritura aquí mismo con el flag [L] (Last).
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. (Opcional) Si quieres ignorar una carpeta "public" específica:
 RewriteRule ^(public)($|/) - [L,NC]
-    RewriteBase /
-    RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
-    RewriteRule ^([^/]+)$         index.php?controller=$1           [L,QSA]
+
+# 3. Si llegamos hasta aquí, significa que la URL no es de un archivo real.
+# Aplicamos el ruteo de tu patrón MVC:
+RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
+RewriteRule ^([^/]+)$         index.php?controller=$1            [L,QSA]
