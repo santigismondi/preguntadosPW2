@@ -16,7 +16,7 @@ class LobbyController
     public function ver()
     {
         if (!isset($_SESSION['usuario_id'])) {
-            header('Location: /preguntadosPW2/index.php?controller=usuario&method=login');
+            header('Location: /usuario/login');
             return;
         }
 

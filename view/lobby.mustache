@@ -173,7 +173,7 @@ function girarRuleta() {
             document.getElementById('resultado').textContent = '¡Te tocó: ' + ganadora.nombre + '!';
 
             setTimeout(function() {
-                window.location.href = '/preguntadosPW2/index.php?controller=pregunta&method=ver&categoria_id=' + ganadora.id;
+                window.location.href = '/pregunta/ver?categoria_id=' + ganadora.id;
             }, 2000);
         }
     }

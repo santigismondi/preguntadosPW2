@@ -16,7 +16,7 @@ class PreguntaController
         $categoriaId = isset($_GET['categoria_id']) ? $_GET['categoria_id'] : null;
 
         if (!$categoriaId) {
-            header('Location: /preguntadosPW2/index.php?controller=lobby&method=ver');
+            header('Location: /lobby/ver');
             return;
         }
 
@@ -28,7 +28,7 @@ class PreguntaController
         $pregunta = $this->model->getPreguntaRandom($categoriaId);
 
         if (!$pregunta || !$categoria) {
-            header('Location: /preguntadosPW2/index.php?controller=lobby&method=ver');
+            header('Location: /lobby/ver');
             return;
         }
 
@@ -72,7 +72,7 @@ class PreguntaController
                 'correcta' => true,
                 'correctaId' => $correctaId,
                 'puntaje' => $_SESSION['puntaje'],
-                'redirect' => '/preguntadosPW2/index.php?controller=lobby&method=ver'
+                'redirect' => '/lobby/ver'
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
@@ -85,7 +85,7 @@ class PreguntaController
                 'correcta' => false,
                 'correctaId' => $correctaId,
                 'puntaje' => $puntajeFinal,
-                'redirect' => '/preguntadosPW2/index.php?controller=lobby&method=ver'
+                'redirect' => '/lobby/ver'
             ]);
         }
     }

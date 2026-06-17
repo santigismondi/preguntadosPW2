@@ -19,7 +19,7 @@ class JuegoController {
         }
 
         if (!isset($_SESSION['usuario_id'])) {
-            Redirect::to('/preguntadosPW2-main/index.php?controller=usuario&method=login');
+            Redirect::to('/usuario/login');
             return;
         }
         $categoriaId = $this->request->get('categoria_id');
@@ -31,7 +31,7 @@ class JuegoController {
 
         $idCategoria = $_SESSION['categoria_actual'] ?? null;
         if (!$idCategoria) {
-            Redirect::to('/preguntadosPW2-main/index.php?controller=lobby&method=ver');
+            Redirect::to('/usuario/login');
             return;
         }
 
