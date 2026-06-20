@@ -7,11 +7,6 @@ class Configurator {
         $this->config = parse_ini_file(__DIR__ . '/config.ini');
     }
 
-    public function getVikingoController()
-    {
-        return new VikingoController($this->getVikingoModel(), $this->getRenderer(), new Request());
-    }
-
     public function getUsuarioController()
     {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
@@ -63,12 +58,15 @@ class Configurator {
 
     private function getRenderer()
     {
-        return new MustacheRenderer(__DIR__ . '/../view');
-    }
+        // Detectamos si estamos en XAMPP o en producción
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            $baseUrl = '/preguntadosPW2'; // La carpeta en tu PC
+        } else {
+            $baseUrl = ''; // La raíz en InfinityFree
+        }
 
-    private function getVikingoModel()
-    {
-        return new VikingoModel($this->getDatabase());
+        // Le pasamos el baseUrl como segundo parámetro
+        return new MustacheRenderer(__DIR__ . '/../view', $baseUrl);
     }
 
     public function getRouter()
