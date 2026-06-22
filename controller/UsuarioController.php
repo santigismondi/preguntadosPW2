@@ -71,7 +71,7 @@ class UsuarioController
         $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil);
  
         Log::info("UsuarioController::registrar - registrado: $nombre_usuario");
-        Redirect::to('/usuario/login');
+        Redirect::to('{{baseUrl}}/index.php?controller=usuario&method=login');
     }
  
     public function procesarLogin()
@@ -102,7 +102,10 @@ class UsuarioController
         //var_dump($usuario);
         //exit();
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        Redirect::to('/lobby/ver');
+        $config = parse_ini_file("config/config.ini");
+        $baseUrl = $config["baseUrl"] ?? "";
+
+        Redirect::to($baseUrl . "/index.php?controller=lobby&method=ver");
     }
  
     public function logout()
