@@ -16,7 +16,7 @@ class PreguntaController
         $categoriaId = isset($_GET['categoria_id']) ? $_GET['categoria_id'] : null;
 
         if (!$categoriaId) {
-            header('Location: /lobby/ver');
+            header('Location: /preguntadospw2/lobby/ver');
             return;
         }
 
@@ -28,7 +28,7 @@ class PreguntaController
         $pregunta = $this->model->getPreguntaRandom($categoriaId);
 
         if (!$pregunta || !$categoria) {
-            header('Location: /lobby/ver');
+            header('Location: /preguntadospw2/lobby/ver');
             return;
         }
 
@@ -72,7 +72,7 @@ class PreguntaController
                 'correcta' => true,
                 'correctaId' => $correctaId,
                 'puntaje' => $_SESSION['puntaje'],
-                'redirect' => '/lobby/ver'
+                'redirect' => '/preguntadospw2/lobby/ver'
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
@@ -85,7 +85,7 @@ class PreguntaController
                 'correcta' => false,
                 'correctaId' => $correctaId,
                 'puntaje' => $puntajeFinal,
-                'redirect' => '/lobby/ver'
+                'redirect' => '/preguntadospw2/lobby/ver'
             ]);
         }
     }
@@ -95,24 +95,24 @@ class PreguntaController
         $nombre = strtolower($nombre);
 
         if (strpos($nombre, 'grupo') !== false || strpos($nombre, 'fase') !== false) {
-            return '/preguntadosPW2/img/iconos/fase.png';
+            return "/img/iconos/fase.png";
         }
         if (strpos($nombre, 'estadio') !== false) {
-            return '/preguntadosPW2/img/iconos/estadios.png';
+            return "/img/iconos/estadios.png";
         }
         if (strpos($nombre, 'jugador') !== false) {
-            return '/preguntadosPW2/img/iconos/jugadores.png';
+            return "/img/iconos/jugadores.png";
         }
         if (strpos($nombre, 'seleccion') !== false || strpos($nombre, 'selección') !== false) {
-            return '/preguntadosPW2/img/iconos/selecciones.png';
+            return "/img/iconos/selecciones.png";
         }
         if (strpos($nombre, 'historia') !== false) {
-            return '/preguntadosPW2/img/iconos/historia.png';
+            return "/img/iconos/historia.png";
         }
         if (strpos($nombre, 'record') !== false || strpos($nombre, 'estad') !== false) {
-            return '/preguntadosPW2/img/iconos/estadisticas.png';
+            return "/img/iconos/estadisticas.png";
         }
 
-        return '/preguntadosPW2/img/iconos/fase.png';
+        return "/img/iconos/fase.png";
     }
 }

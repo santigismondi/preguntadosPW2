@@ -51,24 +51,24 @@ function obtenerIconoCategoria(nombre) {
     nombre = nombre.toLowerCase();
 
     if (nombre.includes("grupo") || nombre.includes("fase")) {
-        return "/img/iconos/fase.png";
+        return "{{baseUrl}}/img/iconos/fase.png";
     }
     if (nombre.includes("estadio")) {
-        return "/img/iconos/estadios.png";
+        return "{{baseUrl}}/img/iconos/estadios.png";
     }
     if (nombre.includes("jugador")) {
-        return "/img/iconos/jugadores.png";
+        return "{{baseUrl}}/img/iconos/jugadores.png";
     }
     if (nombre.includes("seleccion") || nombre.includes("selección")) {
-        return "/img/iconos/selecciones.png";
+        return "{{baseUrl}}/img/iconos/selecciones.png";
     }
     if (nombre.includes("historia")) {
-        return "/img/iconos/historia.png";
+        return "{{baseUrl}}/img/iconos/historia.png";
     }
     if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
-        return "/img/iconos/estadisticas.png";
+        return "{{baseUrl}}/img/iconos/estadisticas.png";
     }
-    return "/img/iconos/fase.png";
+    return "{{baseUrl}}/img/iconos/fase.png";
 }
 
 const canvas = document.getElementById('ruleta');
@@ -173,7 +173,7 @@ function girarRuleta() {
             document.getElementById('resultado').textContent = '¡Te tocó: ' + ganadora.nombre + '!';
 
             setTimeout(function() {
-                window.location.href = '/pregunta/ver?categoria_id=' + ganadora.id;
+                window.location.href = '{{baseUrl}}/pregunta/ver?categoria_id=' + ganadora.id;
             }, 2000);
         }
     }

@@ -6,6 +6,7 @@ class JuegoController {
     private $renderer;
     private $request;
 
+
     public function __construct($model, $renderer, $request) {
         $this->model = $model;
         $this->renderer = $renderer;
@@ -63,6 +64,7 @@ class JuegoController {
 
     public function responder()
     {
+        $baseUrl = "/preguntadosPW2";
         if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
         $tiempoActual = time();
@@ -93,11 +95,11 @@ class JuegoController {
                 unset($_SESSION['categoria_actual']);
                 unset($_SESSION['preguntas_respondidas_racha']);
                 unset($_SESSION['respuestas_correctas_racha']);
-                Redirect::to('index.php?controller=lobby&method=ver');
+                Redirect::to($baseUrl.'/lobby/ver');
                 exit();
             }
 
-            Redirect::to('index.php?controller=juego&method=jugar');
+            Redirect::to($baseUrl.'/juego/jugar');
             exit();
         } else {
             $this->procesarPerdida("¡Respuesta incorrecta! Has perdido la racha de la categoría.");
