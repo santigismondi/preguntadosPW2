@@ -105,7 +105,7 @@ class UsuarioController
         $config = parse_ini_file("config/config.ini");
         $baseUrl = $config["baseUrl"] ?? "";
 
-        Redirect::to($baseUrl . "/index.php?controller=lobby&method=ver");
+        Redirect::to($baseUrl . "/lobby/ver");
     }
  
     public function logout()
