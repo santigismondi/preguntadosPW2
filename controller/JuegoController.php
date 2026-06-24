@@ -20,7 +20,7 @@ class JuegoController {
         }
 
         if (!isset($_SESSION['usuario_id'])) {
-            Redirect::to('/usuario/login');
+            Redirect::to($this->getBaseUrl() . '/usuario/login');
             return;
         }
         $categoriaId = $this->request->get('categoria_id');
@@ -32,7 +32,7 @@ class JuegoController {
 
         $idCategoria = $_SESSION['categoria_actual'] ?? null;
         if (!$idCategoria) {
-            Redirect::to('/usuario/login');
+            Redirect::to($this->getBaseUrl() . '/usuario/login');
             return;
         }
 
@@ -64,7 +64,6 @@ class JuegoController {
 
     public function responder()
     {
-        $baseUrl = "/preguntadosPW2";
         if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
         $tiempoActual = time();
@@ -95,11 +94,11 @@ class JuegoController {
                 unset($_SESSION['categoria_actual']);
                 unset($_SESSION['preguntas_respondidas_racha']);
                 unset($_SESSION['respuestas_correctas_racha']);
-                Redirect::to($baseUrl.'/lobby/ver');
+                Redirect::to($this->getBaseUrl() . '/lobby/ver');
                 exit();
             }
 
-            Redirect::to($baseUrl.'/juego/jugar');
+            Redirect::to($this->getBaseUrl() . '/juego/jugar');
             exit();
         } else {
             $this->procesarPerdida("¡Respuesta incorrecta! Has perdido la racha de la categoría.");
@@ -124,5 +123,10 @@ class JuegoController {
         $_SESSION['puntaje_partida'] = 0;
 
         echo $this->renderer->render("gameOver", $data);
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }

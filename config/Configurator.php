@@ -4,7 +4,7 @@ class Configurator {
 
     public function __construct()
     {
-        $this->config = parse_ini_file(__DIR__ . '/config.ini');
+        $this->config = (new ConfigParser())->all();
     }
 
     public function getUsuarioController()

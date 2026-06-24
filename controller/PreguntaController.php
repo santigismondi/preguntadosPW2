@@ -16,7 +16,7 @@ class PreguntaController
         $categoriaId = isset($_GET['categoria_id']) ? $_GET['categoria_id'] : null;
 
         if (!$categoriaId) {
-            header('Location: /preguntadospw2/lobby/ver');
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
             return;
         }
 
@@ -28,7 +28,7 @@ class PreguntaController
         $pregunta = $this->model->getPreguntaRandom($categoriaId);
 
         if (!$pregunta || !$categoria) {
-            header('Location: /preguntadospw2/lobby/ver');
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
             return;
         }
 
@@ -36,7 +36,7 @@ class PreguntaController
 
         $data = [
             'titulo'          => 'Preguntados Mundial - Pregunta',
-            'cssExtra'        => '/preguntadosPW2/css/pregunta.css',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/pregunta.css',
             'colorCategoria'  => $categoria['color'],
             'nombreCategoria' => $categoria['nombre'],
             'iconoCategoria'  => $this->obtenerIcono($categoria['nombre']),
@@ -72,7 +72,7 @@ class PreguntaController
                 'correcta' => true,
                 'correctaId' => $correctaId,
                 'puntaje' => $_SESSION['puntaje'],
-                'redirect' => '/preguntadospw2/lobby/ver'
+                'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
@@ -85,34 +85,41 @@ class PreguntaController
                 'correcta' => false,
                 'correctaId' => $correctaId,
                 'puntaje' => $puntajeFinal,
-                'redirect' => '/preguntadospw2/lobby/ver'
+                'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         }
     }
 
     private function obtenerIcono($nombre)
     {
+
         $nombre = strtolower($nombre);
+        $baseUrl = $this->getBaseUrl();
 
         if (strpos($nombre, 'grupo') !== false || strpos($nombre, 'fase') !== false) {
-            return "/img/iconos/fase.png";
+            return $baseUrl . "/public/img/iconos/fase.png";
         }
         if (strpos($nombre, 'estadio') !== false) {
-            return "/img/iconos/estadios.png";
+            return $baseUrl . "/public/img/iconos/estadios.png";
         }
         if (strpos($nombre, 'jugador') !== false) {
-            return "/img/iconos/jugadores.png";
+            return $baseUrl . "/public/img/iconos/jugadores.png";
         }
         if (strpos($nombre, 'seleccion') !== false || strpos($nombre, 'selección') !== false) {
-            return "/img/iconos/selecciones.png";
+            return $baseUrl . "/public/img/iconos/selecciones.png";
         }
         if (strpos($nombre, 'historia') !== false) {
-            return "/img/iconos/historia.png";
+            return $baseUrl . "/public/img/iconos/historia.png";
         }
         if (strpos($nombre, 'record') !== false || strpos($nombre, 'estad') !== false) {
-            return "/img/iconos/estadisticas.png";
+            return $baseUrl . "/public/img/iconos/estadisticas.png";
         }
 
-        return "/img/iconos/fase.png";
+        return $baseUrl . "/public/img/iconos/fase.png";
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }

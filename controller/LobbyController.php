@@ -6,6 +6,7 @@ class LobbyController
     private $request;
     private $model;
 
+
     public function __construct($model, $renderer, $request)
     {
         $this->renderer = $renderer;
@@ -16,7 +17,7 @@ class LobbyController
     public function ver()
     {
         if (!isset($_SESSION['usuario_id'])) {
-            header('Location: /usuario/login');
+            header('Location: ' . $this->getBaseUrl() . '/usuario/login');
             return;
         }
 
@@ -42,7 +43,7 @@ class LobbyController
 
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
-            'cssExtra'           => '/preguntadosPW2/css/lobby.css',
+            'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
             'categorias'         => $categorias,
             'puntaje'            => $_SESSION['puntaje'],
@@ -52,5 +53,10 @@ class LobbyController
         ];
 
         echo $this->renderer->render("lobby", $data);
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }

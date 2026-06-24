@@ -71,7 +71,7 @@ class UsuarioController
         $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil);
  
         Log::info("UsuarioController::registrar - registrado: $nombre_usuario");
-        Redirect::to('{{baseUrl}}/index.php?controller=usuario&method=login');
+        Redirect::to($this->getBaseUrl() . '/usuario/login');
     }
  
     public function procesarLogin()
@@ -102,10 +102,7 @@ class UsuarioController
         //var_dump($usuario);
         //exit();
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        $config = parse_ini_file("config/config.ini");
-        $baseUrl = $config["baseUrl"] ?? "";
-
-        Redirect::to($baseUrl . "/lobby/ver");
+        Redirect::to($this->getBaseUrl() . "/lobby/ver");
     }
  
     public function logout()
@@ -113,6 +110,11 @@ class UsuarioController
         session_start();
         session_destroy();
         Log::info("UsuarioController::logout");
-        Redirect::to('/usuario/login');
+        Redirect::to($this->getBaseUrl() . '/usuario/login');
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }
