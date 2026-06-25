@@ -60,7 +60,7 @@ class Configurator {
     {
         // Detectamos si estamos en XAMPP o en producción
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            $baseUrl = '/preguntadosPW2'; // La carpeta en tu PC
+            $baseUrl = ' '; // La carpeta en tu PC
         } else {
             $baseUrl = ''; // La raíz en InfinityFree
         }

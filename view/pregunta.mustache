@@ -14,6 +14,8 @@
             <div class="puntaje-badge">
                 <span class="puntaje-estrella">⭐</span>
                 <span class="puntaje-numero">{{puntaje}}</span>
+                <span class="ms-3">⏱</span>
+                <span id="timer" class="puntaje-numero">10</span>
             </div>
         </header>
 
@@ -73,6 +75,31 @@
             }, 1500);
         });
     }
+</script>
+
+<script>
+    let tiempoRestante = 10;
+
+    const timer = document.getElementById('timer');
+
+    const intervalo = setInterval(() => {
+
+        if (respondido) {
+            clearInterval(intervalo);
+            return;
+        }
+
+        tiempoRestante--;
+        timer.textContent = tiempoRestante;
+
+        if (tiempoRestante <= 0) {
+            clearInterval(intervalo);
+
+            window.location.href =
+                    '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
+        }
+
+    }, 1000);
 </script>
 
 {{>footer}}

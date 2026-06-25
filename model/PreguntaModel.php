@@ -64,4 +64,14 @@ class PreguntaModel
         }
         return null;
     }
+
+    public function registrarPartida($usuarioId, $puntaje)
+    {
+        $sql = "
+        INSERT INTO PARTIDA(usuario_id, puntaje, resultado)
+        VALUES (?, ?, 'perdida')
+    ";
+
+        return $this->database->execute($sql, [$usuarioId, $puntaje]);
+    }
 }

@@ -76,6 +76,10 @@ class PreguntaController
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
+            $this->model->registrarPartida(
+                $_SESSION['usuario_id'],
+                $puntajeFinal
+            );
             $_SESSION['puntaje'] = 0;
             $_SESSION['partida_terminada'] = true;
             $_SESSION['puntaje_final'] = $puntajeFinal;
@@ -88,6 +92,25 @@ class PreguntaController
                 'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         }
+    }
+
+    public function timeout()
+    {
+        $puntajeFinal = $_SESSION['puntaje'] ?? 0;
+
+        $this->model->registrarPartida(
+            $_SESSION['usuario_id'],
+            $puntajeFinal
+        );
+
+        $_SESSION['puntaje'] = 0;
+
+        $data = [
+            'error' => '¡Se terminó el tiempo!',
+            'puntajeFinal' => $puntajeFinal
+        ];
+
+        echo $this->renderer->render('gameOver', $data);
     }
 
     private function obtenerIcono($nombre)

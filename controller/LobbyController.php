@@ -30,6 +30,9 @@ class LobbyController
         $partidaTerminada = false;
         $puntajeFinal = 0;
         $respuestaCorrecta = '';
+        $puntajeMaximo = $this->model->getPuntajeMaximo(
+            $_SESSION['usuario_id']
+        );
 
         if (isset($_SESSION['partida_terminada']) && $_SESSION['partida_terminada']) {
             $partidaTerminada = true;
@@ -49,7 +52,8 @@ class LobbyController
             'puntaje'            => $_SESSION['puntaje'],
             'partidaTerminada'   => $partidaTerminada,
             'puntajeFinal'       => $puntajeFinal,
-            'respuestaCorrecta'  => $respuestaCorrecta
+            'respuestaCorrecta'  => $respuestaCorrecta,
+            'puntajeMaximo' => $puntajeMaximo
         ];
 
         echo $this->renderer->render("lobby", $data);
