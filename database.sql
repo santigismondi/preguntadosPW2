@@ -84,10 +84,10 @@ VALUES ('Grupos y Fase de Grupos', '#53f1c8'),
 
 -- CATEGORÍA 1: Grupos y Fase de Grupos
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
-VALUES ('¿Cuántos grupos hay en la fase de grupos del Mundial 2026?', 0, 1),
-       ('¿Cuántas selecciones clasifican por grupo en el Mundial 2026?', 0, 1),
+VALUES ('¿Cuántos grupos hay en la fase de grupos del Mundial 2026?', 1, 1),
+       ('¿Cuántas selecciones clasifican por grupo en el Mundial 2026?', 1, 1),
        ('¿Cuántos partidos se juegan en total en la fase de grupos del Mundial 2026 con 48 equipos?', 0, 1),
-       ('¿Qué pasa si dos equipos terminan igualados en puntos en la fase de grupos?', 0, 1),
+       ('¿Qué pasa si dos equipos terminan igualados en puntos en la fase de grupos?', 2, 1),
        ('¿Cuántos puntos se obtienen por ganar un partido en la fase de grupos?', 0, 1);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)
@@ -114,11 +114,11 @@ VALUES (1, '8 grupos', false),
 
 -- CATEGORÍA 2: Estadios y Sedes
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
-VALUES ('¿Cuál es el estadio donde se jugará la final del Mundial 2026?', 0, 2),
+VALUES ('¿Cuál es el estadio donde se jugará la final del Mundial 2026?', 1, 2),
        ('¿En cuántos países se disputará el Mundial 2026?', 0, 2),
        ('¿Cuál de estos estadios es sede del Mundial 2026 en México?', 0, 2),
-       ('¿Cuál es la ciudad canadiense sede del Mundial 2026?', 0, 2),
-       ('¿Cuántos estadios en total se usarán en el Mundial 2026?', 0, 2);
+       ('¿Cuál es la ciudad canadiense sede del Mundial 2026?', 1, 2),
+       ('¿Cuántos estadios en total se usarán en el Mundial 2026?', 2, 2);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)
 VALUES (6, 'Rose Bowl, California', false),
@@ -144,11 +144,11 @@ VALUES (6, 'Rose Bowl, California', false),
 
 -- CATEGORÍA 3: Jugadores y Figuras
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
-VALUES ('¿Quién es el máximo goleador de la historia de los mundiales?', 0, 3),
+VALUES ('¿Quién es el máximo goleador de la historia de los mundiales?', 1, 3),
        ('¿Con qué resultado Argentina ganó la final del Mundial 2022 en penales?', 0, 3),
-       ('¿Qué jugador ganó el Balón de Oro en el Mundial 2022?', 0, 3),
+       ('¿Qué jugador ganó el Balón de Oro en el Mundial 2022?', 1, 3),
        ('¿Quién fue el arquero titular de Argentina en el Mundial 2022?', 0, 3),
-       ('¿Cuántos mundiales jugó Lionel Messi antes de ganar en 2022?', 0, 3);
+       ('¿Cuántos mundiales jugó Lionel Messi antes de ganar en 2022?', 2, 3);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)
 VALUES (11, 'Pelé', false),
@@ -175,10 +175,10 @@ VALUES (11, 'Pelé', false),
 -- CATEGORÍA 4: Selecciones
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
 VALUES ('¿Cuántas Copas del Mundo tiene Brasil en su historia?', 0, 4),
-       ('¿Qué selección ganó el primer Mundial de la historia en 1930?', 0, 4),
-       ('¿Cuál es el apodo de la selección de Brasil?', 0, 4),
+       ('¿Qué selección ganó el primer Mundial de la historia en 1930?', 1, 4),
+       ('¿Cuál es el apodo de la selección de Brasil?', 1, 4),
        ('¿Qué selección europea ganó el Mundial 2018?', 0, 4),
-       ('¿Cuál es la selección con más participaciones mundialistas de CONMEBOL?', 0, 4);
+       ('¿Cuál es la selección con más participaciones mundialistas de CONMEBOL?', 2, 4);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)
 VALUES (16, '4 Copas del Mundo', false),
@@ -204,10 +204,10 @@ VALUES (16, '4 Copas del Mundo', false),
 
 -- CATEGORÍA 5: Historia del Mundial
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
-VALUES ('¿En qué año se jugó el primer Mundial de fútbol?', 0, 5),
+VALUES ('¿En qué año se jugó el primer Mundial de fútbol?', 1, 5),
        ('¿Quién organizó el Mundial 2014?', 0, 5),
-       ('¿Qué país fue el primero en organizar dos mundiales?', 0, 5),
-       ('¿Cuántos mundiales se jugaron en América del Sur hasta 2022?', 0, 5),
+       ('¿Qué país fue el primero en organizar dos mundiales?', 1, 5),
+       ('¿Cuántos mundiales se jugaron en América del Sur hasta 2022?', 2, 5),
        ('¿Qué selección ganó el Mundial 2010 en Sudáfrica?', 0, 5);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)
@@ -234,10 +234,10 @@ VALUES (21, '1924', false),
 
 -- CATEGORÍA 6: Récords y Estadísticas
 INSERT INTO PREGUNTA (texto, dificultad, categoria_id)
-VALUES ('¿Cuántos goles marcó Miroslav Klose en mundiales para ser el máximo goleador?', 0, 6),
+VALUES ('¿Cuántos goles marcó Miroslav Klose en mundiales para ser el máximo goleador?', 2, 6),
        ('¿Qué selección tiene más títulos mundiales?', 0, 6),
-       ('¿Cuántos goles metió Kylian Mbappé en el Mundial 2022?', 0, 6),
-       ('¿Cuál fue el primer mundial con VAR?', 0, 6),
+       ('¿Cuántos goles metió Kylian Mbappé en el Mundial 2022?', 1, 6),
+       ('¿Cuál fue el primer mundial con VAR?', 1, 6),
        ('¿Cuántos mundiales ganó Argentina en total?', 0, 6);
 
 INSERT INTO OPCION (pregunta_id, texto, es_correcta)

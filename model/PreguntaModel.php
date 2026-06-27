@@ -9,13 +9,18 @@ class PreguntaModel
         $this->database = $database;
     }
 
-    public function getPreguntaRandom($categoriaId)
+    public function getPreguntaRandom($categoriaId, $dificultad)
     {
-        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND estado = 'aprobada' ORDER BY RAND() LIMIT 1";
-        $resultado = $this->database->query($sql, [$categoriaId]);
+        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND dificultad = ? AND estado = 'aprobada'
+        ORDER BY RAND()
+        LIMIT 1 ";
+
+        $resultado = $this->database->query($sql, [$categoriaId, $dificultad]);
+
         if (!empty($resultado)) {
             return $resultado[0];
         }
+
         return null;
     }
 

@@ -24,8 +24,11 @@ class PreguntaController
             $_SESSION['puntaje'] = 0;
         }
 
+        $puntaje = $_SESSION['puntaje'];
+        $dificultad = $this->obtenerDificultad($puntaje);
+
         $categoria = $this->model->getCategoria($categoriaId);
-        $pregunta = $this->model->getPreguntaRandom($categoriaId);
+        $pregunta = $this->model->getPreguntaRandom($categoriaId, $dificultad);
 
         if (!$pregunta || !$categoria) {
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
@@ -111,6 +114,19 @@ class PreguntaController
         ];
 
         echo $this->renderer->render('gameOver', $data);
+    }
+
+    private function obtenerDificultad($puntaje)
+    {
+        if ($puntaje < 5) {
+            return 0;
+        }
+
+        if ($puntaje < 10) {
+            return 1;
+        }
+
+        return 2;
     }
 
     private function obtenerIcono($nombre)
