@@ -12,15 +12,6 @@ class Configurator {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
     }
 
-    public function getJuegoController()
-    {
-        return new JuegoController(
-            $this->getPreguntaModel(),
-            $this->getRenderer(),
-            new Request()
-        );
-    }
-
     public function getLobbyController()
     {
         return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
@@ -82,5 +73,15 @@ class Configurator {
         }
         $defaultGetter = 'get' . ucfirst($defaultControllerName) . 'Controller';
         return $this->{$defaultGetter}();
+    }
+
+        public function getPerfilController()
+    {
+        return new PerfilController($this->getPerfilModel(), $this->getRenderer(), new Request());
+    }
+
+        private function getPerfilModel()
+    {
+        return new PerfilModel($this->getDatabase());
     }
 }

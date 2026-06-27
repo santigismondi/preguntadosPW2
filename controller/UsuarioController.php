@@ -93,21 +93,16 @@ class UsuarioController
             return;
         }
  
-        session_start();
         $_SESSION['usuario_id'] = $usuario['id'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
         $_SESSION['rol'] = $usuario['rol'] ?? 'jugador';
 
-        //var_dump($_SESSION);
-        //var_dump($usuario);
-        //exit();
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
         Redirect::to($this->getBaseUrl() . "/lobby/ver");
     }
  
     public function logout()
     {
-        session_start();
         session_destroy();
         Log::info("UsuarioController::logout");
         Redirect::to($this->getBaseUrl() . '/usuario/login');
