@@ -1,0 +1,64 @@
+{{>header}}
+
+<main class="perfil-page">
+    <div class="overlay"></div>
+
+    <section class="perfil-card">
+
+        <div class="perfil-header">
+            <img src="{{baseUrl}}/public/img/usuarios/{{usuario.foto_perfil}}"
+                 onerror="this.src='{{baseUrl}}/public/img/usuarios/default.png'"
+                 alt="Foto de perfil"
+                 class="perfil-foto">
+
+            <h1>{{usuario.nombre_usuario}}</h1>
+            <p>{{usuario.nombre}}</p>
+        </div>
+
+        <div class="perfil-stats">
+            <div class="stat-box">
+                <span>⭐ {{puntajeMaximo}}</span>
+                <p>Mejor puntaje</p>
+            </div>
+
+            <div class="stat-box">
+                <span>🎮 {{cantidadPartidas}}</span>
+                <p>Partidas realizadas</p>
+            </div>
+        </div>
+
+        <div class="perfil-section">
+            <h2>Datos del jugador</h2>
+            <p><strong>Ubicación:</strong> {{usuario.coordenadas_ciudad}}</p>
+        </div>
+
+        <div class="perfil-section perfil-qr">
+            <h2>QR del perfil</h2>
+            <img src="{{qrUrl}}" alt="QR del perfil">
+        </div>
+
+        <div class="perfil-section">
+            <h2>Partidas</h2>
+
+            {{#partidas}}
+                <div class="partida-card">
+                    <h3>Partida #{{id}}</h3>
+                    <p><strong>Puntaje:</strong> {{puntaje}}</p>
+                    <p><strong>Resultado:</strong> {{resultado}}</p>
+                </div>
+            {{/partidas}}
+
+            {{^partidas}}
+                <p class="sin-partidas">Todavía no hay partidas realizadas.</p>
+            {{/partidas}}
+        </div>
+
+        <div class="perfil-botones">
+            <a href="{{baseUrl}}/lobby/ver" class="btn-perfil btn-volver">Volver al lobby</a>
+            <a href="{{baseUrl}}/usuario/logout" class="btn-perfil btn-salir">Cerrar sesión</a>
+        </div>
+
+    </section>
+</main>
+
+{{>footer}}

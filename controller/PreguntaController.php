@@ -24,8 +24,11 @@ class PreguntaController
             $_SESSION['puntaje'] = 0;
         }
 
+        $puntaje = $_SESSION['puntaje'];
+        $dificultad = $this->obtenerDificultad($puntaje);
+
         $categoria = $this->model->getCategoria($categoriaId);
-        $pregunta = $this->model->getPreguntaRandom($categoriaId);
+        $pregunta = $this->model->getPreguntaRandom($categoriaId, $dificultad);
 
         if (!$pregunta || !$categoria) {
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
@@ -76,6 +79,10 @@ class PreguntaController
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
+            $this->model->registrarPartida(
+                $_SESSION['usuario_id'],
+                $puntajeFinal
+            );
             $_SESSION['puntaje'] = 0;
             $_SESSION['partida_terminada'] = true;
             $_SESSION['puntaje_final'] = $puntajeFinal;
@@ -88,6 +95,38 @@ class PreguntaController
                 'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         }
+    }
+
+    public function timeout()
+    {
+        $puntajeFinal = $_SESSION['puntaje'] ?? 0;
+
+        $this->model->registrarPartida(
+            $_SESSION['usuario_id'],
+            $puntajeFinal
+        );
+
+        $_SESSION['puntaje'] = 0;
+
+        $data = [
+            'error' => '¡Se terminó el tiempo!',
+            'puntajeFinal' => $puntajeFinal
+        ];
+
+        echo $this->renderer->render('gameOver', $data);
+    }
+
+    private function obtenerDificultad($puntaje)
+    {
+        if ($puntaje < 5) {
+            return 0;
+        }
+
+        if ($puntaje < 10) {
+            return 1;
+        }
+
+        return 2;
     }
 
     private function obtenerIcono($nombre)
