@@ -139,6 +139,8 @@ function dibujarRuleta(angulo) {
             ctx.rotate(anguloMedio);
             ctx.globalAlpha = 0.5;
             const iconSize = 76;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(icono, radio * 0.55 - iconSize / 2, -iconSize / 2, iconSize, iconSize);
             ctx.globalAlpha = 1;
             ctx.restore();

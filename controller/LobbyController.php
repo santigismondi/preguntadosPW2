@@ -63,4 +63,13 @@ class LobbyController
     {
         return (new ConfigParser())->get('baseUrl', '');
     }
+
+    public function reiniciar()
+    {
+        $_SESSION['puntaje'] = 0;
+        $_SESSION['preguntas_respondidas'] = [];
+
+        header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+        exit;
+    }
 }

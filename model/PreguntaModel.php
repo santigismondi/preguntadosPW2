@@ -79,4 +79,13 @@ class PreguntaModel
 
         return $this->database->execute($sql, [$usuarioId, $puntaje]);
     }
+
+    public function reportarPregunta($preguntaId, $usuarioId, $motivo)
+    {
+        $sql = "INSERT INTO REPORTE_PREGUNTA (pregunta_id, usuario_id, motivo)
+            VALUES (?, ?, ?)";
+
+        return $this->database->execute($sql, [$preguntaId, $usuarioId, $motivo]);
+    }
+
 }

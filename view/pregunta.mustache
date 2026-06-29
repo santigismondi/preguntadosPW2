@@ -6,11 +6,10 @@
 
         <header class="pregunta-header">
             <div class="categoria-titulo">
-                <img src="{{iconoCategoria}}"
-                     alt="{{nombreCategoria}}"
-                     class="categoria-icono">
+                <img src="{{iconoCategoria}}" alt="{{nombreCategoria}}" class="categoria-icono">
                 <h1>{{nombreCategoria}}</h1>
             </div>
+
             <div class="puntaje-badge">
                 <span class="puntaje-estrella">⭐</span>
                 <span class="puntaje-numero">{{puntaje}}</span>
@@ -34,16 +33,69 @@
             {{/opciones}}
         </div>
 
+        <div class="reporte-container">
+            <button type="button"
+                    class="btn-reportar-pregunta"
+                    onclick="reportarPregunta()">
+                🚩 Reportar pregunta
+            </button>
+
+            <p id="mensajeReporte" class="mensaje-reporte"></p>
+        </div>
+
     </section>
+
+    <div id="modalReporte" class="modal-reporte">
+        <div class="modal-reporte-contenido">
+            <h3>Reportar pregunta</h3>
+            <p>Contanos por qué esta pregunta debería ser revisada.</p>
+
+            <textarea id="motivoReporte"
+                      placeholder="Ejemplo: la respuesta correcta está mal, la pregunta está repetida, etc."></textarea>
+
+            <div class="modal-reporte-acciones">
+                <button type="button" onclick="cerrarModalReporte()" class="btn-modal-cancelar">
+                    Cancelar
+                </button>
+
+                <button type="button" onclick="enviarReportePregunta()" class="btn-modal-enviar">
+                    Enviar reporte
+                </button>
+            </div>
+        </div>
+    </div>
 
 </main>
 
 <script>
     let respondido = false;
+    let reportando = false;
+    let redirectTimeout = null;
+    let tiempoRestante = 10;
+    let intervalo = null;
+
+    const timer = document.getElementById('timer');
+
+    intervalo = setInterval(function () {
+        if (respondido) {
+            clearInterval(intervalo);
+            return;
+        }
+
+        tiempoRestante--;
+        timer.textContent = tiempoRestante;
+
+        if (tiempoRestante <= 0) {
+            clearInterval(intervalo);
+            window.location.href = '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
+        }
+    }, 1000);
 
     function responder(boton, opcionId) {
         if (respondido) return;
+
         respondido = true;
+        clearInterval(intervalo);
 
         const botones = document.querySelectorAll('.respuesta-btn');
         botones.forEach(b => b.disabled = true);
@@ -65,41 +117,72 @@
                 boton.classList.add('respuesta-correcta');
             } else {
                 boton.classList.add('respuesta-incorrecta');
+
                 if (correctaBtn) {
                     correctaBtn.classList.add('respuesta-correcta');
                 }
             }
 
-            setTimeout(function() {
-                window.location.href = data.redirect;
-            }, 1500);
+            document.querySelector('.reporte-container').style.display = 'block';
+
+            redirectTimeout = setTimeout(function () {
+                if (!reportando) {
+                    window.location.href = data.redirect;
+                }
+            }, 2500);
         });
     }
-</script>
 
-<script>
-    let tiempoRestante = 10;
+    function reportarPregunta() {
+        reportando = true;
+        clearTimeout(redirectTimeout);
 
-    const timer = document.getElementById('timer');
+        document.getElementById('modalReporte').classList.add('modal-reporte-activo');
+    }
 
-    const intervalo = setInterval(() => {
+    function cerrarModalReporte() {
+        reportando = false;
 
-        if (respondido) {
-            clearInterval(intervalo);
-            return;
-        }
+        document.getElementById('modalReporte').classList.remove('modal-reporte-activo');
 
-        tiempoRestante--;
-        timer.textContent = tiempoRestante;
+        redirectTimeout = setTimeout(function () {
+            window.location.href = '{{baseUrl}}/lobby/ver';
+        }, 200);
+    }
 
-        if (tiempoRestante <= 0) {
-            clearInterval(intervalo);
+    function enviarReportePregunta() {
+        const motivo = document.getElementById('motivoReporte').value;
 
-            window.location.href =
-                    '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
-        }
+        const datos = new FormData();
+        datos.append('pregunta_id', '{{preguntaId}}');
+        datos.append('motivo', motivo.trim() || 'Pregunta reportada por el usuario');
 
-    }, 1000);
+        fetch('index.php?controller=pregunta&method=reportar', {
+            method: 'POST',
+            body: datos
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.ok) {
+                document.querySelector('.modal-reporte-contenido').innerHTML = `
+                    <div class="modal-reporte-exito">
+                        <div class="icono-reporte-exito">✅</div>
+                        <h3>¡Reporte enviado!</h3>
+                        <p>
+                            Gracias por ayudarnos a mejorar el juego.<br>
+                            Estaremos revisando esta pregunta.
+                        </p>
+                    </div>
+                `;
+
+                setTimeout(function () {
+                    window.location.href = '{{baseUrl}}/lobby/reiniciar';
+                }, 2500);
+            } else {
+                document.getElementById('mensajeReporte').textContent = data.mensaje;
+            }
+        });
+    }
 </script>
 
 {{>footer}}
