@@ -121,7 +121,7 @@ class PreguntaModel
 
         if($porcentaje >= 0.70){
             $dificultad = 0;
-        }elseif($porcentaje >= 0.40){
+        }elseif($porcentaje >= 0.30){
             $dificultad = 1;
         }else{
             $dificultad = 2;
