@@ -77,6 +77,7 @@ class UsuarioController
                 }
             }
 
+
             // 3. Control estricto del resultado de la subida física
             if (!move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $dir_destino . $foto_perfil)) {
                 Log::error("UsuarioController::registrar - Falló move_uploaded_file a: " . $dir_destino . $foto_perfil);
