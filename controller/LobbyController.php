@@ -16,10 +16,7 @@ class LobbyController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            header('Location: ' . $this->getBaseUrl() . '/usuario/login');
-            return;
-        }
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;

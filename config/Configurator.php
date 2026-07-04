@@ -22,6 +22,11 @@ class Configurator {
         return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
     }
 
+    public function getReporteController()
+    {
+        return new ReporteController($this->getReporteModel(), $this->getRenderer(), new Request());
+    }
+
     private function getLobbyModel()
     {
         return new LobbyModel($this->getDatabase());
@@ -30,6 +35,11 @@ class Configurator {
     private function getPreguntaModel()
     {
         return new PreguntaModel($this->getDatabase());
+    }
+
+    private function getReporteModel()
+    {
+        return new UsuarioReportModel($this->getDatabase());
     }
 
     private function getUsuarioModel()

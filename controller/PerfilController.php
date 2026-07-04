@@ -15,10 +15,7 @@ class PerfilController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            Redirect::to($this->getBaseUrl() . '/usuario/login');
-            return;
-        }
+        Access::allow('reports.view');
 
         $usuarioId = $this->request->get('id') ?: $_SESSION['usuario_id'];
 
