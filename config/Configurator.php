@@ -22,6 +22,11 @@ class Configurator {
         return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
     }
 
+    public function getAdminController()
+    {
+        return new AdminController($this->getRenderer(), new Request());
+    }
+
     public function getReporteController()
     {
         return new ReporteController($this->getReporteModel(), $this->getRenderer(), new Request());

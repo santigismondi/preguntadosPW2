@@ -4,20 +4,12 @@
 
     <section class="pregunta-container">
 
-        <header class="pregunta-header">
-            <div class="categoria-titulo">
-                <img src="{{iconoCategoria}}"
-                     alt="{{nombreCategoria}}"
-                     class="categoria-icono">
-                <h1>{{nombreCategoria}}</h1>
+        <div class="pregunta-meta">
+            <div class="pregunta-meta-badge">
+                <span>⭐ <strong class="puntaje-numero">{{puntaje}}</strong></span>
+                <span>⏱ <strong id="timer" class="puntaje-numero">10</strong></span>
             </div>
-            <div class="puntaje-badge">
-                <span class="puntaje-estrella">⭐</span>
-                <span class="puntaje-numero">{{puntaje}}</span>
-                <span class="ms-3">⏱</span>
-                <span id="timer" class="puntaje-numero">10</span>
-            </div>
-        </header>
+        </div>
 
         <article class="pregunta-card">
             <h2>{{textoPregunta}}</h2>

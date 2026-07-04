@@ -15,17 +15,18 @@ class PerfilController
 
     public function ver()
     {
-        Access::allow('reports.view');
+        Access::allow('profile.view');
 
         $usuarioId = $this->request->get('id') ?: $_SESSION['usuario_id'];
 
         $usuario = $this->model->getUsuario($usuarioId);
-        $usuario['localidad'] = $this->resolverLocalidad($usuario['coordenadas_ciudad']);
 
         if ($usuario === null) {
             Redirect::to($this->getBaseUrl() . '/lobby/ver');
             return;
         }
+
+        $usuario['localidad'] = $this->resolverLocalidad($usuario['coordenadas_ciudad']);
 
         $urlPerfil = $this->getUrlPerfil($usuario['id']);
         
@@ -33,6 +34,17 @@ class PerfilController
 
         echo $this->renderer->render('perfil', [
             'titulo' => 'Preguntados Mundial - Perfil',
+            'showAppHeader' => true,
+            'headerVariant' => 'perfil',
+            'headerSurfaceStyle' => 'background: radial-gradient(circle at top left, rgba(245, 197, 24, 0.18), transparent 28%), radial-gradient(circle at bottom right, rgba(192, 57, 43, 0.22), transparent 30%), linear-gradient(135deg, rgba(11, 18, 32, 0.96), rgba(27, 38, 58, 0.94) 55%, rgba(56, 25, 33, 0.95));',
+            'showPageTitle' => true,
+            'headerPageTitle' => 'Mi Perfil',
+            'showBackToLobby' => true,
+            'backToLobbyUrl' => $this->getBaseUrl() . '/lobby/ver',
+            'showLogoutButton' => true,
+            'logoutUrl' => $this->getBaseUrl() . '/usuario/logout',
+            'showAdminButton' => $this->isAdmin(),
+            'adminUrl' => $this->getBaseUrl() . '/admin/dashboard',
             'usuario' => $usuario,
             'puntajeMaximo' => $this->model->getPuntajeMaximo($usuarioId),
             'cantidadPartidas' => $this->model->getCantidadPartidas($usuarioId),
@@ -81,5 +93,10 @@ class PerfilController
             ?? $data['address']['village']
             ?? $data['address']['state']
             ?? 'Ubicación no disponible';
+    }
+
+    private function isAdmin()
+    {
+        return isset($_SESSION['rol']) && strtolower((string) $_SESSION['rol']) === 'administrador';
     }
 }
