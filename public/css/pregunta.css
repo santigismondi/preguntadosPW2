@@ -74,7 +74,7 @@
     padding: 10px 18px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.38);
-    color: white;
+    color: var(--badge-contrast);
     font-weight: 800;
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
@@ -83,6 +83,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    color: var(--badge-contrast);
 }
 
 @media (max-width: 576px){
@@ -136,4 +137,5 @@
 
 .puntaje-numero {
     font-size: 1.2rem;
+    color: inherit;
 }

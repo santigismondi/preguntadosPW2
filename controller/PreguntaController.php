@@ -44,6 +44,7 @@ class PreguntaController
             'showCategoryBadge' => true,
             'headerCategoryName' => $categoria['nombre'],
             'headerCategoryColor' => $categoria['color'],
+            'headerCategoryContrastColor' => $this->getContrastingColor($categoria['color']),
             'headerCategoryIcon' => $this->obtenerIcono($categoria['nombre']),
             'showQuestionMeta' => true,
             'colorCategoria'  => $categoria['color'],
@@ -165,5 +166,21 @@ class PreguntaController
     private function getBaseUrl()
     {
         return (new ConfigParser())->get('baseUrl', '');
+    }
+
+    private function getContrastingColor($hexColor)
+    {
+        $hexColor = ltrim(trim((string) $hexColor), '#');
+        if (!preg_match('/^[0-9a-fA-F]{6}$/', $hexColor)) {
+            return '#F8E7A0';
+        }
+
+        $r = hexdec(substr($hexColor, 0, 2));
+        $g = hexdec(substr($hexColor, 2, 2));
+        $b = hexdec(substr($hexColor, 4, 2));
+
+        $luminance = (0.299 * $r) + (0.587 * $g) + (0.114 * $b);
+
+        return $luminance > 160 ? '#1F2937' : '#F8E7A0';
     }
 }
