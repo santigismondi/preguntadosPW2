@@ -24,11 +24,9 @@ class PreguntaController
             $_SESSION['puntaje'] = 0;
         }
 
-        $puntaje = $_SESSION['puntaje'];
-        $dificultad = $this->obtenerDificultad($puntaje);
-
+        $nivelJugador = $this->obtenerNivelJugador($_SESSION['puntaje']);
         $categoria = $this->model->getCategoria($categoriaId);
-        $pregunta = $this->model->getPreguntaRandom($categoriaId, $dificultad);
+        $pregunta = $this->model->getPreguntaRandom($categoriaId, $nivelJugador);
 
         if (!$pregunta || !$categoria) {
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
@@ -67,6 +65,7 @@ class PreguntaController
         }
 
         $esCorrecta = $this->model->esRespuestaCorrecta($opcionId);
+        $this->model->actualizarEstadisticasPregunta($preguntaId, $esCorrecta);
         $correctaId = $this->model->getOpcionCorrectaId($preguntaId);
 
         if ($esCorrecta) {
@@ -116,20 +115,18 @@ class PreguntaController
         echo $this->renderer->render('gameOver', $data);
     }
 
-    private function obtenerDificultad($puntaje)
+    private function obtenerNivelJugador($puntaje)
     {
         if ($puntaje < 5) {
             return 0;
         }
-
         if ($puntaje < 10) {
             return 1;
         }
-
         return 2;
     }
 
-    private function obtenerIcono($nombre)
+            private function obtenerIcono($nombre)
     {
 
         $nombre = strtolower($nombre);
