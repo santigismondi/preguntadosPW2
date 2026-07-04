@@ -30,6 +30,8 @@ class PerfilController
         }
 
         $urlPerfil = $this->getUrlPerfil($usuario['id']);
+        
+        $usuario['foto_perfil'] = !empty($usuario['foto_perfil']) ? $usuario['foto_perfil'] : 'default.png';
 
         echo $this->renderer->render('perfil', [
             'titulo' => 'Preguntados Mundial - Perfil',
