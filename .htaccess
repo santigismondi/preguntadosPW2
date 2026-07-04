@@ -22,33 +22,22 @@ Options -Indexes
 # El browser nunca sabe que existe index.php.
 # ══════════════════════════════════════════════════════
 <IfModule mod_rewrite.c>
-    # Activa el motor de reescritura.
-    RewriteEngine On
+# Activa el motor de reescritura.
+RewriteEngine On
 
-    # Raíz desde donde se aplican las reglas (relativo al DocumentRoot).
-    # Si el proyecto no está en la raíz de htdocs, cambiar a /nombre-carpeta/
+# Raíz desde donde se aplican las reglas (relativo al DocumentRoot).
+# Si el proyecto no está en la raíz de htdocs, cambiar a /nombre-carpeta/
 #    RewriteBase /
 
-    # ── CONDICIONES ── (aplican a las dos reglas de abajo)
-    # Solo reescribir si la URL NO es un archivo real en disco.
-    # Ej: /css/estilo.css NO se reescribe porque el archivo existe.
-    RewriteCond %{REQUEST_FILENAME} !-f
+# ── EXCEPCIONES ── No reescribir archivos y directorios reales
+# Solo reescribir si la URL NO es un archivo real en disco.
+RewriteCond %{REQUEST_FILENAME} !-f
+# Solo reescribir si la URL NO es un directorio real en disco.
+RewriteCond %{REQUEST_FILENAME} !-d
 
-    # Solo reescribir si la URL NO es un directorio real en disco.
-    RewriteCond %{REQUEST_FILENAME} !-d
+# ── REGLA 1: /controller/method ──────────────────────
+RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
 
-    # ── REGLA 1: /controller/method ──────────────────────
-    # ^([^/]+)/([^/]+)$  →  captura dos segmentos separados por /
-    #   $1 = primer segmento  (controller)
-    #   $2 = segundo segmento (method)
-    # [L]   = Last: si esta regla coincide, no evaluar las siguientes.
-    # [QSA] = Query String Append: conserva parámetros adicionales.
-    #   /vikingo/editar?id=5 llega como controller=vikingo&method=editar&id=5
-    RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
-
-    # ── REGLA 2: /controller (sin method) ────────────────
-    # Si solo viene el controller, el router usa el método default ('ver').
-    RewriteRule ^([^/]+)$         index.php?controller=$1           [L,QSA]
-
-    RewriteRule ^(public)($|/) - [L,NC]
+# ── REGLA 2: /controller (sin method) ────────────────
+RewriteRule ^([^/]+)$         index.php?controller=$1           [L,QSA]
 </IfModule>

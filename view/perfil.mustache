@@ -7,7 +7,7 @@
 
         <div class="perfil-header">
             <img src="{{baseUrl}}/public/img/usuarios/{{usuario.foto_perfil}}"
-                 onerror="if(this.src !== '{{baseUrl}}/public/img/usuarios/default.png') this.src='{{baseUrl}}/public/img/usuarios/default.png'; else this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22200%22 height=%22200%22/%3E%3Ccircle cx=%22100%22 cy=%2270%22 r=%2240%22 fill=%22%23999%22/%3E%3Crect x=%2260%22 y=%22130%22 width=%2280%22 height=%2270%22 fill=%22%23999%22/%3E%3C/svg%3E'"
+                 onerror="this.src='{{baseUrl}}/public/img/usuarios/default.png'; if(this.complete) this.onerror=null;"
                  alt="Foto de perfil"
                  class="perfil-foto">
 
