@@ -84,4 +84,9 @@ class Configurator {
     {
         return new PerfilModel($this->getDatabase());
     }
+
+    public function getAdminController()
+    {
+        return new AdminController($this->getRenderer());
+    }
 }

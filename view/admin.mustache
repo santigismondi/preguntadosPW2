@@ -1,0 +1,315 @@
+{{>header}}
+
+<main class="admin-page">
+    <section class="admin-container">
+
+        <div class="admin-header">
+            <div>
+                <h1>Panel de Administrador</h1>
+                <p>Resumen general de jugadores, partidas, preguntas y reportes.</p>
+            </div>
+
+            <button class="btn-print" onclick="window.print()">
+                🖨️ Imprimir reporte
+            </button>
+        </div>
+
+        <form class="admin-filtros">
+            <label>
+                Filtrar por período
+                <select name="periodo">
+                    <option value="dia">Día</option>
+                    <option value="semana">Semana</option>
+                    <option value="mes" selected>Mes</option>
+                    <option value="anio">Año</option>
+                </select>
+            </label>
+
+            <button type="submit">Aplicar filtro</button>
+        </form>
+
+        <section class="admin-stats">
+            <article class="stat-card">
+                <span>Jugadores</span>
+                <strong>{{totalJugadores}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Partidas jugadas</span>
+                <strong>{{totalPartidas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Preguntas en juego</span>
+                <strong>{{totalPreguntas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Preguntas creadas</span>
+                <strong>{{preguntasCreadas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Usuarios nuevos</span>
+                <strong>{{usuariosNuevos}}</strong>
+            </article>
+        </section>
+
+        <section class="admin-grid">
+            <article class="admin-card">
+                <h2>Preguntas correctas por usuario</h2>
+                <div class="chart-placeholder">
+                    <span>Gráfico de barras</span>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Correctas</th>
+                        <th>Total</th>
+                        <th>Porcentaje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#correctasPorUsuario}}
+                        <tr>
+                            <td>{{usuario}}</td>
+                            <td>{{correctas}}</td>
+                            <td>{{total}}</td>
+                            <td>{{porcentaje}}%</td>
+                        </tr>
+                    {{/correctasPorUsuario}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por país</h2>
+                <div class="chart-placeholder">
+                    <span>Gráfico circular</span>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>País</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorPais}}
+                        <tr>
+                            <td>{{pais}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorPais}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por sexo</h2>
+                <div class="chart-placeholder">
+                    <span>Gráfico circular</span>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Sexo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorSexo}}
+                        <tr>
+                            <td>{{sexo}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorSexo}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por grupo de edad</h2>
+                <div class="chart-placeholder">
+                    <span>Gráfico de barras</span>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Grupo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorEdad}}
+                        <tr>
+                            <td>{{grupo}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorEdad}}
+                    </tbody>
+                </table>
+            </article>
+            <section class="admin-card admin-reportes-preguntas">
+                <div class="admin-card-header">
+                    <div>
+                        <h2>Reportes de preguntas</h2>
+                        <p>Preguntas reportadas por usuarios para revisión del administrador.</p>
+                    </div>
+
+                    <select name="estadoReporte">
+                        <option value="todos">Todos</option>
+                        <option value="pendientes">Pendientes</option>
+                        <option value="revisados">Revisados</option>
+                    </select>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Pregunta</th>
+                        <th>Categoría</th>
+                        <th>Reportes</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#reportesPreguntas}}
+                        <tr>
+                            <td>{{pregunta}}</td>
+                            <td>{{categoria}}</td>
+                            <td>{{cantidadReportes}}</td>
+                            <td>{{motivo}}</td>
+                            <td>
+                <span class="estado-reporte {{estadoClase}}">
+                    {{estado}}
+                </span>
+                            </td>
+                            <td class="acciones-reporte">
+                                <button
+                                        type="button"
+                                        class="btn-ver"
+                                        onclick="abrirModalReporte(
+                                                '{{id}}',
+                                                '{{pregunta}}',
+                                                '{{categoria}}',
+                                                '{{estado}}',
+                                                [
+                                                {texto: 'Argentina', correcta: true},
+                                                {texto: 'Brasil', correcta: false},
+                                                {texto: 'Alemania', correcta: false},
+                                                {texto: 'Francia', correcta: false}
+                                                ],
+                                                [
+                                                {usuario: 'joaco', motivo: 'La respuesta correcta está mal'},
+                                                {usuario: 'nacho', motivo: 'La pregunta está mal redactada'},
+                                                {usuario: 'mora', motivo: 'Tiene un error histórico'}
+                                                ]
+                                                )">
+                                    Ver
+                                </button>
+                                <button class="btn-revisada">Revisada</button>
+                                <button class="btn-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    {{/reportesPreguntas}}
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+    </section>
+</main>
+<div class="modal-reporte" id="modalReporte">
+    <div class="modal-reporte-content">
+        <button class="modal-close" onclick="cerrarModalReporte()">×</button>
+
+        <span class="admin-badge">Reporte de pregunta</span>
+
+        <h2 id="modalPregunta">Pregunta reportada</h2>
+
+        <div class="modal-info">
+            <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
+            <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+        </div>
+        <h3 class="modal-subtitle">Opciones de respuesta</h3>
+        <div class="modal-opciones-lista" id="modalOpcionesLista"></div>
+
+        <h3 class="modal-subtitle">Usuarios que reportaron</h3>
+
+        <div class="modal-reportes-lista" id="modalReportesLista"></div>
+
+        <div class="modal-actions">
+            <a id="btnGestionarPregunta" class="btn-gestionar" href="#">
+                Gestionar pregunta
+            </a>
+            <button class="btn-revisada">Marcar revisada</button>
+            <button class="btn-danger">Eliminar pregunta</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModalReporte(id, pregunta, categoria, estado, opciones, reportes) {
+        document.getElementById('modalPregunta').textContent = pregunta;
+        document.getElementById('modalCategoria').textContent = categoria;
+        document.getElementById('modalEstado').textContent = estado;
+
+        document.getElementById('btnGestionarPregunta').href =
+                '{{baseUrl}}/index.php?controller=admin&method=editarPregunta&id=' + id;
+
+        const contenedorOpciones = document.getElementById('modalOpcionesLista');
+        contenedorOpciones.innerHTML = '';
+
+        opciones.forEach(function(opcion) {
+            const item = document.createElement('div');
+            item.classList.add('modal-opcion-item');
+
+            if (opcion.correcta) {
+                item.classList.add('opcion-correcta');
+            }
+
+            item.innerHTML = `
+                <span>${opcion.texto}</span>
+                ${opcion.correcta ? '<strong>Correcta</strong>' : ''}
+            `;
+
+            contenedorOpciones.appendChild(item);
+        });
+
+        const contenedorReportes = document.getElementById('modalReportesLista');
+        contenedorReportes.innerHTML = '';
+
+        reportes.forEach(function(reporte) {
+            const item = document.createElement('div');
+            item.classList.add('modal-reporte-item');
+
+            item.innerHTML = `
+                <strong>${reporte.usuario}</strong>
+                <p>${reporte.motivo}</p>
+            `;
+
+            contenedorReportes.appendChild(item);
+        });
+
+        document.getElementById('modalReporte').classList.add('show');
+    }
+
+    function cerrarModalReporte() {
+        document.getElementById('modalReporte').classList.remove('show');
+    }
+
+    document.getElementById('modalReporte').addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarModalReporte();
+        }
+    });
+</script>
+{{>footer}}
