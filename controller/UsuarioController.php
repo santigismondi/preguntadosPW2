@@ -59,19 +59,39 @@ class UsuarioController
             echo $this->renderer->render("registro", ['error' => 'El nombre de usuario ya está en uso.']);
             return;
         }
- 
+
         $foto_perfil = 'default.png';
         if (!empty($_FILES['foto_perfil']['name'])) {
             $extension   = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
             $foto_perfil = uniqid() . '.' . $extension;
-            move_uploaded_file($_FILES['foto_perfil']['tmp_name'], __DIR__ . '/../img/usuarios/' . $foto_perfil);
+
+            // 1. Definimos la ruta absoluta apuntando correctamente al directorio público
+            $dir_destino = __DIR__ . '/../public/img/usuarios/';
+
+            // 2. Programación defensiva: si el directorio no existe, lo creamos dinámicamente
+            if (!is_dir($dir_destino)) {
+                if (!mkdir($dir_destino, 0777, true)) {
+                    Log::error("UsuarioController::registrar - No se pudo crear el directorio: $dir_destino");
+                    echo $this->renderer->render("registro", ['error' => 'Error interno del servidor al procesar la imagen.']);
+                    return;
+                }
+            }
+
+
+            // 3. Control estricto del resultado de la subida física
+            if (!move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $dir_destino . $foto_perfil)) {
+                Log::error("UsuarioController::registrar - Falló move_uploaded_file a: " . $dir_destino . $foto_perfil);
+                echo $this->renderer->render("registro", ['error' => 'No se pudo guardar la foto de perfil de manera segura.']);
+                return;
+            }
         }
- 
+
+        // Si la foto se subió con éxito (o quedó la default), recién ahí procedemos a la persistencia
         $hash = password_hash($contrasena, PASSWORD_DEFAULT);
         $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil);
- 
-        Log::info("UsuarioController::registrar - registrado: $nombre_usuario");
-        Redirect::to('{{baseUrl}}/index.php?controller=usuario&method=login');
+
+        Log::info("UsuarioController::registrar - registrado exitosamente: $nombre_usuario");
+        Redirect::to($this->getBaseUrl() . '/usuario/login');
     }
  
     public function procesarLogin()
@@ -93,26 +113,23 @@ class UsuarioController
             return;
         }
  
-        session_start();
         $_SESSION['usuario_id'] = $usuario['id'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
         $_SESSION['rol'] = $usuario['rol'] ?? 'jugador';
 
-        //var_dump($_SESSION);
-        //var_dump($usuario);
-        //exit();
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        $config = parse_ini_file("config/config.ini");
-        $baseUrl = $config["baseUrl"] ?? "";
-
-        Redirect::to($baseUrl . "/index.php?controller=lobby&method=ver");
+        Redirect::to($this->getBaseUrl() . "/lobby/ver");
     }
  
     public function logout()
     {
-        session_start();
         session_destroy();
         Log::info("UsuarioController::logout");
-        Redirect::to('/usuario/login');
+        Redirect::to($this->getBaseUrl() . '/usuario/login');
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }

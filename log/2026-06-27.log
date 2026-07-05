@@ -1,0 +1,49 @@
+[18:12:05] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach00]
+[18:12:05] [INFO] UsuarioController::procesarLogin - login exitoso id=8
+[18:31:17] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach00]
+[18:31:17] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: nach00
+[18:31:23] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach00]
+[18:31:23] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: nach00
+[18:31:50] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [nacho, na00, na00@gmail.com]
+[18:31:50] [INFO] UsuarioController::registrar - registrado: na00
+[18:31:55] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [na00]
+[18:31:55] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[23:17:37] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach00]
+[23:17:37] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: nach00
+[23:17:43] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [na00]
+[23:17:43] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[23:18:48] [INFO] UsuarioController::logout
+[23:19:29] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho1, nacho1@gmail.com]
+[23:19:29] [INFO] UsuarioController::registrar - registrado: Nacho1
+[23:19:34] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho1]
+[23:19:34] [INFO] UsuarioController::procesarLogin - login exitoso id=2
+[23:19:56] [INFO] UsuarioController::logout
+[23:20:03] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [na00]
+[23:20:03] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: na00
+[23:20:08] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [na00]
+[23:20:08] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: na00
+[23:20:11] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [na00]
+[23:20:11] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[23:21:23] [INFO] UsuarioController::logout

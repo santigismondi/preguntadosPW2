@@ -16,7 +16,7 @@ class PreguntaController
         $categoriaId = isset($_GET['categoria_id']) ? $_GET['categoria_id'] : null;
 
         if (!$categoriaId) {
-            header('Location: /preguntadospw2/lobby/ver');
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
             return;
         }
 
@@ -24,11 +24,12 @@ class PreguntaController
             $_SESSION['puntaje'] = 0;
         }
 
+        $nivelJugador = $this->obtenerNivelJugador($_SESSION['puntaje']);
         $categoria = $this->model->getCategoria($categoriaId);
-        $pregunta = $this->model->getPreguntaRandom($categoriaId);
+        $pregunta = $this->model->getPreguntaRandom($categoriaId, $nivelJugador);
 
         if (!$pregunta || !$categoria) {
-            header('Location: /preguntadospw2/lobby/ver');
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
             return;
         }
 
@@ -36,7 +37,16 @@ class PreguntaController
 
         $data = [
             'titulo'          => 'Preguntados Mundial - Pregunta',
-            'cssExtra'        => '/preguntadosPW2/css/pregunta.css',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/pregunta.css',
+            'showAppHeader'   => true,
+            'headerVariant'   => 'pregunta',
+            'headerSurfaceStyle' => 'background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10)), ' . $categoria['color'] . ';',
+            'showCategoryBadge' => true,
+            'headerCategoryName' => $categoria['nombre'],
+            'headerCategoryColor' => $categoria['color'],
+            'headerCategoryContrastColor' => $this->getContrastingColor($categoria['color']),
+            'headerCategoryIcon' => $this->obtenerIcono($categoria['nombre']),
+            'showQuestionMeta' => true,
             'colorCategoria'  => $categoria['color'],
             'nombreCategoria' => $categoria['nombre'],
             'iconoCategoria'  => $this->obtenerIcono($categoria['nombre']),
@@ -64,6 +74,7 @@ class PreguntaController
         }
 
         $esCorrecta = $this->model->esRespuestaCorrecta($opcionId);
+        $this->model->actualizarEstadisticasPregunta($preguntaId, $esCorrecta);
         $correctaId = $this->model->getOpcionCorrectaId($preguntaId);
 
         if ($esCorrecta) {
@@ -72,10 +83,14 @@ class PreguntaController
                 'correcta' => true,
                 'correctaId' => $correctaId,
                 'puntaje' => $_SESSION['puntaje'],
-                'redirect' => '/preguntadospw2/lobby/ver'
+                'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         } else {
             $puntajeFinal = $_SESSION['puntaje'];
+            $this->model->registrarPartida(
+                $_SESSION['usuario_id'],
+                $puntajeFinal
+            );
             $_SESSION['puntaje'] = 0;
             $_SESSION['partida_terminada'] = true;
             $_SESSION['puntaje_final'] = $puntajeFinal;
@@ -85,34 +100,87 @@ class PreguntaController
                 'correcta' => false,
                 'correctaId' => $correctaId,
                 'puntaje' => $puntajeFinal,
-                'redirect' => '/preguntadospw2/lobby/ver'
+                'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         }
     }
 
-    private function obtenerIcono($nombre)
+    public function timeout()
     {
+        $puntajeFinal = $_SESSION['puntaje'] ?? 0;
+
+        $this->model->registrarPartida(
+            $_SESSION['usuario_id'],
+            $puntajeFinal
+        );
+
+        $_SESSION['puntaje'] = 0;
+
+        $data = [
+            'error' => '¡Se terminó el tiempo!',
+            'puntajeFinal' => $puntajeFinal
+        ];
+
+        echo $this->renderer->render('gameOver', $data);
+    }
+
+    private function obtenerNivelJugador($puntaje)
+    {
+        if ($puntaje < 5) {
+            return 0;
+        }
+        if ($puntaje < 10) {
+            return 1;
+        }
+        return 2;
+    }
+
+            private function obtenerIcono($nombre)
+    {
+
         $nombre = strtolower($nombre);
+        $baseUrl = $this->getBaseUrl();
 
         if (strpos($nombre, 'grupo') !== false || strpos($nombre, 'fase') !== false) {
-            return "/img/iconos/fase.png";
+            return $baseUrl . "/public/img/iconos/fase.png";
         }
         if (strpos($nombre, 'estadio') !== false) {
-            return "/img/iconos/estadios.png";
+            return $baseUrl . "/public/img/iconos/estadios.png";
         }
         if (strpos($nombre, 'jugador') !== false) {
-            return "/img/iconos/jugadores.png";
+            return $baseUrl . "/public/img/iconos/jugadores.png";
         }
         if (strpos($nombre, 'seleccion') !== false || strpos($nombre, 'selección') !== false) {
-            return "/img/iconos/selecciones.png";
+            return $baseUrl . "/public/img/iconos/selecciones.png";
         }
         if (strpos($nombre, 'historia') !== false) {
-            return "/img/iconos/historia.png";
+            return $baseUrl . "/public/img/iconos/historia.png";
         }
         if (strpos($nombre, 'record') !== false || strpos($nombre, 'estad') !== false) {
-            return "/img/iconos/estadisticas.png";
+            return $baseUrl . "/public/img/iconos/estadisticas.png";
         }
 
-        return "/img/iconos/fase.png";
+        return $baseUrl . "/public/img/iconos/fase.png";
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
+    }
+
+    private function getContrastingColor($hexColor)
+    {
+        $hexColor = ltrim(trim((string) $hexColor), '#');
+        if (!preg_match('/^[0-9a-fA-F]{6}$/', $hexColor)) {
+            return '#F8E7A0';
+        }
+
+        $r = hexdec(substr($hexColor, 0, 2));
+        $g = hexdec(substr($hexColor, 2, 2));
+        $b = hexdec(substr($hexColor, 4, 2));
+
+        $luminance = (0.299 * $r) + (0.587 * $g) + (0.114 * $b);
+
+        return $luminance > 160 ? '#1F2937' : '#F8E7A0';
     }
 }

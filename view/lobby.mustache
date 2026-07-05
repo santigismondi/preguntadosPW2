@@ -8,6 +8,10 @@
 
     <div class="puntaje-display">⭐ Puntaje: {{puntaje}}</div>
 
+    <div class="alert alert-warning text-center mb-3">
+        🏆 Mejor puntaje: <strong>{{puntajeMaximo}}</strong>
+    </div>
+
     {{#partidaTerminada}}
     <div class="modal-gameover" id="modalGameover">
         <div class="modal-contenido">
@@ -30,11 +34,6 @@
 
     <div class="resultado" id="resultado"></div>
 
-    <div class="logout">
-        <a href="{{baseUrl}}/usuario/logout">Cerrar sesión</a>
-    </div>
-</div>
-
 <script>
 const categorias = [
     {{#categorias}}
@@ -51,24 +50,24 @@ function obtenerIconoCategoria(nombre) {
     nombre = nombre.toLowerCase();
 
     if (nombre.includes("grupo") || nombre.includes("fase")) {
-        return "{{baseUrl}}/img/iconos/fase.png";
+        return "{{baseUrl}}/public/img/iconos/fase.png";
     }
     if (nombre.includes("estadio")) {
-        return "{{baseUrl}}/img/iconos/estadios.png";
+        return "{{baseUrl}}/public/img/iconos/estadios.png";
     }
     if (nombre.includes("jugador")) {
-        return "{{baseUrl}}/img/iconos/jugadores.png";
+        return "{{baseUrl}}/public/img/iconos/jugadores.png";
     }
     if (nombre.includes("seleccion") || nombre.includes("selección")) {
-        return "{{baseUrl}}/img/iconos/selecciones.png";
+        return "{{baseUrl}}/public/img/iconos/selecciones.png";
     }
     if (nombre.includes("historia")) {
-        return "{{baseUrl}}/img/iconos/historia.png";
+        return "{{baseUrl}}/public/img/iconos/historia.png";
     }
     if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
-        return "{{baseUrl}}/img/iconos/estadisticas.png";
+        return "{{baseUrl}}/public/img/iconos/estadisticas.png";
     }
-    return "{{baseUrl}}/img/iconos/fase.png";
+    return "{{baseUrl}}/public/img/iconos/fase.png";
 }
 
 const canvas = document.getElementById('ruleta');

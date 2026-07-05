@@ -4,21 +4,12 @@ class Configurator {
 
     public function __construct()
     {
-        $this->config = parse_ini_file(__DIR__ . '/config.ini');
+        $this->config = (new ConfigParser())->all();
     }
 
     public function getUsuarioController()
     {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
-    }
-
-    public function getJuegoController()
-    {
-        return new JuegoController(
-            $this->getPreguntaModel(),
-            $this->getRenderer(),
-            new Request()
-        );
     }
 
     public function getLobbyController()
@@ -31,6 +22,16 @@ class Configurator {
         return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
     }
 
+    public function getAdminController()
+    {
+        return new AdminController($this->getRenderer(), new Request());
+    }
+
+    public function getReporteController()
+    {
+        return new ReporteController($this->getReporteModel(), $this->getRenderer(), new Request());
+    }
+
     private function getLobbyModel()
     {
         return new LobbyModel($this->getDatabase());
@@ -39,6 +40,11 @@ class Configurator {
     private function getPreguntaModel()
     {
         return new PreguntaModel($this->getDatabase());
+    }
+
+    private function getReporteModel()
+    {
+        return new UsuarioReportModel($this->getDatabase());
     }
 
     private function getUsuarioModel()
@@ -82,5 +88,15 @@ class Configurator {
         }
         $defaultGetter = 'get' . ucfirst($defaultControllerName) . 'Controller';
         return $this->{$defaultGetter}();
+    }
+
+        public function getPerfilController()
+    {
+        return new PerfilController($this->getPerfilModel(), $this->getRenderer(), new Request());
+    }
+
+        private function getPerfilModel()
+    {
+        return new PerfilModel($this->getDatabase());
     }
 }

@@ -6,6 +6,7 @@ class LobbyController
     private $request;
     private $model;
 
+
     public function __construct($model, $renderer, $request)
     {
         $this->renderer = $renderer;
@@ -15,10 +16,7 @@ class LobbyController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            header('Location: /usuario/login');
-            return;
-        }
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
@@ -29,6 +27,9 @@ class LobbyController
         $partidaTerminada = false;
         $puntajeFinal = 0;
         $respuestaCorrecta = '';
+        $puntajeMaximo = $this->model->getPuntajeMaximo(
+            $_SESSION['usuario_id']
+        );
 
         if (isset($_SESSION['partida_terminada']) && $_SESSION['partida_terminada']) {
             $partidaTerminada = true;
@@ -42,15 +43,30 @@ class LobbyController
 
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
-            'cssExtra'           => '/preguntadosPW2/css/lobby.css',
+            'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
+            'showAppHeader'      => true,
+            'headerVariant'      => 'lobby',
+            'showAppBrand'       => true,
+            'headerLogo'         => $this->getBaseUrl() . '/public/img/logo.png',
+            'headerTitle'        => 'Preguntados Mundial',
+            'headerBrandUrl'     => $this->getBaseUrl() . '/lobby/ver',
+            'showProfileButton'  => true,
+            'profileButtonUrl'   => $this->getBaseUrl() . '/perfil/ver',
+            'profileButtonLabel' => $_SESSION['nombre_usuario'],
             'categorias'         => $categorias,
             'puntaje'            => $_SESSION['puntaje'],
             'partidaTerminada'   => $partidaTerminada,
             'puntajeFinal'       => $puntajeFinal,
-            'respuestaCorrecta'  => $respuestaCorrecta
+            'respuestaCorrecta'  => $respuestaCorrecta,
+            'puntajeMaximo' => $puntajeMaximo
         ];
 
         echo $this->renderer->render("lobby", $data);
+    }
+
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get('baseUrl', '');
     }
 }

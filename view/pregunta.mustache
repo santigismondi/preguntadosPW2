@@ -4,18 +4,12 @@
 
     <section class="pregunta-container">
 
-        <header class="pregunta-header">
-            <div class="categoria-titulo">
-                <img src="{{baseUrl}}{{iconoCategoria}}"
-                     alt="{{nombreCategoria}}"
-                     class="categoria-icono">
-                <h1>{{nombreCategoria}}</h1>
+        <div class="pregunta-meta">
+            <div class="pregunta-meta-badge" style="--badge-contrast: {{headerCategoryContrastColor}}; color: {{headerCategoryContrastColor}};">
+                <span style="color: {{headerCategoryContrastColor}};">⭐ <strong class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">{{puntaje}}</strong></span>
+                <span style="color: {{headerCategoryContrastColor}};">⏱ <strong id="timer" class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">10</strong></span>
             </div>
-            <div class="puntaje-badge">
-                <span class="puntaje-estrella">⭐</span>
-                <span class="puntaje-numero">{{puntaje}}</span>
-            </div>
-        </header>
+        </div>
 
         <article class="pregunta-card">
             <h2>{{textoPregunta}}</h2>
@@ -73,6 +67,31 @@
             }, 1500);
         });
     }
+</script>
+
+<script>
+    let tiempoRestante = 10;
+
+    const timer = document.getElementById('timer');
+
+    const intervalo = setInterval(() => {
+
+        if (respondido) {
+            clearInterval(intervalo);
+            return;
+        }
+
+        tiempoRestante--;
+        timer.textContent = tiempoRestante;
+
+        if (tiempoRestante <= 0) {
+            clearInterval(intervalo);
+
+            window.location.href =
+                    '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
+        }
+
+    }, 1000);
 </script>
 
 {{>footer}}
