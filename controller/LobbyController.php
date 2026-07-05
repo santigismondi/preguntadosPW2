@@ -16,10 +16,7 @@ class LobbyController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            header('Location: ' . $this->getBaseUrl() . '/usuario/login');
-            return;
-        }
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
@@ -48,6 +45,15 @@ class LobbyController
             'titulo'             => 'Preguntados Mundial - Lobby',
             'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
+            'showAppHeader'      => true,
+            'headerVariant'      => 'lobby',
+            'showAppBrand'       => true,
+            'headerLogo'         => $this->getBaseUrl() . '/public/img/logo.png',
+            'headerTitle'        => 'Preguntados Mundial',
+            'headerBrandUrl'     => $this->getBaseUrl() . '/lobby/ver',
+            'showProfileButton'  => true,
+            'profileButtonUrl'   => $this->getBaseUrl() . '/perfil/ver',
+            'profileButtonLabel' => $_SESSION['nombre_usuario'],
             'categorias'         => $categorias,
             'puntaje'            => $_SESSION['puntaje'],
             'partidaTerminada'   => $partidaTerminada,
