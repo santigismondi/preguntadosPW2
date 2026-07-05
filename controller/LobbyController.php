@@ -41,6 +41,8 @@ class LobbyController
             unset($_SESSION['respuesta_correcta']);
         }
 
+        $posicionRanking = $this->model->getPosicionRanking($_SESSION["usuario_id"]);
+
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
             'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
@@ -59,7 +61,8 @@ class LobbyController
             'partidaTerminada'   => $partidaTerminada,
             'puntajeFinal'       => $puntajeFinal,
             'respuestaCorrecta'  => $respuestaCorrecta,
-            'puntajeMaximo' => $puntajeMaximo
+            'puntajeMaximo' => $puntajeMaximo,
+            'posicionRanking' => $posicionRanking
         ];
 
         echo $this->renderer->render("lobby", $data);

@@ -21,7 +21,19 @@ class PreguntaModel
             return $resultado[0];
         }
 
-        return null;
+        //Esta linea lo que hace es que al empezar a jugar si no hay preguntas con dificultad aun cargadas
+        //Llama a cualquier pregunta disponible.
+
+        $sql = "SELECT id,texto,categoria_id
+            FROM PREGUNTA
+            WHERE categoria_id=?
+            AND estado='aprobada'
+            ORDER BY RAND()
+            LIMIT 1";
+
+        $resultado = $this->database->query($sql, [$categoriaId]);
+
+        return !empty($resultado) ? $resultado[0] : null;
     }
 
     public function getOpciones($preguntaId)
