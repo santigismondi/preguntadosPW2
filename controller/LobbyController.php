@@ -50,7 +50,7 @@ class LobbyController
             'showAppHeader'      => true,
             'headerVariant'      => 'lobby',
             'showAppBrand'       => true,
-            'headerLogo'         => $this->getBaseUrl() . 'public/img/logo.png',
+            'headerLogo'         => $this->getBaseUrl() . '/public/img/logo.png',
             'headerTitle'        => 'Preguntados Mundial',
             'headerBrandUrl'     => $this->getBaseUrl() . '/lobby/ver',
             'showProfileButton'  => true,
