@@ -37,7 +37,7 @@ class PreguntaController
 
         $data = [
             'titulo'          => 'Preguntados Mundial - Pregunta',
-            'cssExtra'        => $this->getBaseUrl() . 'public/css/pregunta.css',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/pregunta.css',
             'showAppHeader'   => true,
             'headerVariant'   => 'pregunta',
             'headerSurfaceStyle' => 'background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10)), ' . $categoria['color'] . ';',
