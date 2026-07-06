@@ -12,6 +12,9 @@ class Configurator {
         return new UsuarioController($this->getUsuarioModel(), $this->getRenderer(), new Request());
     }
 
+    public function getRankingController(){
+        return new RankingController($this->getRankingModel(), $this->getRenderer(), new Request());
+    }
     public function getLobbyController()
     {
         return new LobbyController($this->getLobbyModel(), $this->getRenderer(), new Request());
@@ -32,6 +35,9 @@ class Configurator {
         return new ReporteController($this->getReporteModel(), $this->getRenderer(), new Request());
     }
 
+    private function getRankingModel(){
+        return new RankingModel($this->getDatabase());
+    }
     private function getLobbyModel()
     {
         return new LobbyModel($this->getDatabase());

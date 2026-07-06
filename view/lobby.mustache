@@ -12,6 +12,20 @@
         🏆 Mejor puntaje: <strong>{{puntajeMaximo}}</strong>
     </div>
 
+    <div class="alert alert-info text-center mb-3">
+        🏆 Ranking global
+        <br>
+
+        Tu posición:
+        <strong>#{{posicionRanking}}</strong>
+
+        <br><br>
+
+        <a href="{{baseUrl}}/ranking/ver" class="btn btn-warning">
+            Ver ranking completo
+        </a>
+    </div>
+
     {{#partidaTerminada}}
     <div class="modal-gameover" id="modalGameover">
         <div class="modal-contenido">

@@ -1,0 +1,54 @@
+{{>header}}
+
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4">
+        🏆 Ranking Global
+    </h1>
+
+    <table class="table table-striped">
+
+        <thead>
+
+        <tr>
+            <th>Posición</th>
+            <th>Jugador</th>
+            <th>Mejor puntaje</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {{#ranking}}
+
+            <tr>
+
+                <td>#{{posicion}}</td>
+
+                <td>{{nombre_usuario}}</td>
+
+                <td>{{mejor_puntaje}}</td>
+
+            </tr>
+
+        {{/ranking}}
+
+        </tbody>
+
+    </table>
+
+    <div class="text-center">
+
+        <a href="{{baseUrl}}/lobby/ver"
+           class="btn btn-primary">
+
+            Volver
+
+        </a>
+
+    </div>
+
+</div>
+
+{{>footer}}
