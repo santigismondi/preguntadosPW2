@@ -142,25 +142,25 @@ class PreguntaController
         $baseUrl = $this->getBaseUrl();
 
         if (strpos($nombre, 'grupo') !== false || strpos($nombre, 'fase') !== false) {
-            return $baseUrl . "public/img/iconos/fase.png";
+            return $baseUrl . "/public/img/iconos/fase.png";
         }
         if (strpos($nombre, 'estadio') !== false) {
-            return $baseUrl . "public/img/iconos/estadios.png";
+            return $baseUrl . "/public/img/iconos/estadios.png";
         }
         if (strpos($nombre, 'jugador') !== false) {
-            return $baseUrl . "public/img/iconos/jugadores.png";
+            return $baseUrl . "/public/img/iconos/jugadores.png";
         }
         if (strpos($nombre, 'seleccion') !== false || strpos($nombre, 'selección') !== false) {
-            return $baseUrl . "public/img/iconos/selecciones.png";
+            return $baseUrl . "/public/img/iconos/selecciones.png";
         }
         if (strpos($nombre, 'historia') !== false) {
-            return $baseUrl . "public/img/iconos/historia.png";
+            return $baseUrl . "/public/img/iconos/historia.png";
         }
         if (strpos($nombre, 'record') !== false || strpos($nombre, 'estad') !== false) {
-            return $baseUrl . "public/img/iconos/estadisticas.png";
+            return $baseUrl . "/public/img/iconos/estadisticas.png";
         }
 
-        return $baseUrl . "public/img/iconos/fase.png";
+        return $baseUrl . "/public/img/iconos/fase.png";
     }
 
     private function getBaseUrl()

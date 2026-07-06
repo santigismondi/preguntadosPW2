@@ -45,7 +45,7 @@ class LobbyController
 
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
-            'cssExtra'           => $this->getBaseUrl() . 'public/css/lobby.css',
+            'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
             'showAppHeader'      => true,
             'headerVariant'      => 'lobby',
