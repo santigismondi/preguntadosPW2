@@ -51,6 +51,7 @@ class PreguntaController
             'nombreCategoria' => $categoria['nombre'],
             'iconoCategoria'  => $this->obtenerIcono($categoria['nombre']),
             'textoPregunta'   => $pregunta['texto'],
+            'preguntaTexto'   => $pregunta['texto'],
             'preguntaId'      => $pregunta['id'],
             'categoriaId'     => $categoriaId,
             'puntaje'         => $_SESSION['puntaje'],
