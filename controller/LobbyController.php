@@ -45,12 +45,12 @@ class LobbyController
 
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
-            'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
+            'cssExtra'           => $this->getBaseUrl() . 'public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
             'showAppHeader'      => true,
             'headerVariant'      => 'lobby',
             'showAppBrand'       => true,
-            'headerLogo'         => $this->getBaseUrl() . '/public/img/logo.png',
+            'headerLogo'         => $this->getBaseUrl() . 'public/img/logo.png',
             'headerTitle'        => 'Preguntados Mundial',
             'headerBrandUrl'     => $this->getBaseUrl() . '/lobby/ver',
             'showProfileButton'  => true,

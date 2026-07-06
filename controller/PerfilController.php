@@ -50,7 +50,7 @@ class PerfilController
             'cantidadPartidas' => $this->model->getCantidadPartidas($usuarioId),
             'partidas' => $this->model->getPartidas($usuarioId),
             'qrUrl' => 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' . urlencode($urlPerfil),
-            'cssExtra' => $this->getBaseUrl() . '/public/css/perfil.css',
+            'cssExtra' => $this->getBaseUrl() . 'public/css/perfil.css',
             'baseUrl' => $this->getBaseUrl(),
         ]);
     }

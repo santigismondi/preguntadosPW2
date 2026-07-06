@@ -37,7 +37,7 @@ class PreguntaController
 
         $data = [
             'titulo'          => 'Preguntados Mundial - Pregunta',
-            'cssExtra'        => $this->getBaseUrl() . '/public/css/pregunta.css',
+            'cssExtra'        => $this->getBaseUrl() . 'public/css/pregunta.css',
             'showAppHeader'   => true,
             'headerVariant'   => 'pregunta',
             'headerSurfaceStyle' => 'background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10)), ' . $categoria['color'] . ';',
@@ -142,25 +142,25 @@ class PreguntaController
         $baseUrl = $this->getBaseUrl();
 
         if (strpos($nombre, 'grupo') !== false || strpos($nombre, 'fase') !== false) {
-            return $baseUrl . "/public/img/iconos/fase.png";
+            return $baseUrl . "public/img/iconos/fase.png";
         }
         if (strpos($nombre, 'estadio') !== false) {
-            return $baseUrl . "/public/img/iconos/estadios.png";
+            return $baseUrl . "public/img/iconos/estadios.png";
         }
         if (strpos($nombre, 'jugador') !== false) {
-            return $baseUrl . "/public/img/iconos/jugadores.png";
+            return $baseUrl . "public/img/iconos/jugadores.png";
         }
         if (strpos($nombre, 'seleccion') !== false || strpos($nombre, 'selección') !== false) {
-            return $baseUrl . "/public/img/iconos/selecciones.png";
+            return $baseUrl . "public/img/iconos/selecciones.png";
         }
         if (strpos($nombre, 'historia') !== false) {
-            return $baseUrl . "/public/img/iconos/historia.png";
+            return $baseUrl . "public/img/iconos/historia.png";
         }
         if (strpos($nombre, 'record') !== false || strpos($nombre, 'estad') !== false) {
-            return $baseUrl . "/public/img/iconos/estadisticas.png";
+            return $baseUrl . "public/img/iconos/estadisticas.png";
         }
 
-        return $baseUrl . "/public/img/iconos/fase.png";
+        return $baseUrl . "public/img/iconos/fase.png";
     }
 
     private function getBaseUrl()

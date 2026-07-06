@@ -29,7 +29,7 @@ class RankingController {
             "titulo"=>"Ranking",
             "ranking"=>$ranking,
             "baseUrl"=>$this->getBaseUrl(),
-             "cssExtra" => $this->getBaseUrl() . "/public/css/lobby.css"
+             "cssExtra" => $this->getBaseUrl() . "public/css/lobby.css"
         ]);
     }
 
