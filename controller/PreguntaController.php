@@ -125,6 +125,52 @@ class PreguntaController
         echo $this->renderer->render('gameOver', $data);
     }
 
+    public function proponer()
+{
+    Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+
+    $data = [
+        'titulo'        => 'Proponer pregunta',
+        'cssExtra'      => $this->getBaseUrl() . '/public/css/lobby.css',
+        'showAppHeader' => true,
+        'headerVariant' => 'lobby',
+        'categorias'    => $this->model->getCategorias(),
+        'mensaje'       => $_SESSION['mensaje_pregunta'] ?? null
+    ];
+
+    unset($_SESSION['mensaje_pregunta']);
+
+    echo $this->renderer->render("proponerPregunta", $data);
+}
+
+    public function guardarPropuesta()
+    {
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+
+        $texto = trim($_POST['texto'] ?? '');
+        $categoriaId = $_POST['categoria_id'] ?? null;
+
+        $opciones = [
+            trim($_POST['opcion_1'] ?? ''),
+            trim($_POST['opcion_2'] ?? ''),
+            trim($_POST['opcion_3'] ?? ''),
+            trim($_POST['opcion_4'] ?? '')
+        ];
+
+        $correctaIndex = isset($_POST['correcta']) ? (int) $_POST['correcta'] : null;
+
+        if ($texto === '' || !$categoriaId || in_array('', $opciones, true) || $correctaIndex === null) {
+            $_SESSION['mensaje_pregunta'] = 'Completá todos los campos antes de enviar.';
+            header('Location: ' . $this->getBaseUrl() . '/pregunta/proponer');
+            return;
+        }
+
+        $this->model->crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex);
+
+        $_SESSION['mensaje_pregunta'] = '¡Pregunta enviada! Quedó pendiente de aprobación.';
+        header('Location: ' . $this->getBaseUrl() . '/pregunta/proponer');
+    }
+
     private function obtenerNivelJugador($puntaje)
     {
         if ($puntaje < 5) {

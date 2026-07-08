@@ -201,3 +201,29 @@ body {
 .contenido-ruleta {
     gap: 0.5rem;
 }
+
+.form-pregunta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.form-pregunta input,
+.form-pregunta select {
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+}
+
+.form-pregunta label {
+    color: white;
+    font-weight: bold;
+}
+
+.acciones-lobby {
+    gap: 1rem;
+    flex-wrap: wrap;
+}
