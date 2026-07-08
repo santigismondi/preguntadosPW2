@@ -2,3 +2,18 @@
                 LEFT JOIN ROL r ON r.usuario_id = u.id
                 WHERE u.nombre_usuario = ? [mora04]
 [03:25:05] [INFO] UsuarioController::procesarLogin - login exitoso id=3
+[03:47:06] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[03:47:06] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: mora04
+[03:47:15] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[03:47:15] [WARNING] UsuarioController::procesarLogin - credenciales invalidas: admin
+[03:48:02] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [mora, mora04, moracicero@gmail.com]
+[03:48:02] [INFO] UsuarioController::registrar - registrado exitosamente: mora04
+[03:48:10] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[03:48:10] [INFO] UsuarioController::procesarLogin - login exitoso id=1
