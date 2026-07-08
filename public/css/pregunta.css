@@ -28,10 +28,12 @@
 
 .pregunta-card h2{
     margin: 0;
-    color: #555;
-    font-size: 1.55rem;
-    font-weight: 500;
+    color: #1f2937;
+    font-size: 1.6rem;
+    font-weight: 700;
     line-height: 1.35;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .respuestas-container{
