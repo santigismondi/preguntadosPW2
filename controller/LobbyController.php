@@ -67,6 +67,29 @@ class LobbyController
 
         echo $this->renderer->render("lobby", $data);
     }
+    public function jugar()
+    {
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+
+        if (!isset($_SESSION['puntaje'])) {
+            $_SESSION['puntaje'] = 0;
+        }
+
+        $data = [
+            'titulo'          => 'Preguntados Mundial - Ruleta',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/lobby.css',
+            'showAppHeader'   => true,
+            'headerVariant'   => 'lobby',
+            'showBackToLobby' => true,
+            'backToLobbyUrl'  => $this->getBaseUrl() . '/lobby/ver',
+            'showPageTitle'   => true,
+            'headerPageTitle' => 'Lobby',
+            'categorias'      => $this->model->getCategorias(),
+            'puntaje'         => $_SESSION['puntaje']
+        ];
+
+        echo $this->renderer->render("ruleta", $data);
+    }
 
     private function getBaseUrl()
     {

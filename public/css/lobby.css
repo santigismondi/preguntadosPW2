@@ -171,3 +171,33 @@ body {
     border-radius: 10px;
     margin-bottom: 1.5rem;
 }
+.acciones-lobby {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.btn-jugar {
+    display: inline-block;
+    padding: 1rem 4rem;
+    font-size: 1.35rem;
+    font-weight: bold;
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-jugar:hover {
+    background-color: #e74c3c;
+    color: white;
+    transform: scale(1.05);
+}
+
+.contenido-ruleta {
+    gap: 0.5rem;
+}

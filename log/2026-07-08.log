@@ -17,3 +17,16 @@
                 LEFT JOIN ROL r ON r.usuario_id = u.id
                 WHERE u.nombre_usuario = ? [mora04]
 [03:48:10] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[04:00:14] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[04:00:14] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[04:04:05] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[04:04:05] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[04:04:10] [INFO] UsuarioController::logout
+[04:04:17] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[04:04:17] [INFO] UsuarioController::procesarLogin - login exitoso id=1
