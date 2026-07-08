@@ -227,3 +227,14 @@ body {
     gap: 1rem;
     flex-wrap: wrap;
 }
+
+.link-jugador {
+    font-weight: bold;
+    text-decoration: none;
+    color: #c0392b;
+}
+
+.link-jugador:hover {
+    color: #e74c3c;
+    text-decoration: underline;
+}
