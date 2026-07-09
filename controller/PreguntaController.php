@@ -33,12 +33,21 @@ class PreguntaController
         $pregunta = $this->model->getPreguntaRandom($categoriaId, $nivelJugador);
             if ($pregunta) {$_SESSION['pregunta_actual'] =
                 ['id' => $pregunta['id'],
-                'categoria' => $categoriaId];
+                'categoria' => $categoriaId,
+                'inicio' => microtime(true)];
             }
         }
 
         if (!$pregunta || !$categoria) {
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+            return;
+        }
+
+        $transcurrido = microtime(true) - $_SESSION['pregunta_actual']['inicio'];
+        $tiempoRestante = max(0, ceil(10 - $transcurrido));
+
+        if ($tiempoRestante <= 0) {
+            $this->timeout();
             return;
         }
 
@@ -64,6 +73,7 @@ class PreguntaController
             'preguntaId'      => $pregunta['id'],
             'categoriaId'     => $categoriaId,
             'puntaje'         => $_SESSION['puntaje'],
+            'tiempoRestante'  => $tiempoRestante,
             'opciones'        => $opciones
         ];
 

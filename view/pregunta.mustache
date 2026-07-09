@@ -7,7 +7,7 @@
         <div class="pregunta-meta">
             <div class="pregunta-meta-badge" style="--badge-contrast: {{headerCategoryContrastColor}}; color: {{headerCategoryContrastColor}};">
                 <span style="color: {{headerCategoryContrastColor}};">⭐ <strong class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">{{puntaje}}</strong></span>
-                <span style="color: {{headerCategoryContrastColor}};">⏱ <strong id="timer" class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">10</strong></span>
+                <span style="color: {{headerCategoryContrastColor}};">⏱ <strong id="timer" class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">{{tiempoRestante}}</strong></span>
             </div>
         </div>
 
@@ -70,7 +70,7 @@
 </script>
 
 <script>
-    let tiempoRestante = 10;
+    let tiempoRestante = Number({{tiempoRestante}});
 
     const timer = document.getElementById('timer');
 

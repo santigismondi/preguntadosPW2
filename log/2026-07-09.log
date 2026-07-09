@@ -2,3 +2,8 @@
                 LEFT JOIN ROL r ON r.usuario_id = u.id
                 WHERE u.nombre_usuario = ? [Nacho000]
 [15:44:06] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[16:19:50] [INFO] UsuarioController::logout
+[16:20:14] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho000]
+[16:20:14] [INFO] UsuarioController::procesarLogin - login exitoso id=1
