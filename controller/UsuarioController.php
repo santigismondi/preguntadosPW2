@@ -1,6 +1,8 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 require_once __DIR__ . '/../vendor/autoload.php'; // Asegurate de que la ruta al autoload sea correcta según la ubicación de tu controlador
 class UsuarioController
 {
@@ -28,7 +30,9 @@ class UsuarioController
             "titulo" => "Preguntados Mundial - Registro"
         ]);
     }
-    public function registrar(){
+
+    public function registrar()
+    {
         $nombre = $this->request->post('nombre');
         $nombre_usuario = $this->request->post('nombre_usuario');
         $email = $this->request->post('email');
@@ -36,35 +40,46 @@ class UsuarioController
         $genero = $this->request->post('genero');
         $contrasena = $this->request->post('contrasena');
         $confirmar_contrasena = $this->request->post('confirmar_contrasena');
-        $coordenadas_ciudad  = $this->request->post('coordenadas_ciudad') ?: '0,0';
+        $coordenadas_ciudad = $this->request->post('coordenadas_ciudad') ?: '0,0';
+
+        $datosIngresados = [
+            'nombre' => $nombre,
+            'nombre_usuario' => $nombre_usuario,
+            'email' => $email,
+            'fecha_nac' => $fecha_nac,
+            'genero' => $genero,
+        ];
 
         if (empty($nombre) || empty($nombre_usuario) || empty($email) || empty($fecha_nac) || empty($genero) || empty($contrasena)) {
             Log::warning("UsuarioController::registrar - campos vacios");
-                echo $this->renderer->render("registro", ['error' => 'Todos los campos son obligatorios.']);
+            $datosIngresados['error'] = 'Todos los campos son obligatorios.';
+            echo $this->renderer->render("registro", $datosIngresados);
             return;
         }
- 
         if ($contrasena !== $confirmar_contrasena) {
             Log::warning("UsuarioController::registrar - contrasenas no coinciden");
-            echo $this->renderer->render("registro", ['error' => 'Las contraseñas no coinciden.']);
+            $datosIngresados['error'] = 'Las contraseñas no coinciden.';
+            echo $this->renderer->render("registro", $datosIngresados);
             return;
         }
- 
+
         if ($this->model->existeEmail($email)) {
             Log::warning("UsuarioController::registrar - email ya existe: $email");
-            echo $this->renderer->render("registro", ['error' => 'El email ya está registrado.']);
+            $datosIngresados['error'] = 'El email ya está registrado.';
+            echo $this->renderer->render("registro", $datosIngresados);
             return;
         }
- 
+
         if ($this->model->existeNombreUsuario($nombre_usuario)) {
             Log::warning("UsuarioController::registrar - nombre_usuario ya existe: $nombre_usuario");
-            echo $this->renderer->render("registro", ['error' => 'El nombre de usuario ya está en uso.']);
+            $datosIngresados['error'] = 'El nombre de usuario ya está en uso.';
+            echo $this->renderer->render("registro", $datosIngresados);
             return;
         }
 
         $foto_perfil = 'default.png';
         if (!empty($_FILES['foto_perfil']['name'])) {
-            $extension   = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
+            $extension = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
             $foto_perfil = uniqid() . '.' . $extension;
 
             // 1. Definimos la ruta absoluta apuntando correctamente al directorio público
@@ -103,11 +118,11 @@ class UsuarioController
         try {
             // Configuración de Mailtrap
             $mail->isSMTP();
-            $mail->Host       = 'sandbox.smtp.mailtrap.io';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = (new ConfigParser())->get('mail_user', '13b6c5f52b7e9e');
-            $mail->Password   = (new ConfigParser())->get('mail_pass', 'c9041c1603f335');
-            $mail->Port       = 2525;
+            $mail->Host = 'sandbox.smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Username = (new ConfigParser())->get('mail_user', '13b6c5f52b7e9e');
+            $mail->Password = (new ConfigParser())->get('mail_pass', 'c9041c1603f335');
+            $mail->Port = 2525;
 
             $mail->setFrom('no-reply@preguntadosmundial.com', 'Preguntados Mundial');
             $mail->addAddress($email, $nombre);
@@ -159,19 +174,25 @@ class UsuarioController
     public function procesarLogin()
     {
         $nombre_usuario = $this->request->post('nombre_usuario');
-        $contrasena     = $this->request->post('contrasena');
- 
+        $contrasena = $this->request->post('contrasena');
+
         if (empty($nombre_usuario) || empty($contrasena)) {
             Log::warning("UsuarioController::procesarLogin - campos vacios");
             echo $this->renderer->render("login", ['error' => 'Completá todos los campos.']);
             return;
         }
- 
-        $usuario = $this->model->getUsuarioPorCredenciales($nombre_usuario, $contrasena);
- 
+
+        $usuario = $this->model->getUsuarioPorNombreUsuario($nombre_usuario);
+
         if ($usuario === null) {
             Log::warning("UsuarioController::procesarLogin - credenciales invalidas: $nombre_usuario");
             echo $this->renderer->render("login", ['error' => 'Usuario o contraseña incorrectos.']);
+            return;
+        }
+
+        if (!password_verify($contrasena, $usuario['contrasena'])) {
+            Log::warning("UsuarioController::procesarLogin - contrasena incorrecta para: $nombre_usuario");
+            echo $this->renderer->render("login", ['error' => 'La contraseña ingresada es incorrecta.']);
             return;
         }
 
@@ -188,7 +209,7 @@ class UsuarioController
         Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
         Redirect::to($this->getBaseUrl() . "/lobby/ver");
     }
- 
+
     public function logout()
     {
         session_destroy();

@@ -23,6 +23,18 @@
                 <p class="text-muted mb-0">Desafío 2026</p>
             </div>
 
+            {{#mensaje_exito}}
+                <div class="alert alert-success text-center py-2 fw-semibold">
+                    {{mensaje_exito}}
+                </div>
+            {{/mensaje_exito}}
+
+            {{#error}}
+                <div class="alert alert-danger text-center py-2 fw-semibold">
+                    {{error}}
+                </div>
+            {{/error}}
+
             <form action="{{baseUrl}}/usuario/procesarLogin" method="POST">
                 <div class="mb-3">
                     <label for="nombre_usuario" class="form-label fw-semibold">Usuario</label>

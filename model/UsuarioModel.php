@@ -11,20 +11,15 @@ class UsuarioModel
         $this->database = $database;
     }
 
-    public function getUsuarioPorCredenciales($nombre_usuario, $contrasena)
+    public function getUsuarioPorNombreUsuario($nombre_usuario)
     {
         $sql = "SELECT u.*, r.descripcion as rol FROM USUARIO u
                 LEFT JOIN ROL r ON r.usuario_id = u.id
                 WHERE u.nombre_usuario = ?";
         Log::info("SQL: $sql [$nombre_usuario]");
         $filas = $this->database->query($sql, [$nombre_usuario]);
-        if (!empty($filas)) {
-            $usuario = $filas[0];
-            if (password_verify($contrasena, $usuario['contrasena'])) {
-                return $usuario;
-            }
-        }
-        return null;
+
+        return !empty($filas) ? $filas[0] : null;
     }
 
     public function existeEmail($email)
