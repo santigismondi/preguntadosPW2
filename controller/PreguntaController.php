@@ -26,7 +26,16 @@ class PreguntaController
 
         $nivelJugador = $this->obtenerNivelJugador($_SESSION['puntaje']);
         $categoria = $this->model->getCategoria($categoriaId);
+
+        if (isset($_SESSION['pregunta_actual']) && $_SESSION['pregunta_actual']['categoria'] == $categoriaId) {
+            $pregunta = $this->model->getPreguntaPorId($_SESSION['pregunta_actual']['id']);
+        } else {
         $pregunta = $this->model->getPreguntaRandom($categoriaId, $nivelJugador);
+            if ($pregunta) {$_SESSION['pregunta_actual'] =
+                ['id' => $pregunta['id'],
+                'categoria' => $categoriaId];
+            }
+        }
 
         if (!$pregunta || !$categoria) {
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
@@ -79,6 +88,7 @@ class PreguntaController
         $correctaId = $this->model->getOpcionCorrectaId($preguntaId);
 
         if ($esCorrecta) {
+            unset($_SESSION['pregunta_actual']);
             $_SESSION['puntaje']++;
             echo json_encode([
                 'correcta' => true,
@@ -87,6 +97,7 @@ class PreguntaController
                 'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
         } else {
+            unset($_SESSION['pregunta_actual']);
             $puntajeFinal = $_SESSION['puntaje'];
             $this->model->registrarPartida(
                 $_SESSION['usuario_id'],
@@ -106,8 +117,9 @@ class PreguntaController
         }
     }
 
-    public function timeout()
-    {
+    public function timeout() {
+        unset($_SESSION['pregunta_actual']);
+
         $puntajeFinal = $_SESSION['puntaje'] ?? 0;
 
         $this->model->registrarPartida(

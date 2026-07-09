@@ -8,7 +8,13 @@ class PreguntaModel
     {
         $this->database = $database;
     }
+    public function getPreguntaPorId($preguntaId){
+        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE id = ?";
 
+        $resultado = $this->database->query($sql, [$preguntaId]);
+
+        return !empty($resultado) ? $resultado[0] : null;
+    }
     public function getPreguntaRandom($categoriaId, $nivelJugador)
     {
         $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND dificultad = ? AND estado = 'aprobada'
