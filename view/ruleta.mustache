@@ -2,192 +2,317 @@
 
 <div class="overlay"></div>
 
-<div class="contenido contenido-ruleta">
-    <h1 class="titulo">🎲 Ruleta de categorías</h1>
-    <p class="bienvenida">Girá la ruleta para elegir tu categoría.</p>
+<main class="contenido contenido-ruleta ruleta-page">
 
-    <div class="puntaje-display">⭐ Puntaje: {{puntaje}}</div>
+    <section class="page-card ruleta-card">
 
-    <div class="ruleta-wrapper">
-        <div class="flecha">▼</div>
-        <canvas id="ruleta" width="400" height="400"></canvas>
+        <div class="ruleta-header">
+            <span class="eyebrow">Categorías</span>
+
+            <h1 class="titulo">Ruleta de categorías</h1>
+
+            <p class="bienvenida">
+                Girá la ruleta y descubrí qué categoría te toca responder.
+            </p>
+        </div>
+
+        <div class="puntaje-display">
+            Puntaje actual:
+            <strong>{{puntaje}}</strong>
+        </div>
+
+        <div class="ruleta-wrapper">
+            <div class="flecha" aria-hidden="true">▼</div>
+
+            <canvas
+                id="ruleta"
+                width="400"
+                height="400"
+                aria-label="Ruleta de categorías">
+            </canvas>
+        </div>
+
+        <button
+            type="button"
+            class="btn-girar"
+            id="btnGirar"
+            onclick="girarRuleta()">
+
+            Girar ruleta
+        </button>
+
+        <div
+            class="resultado"
+            id="resultado"
+            aria-live="polite">
+        </div>
+
+    </section>
+
+</main>
+
+<div
+    class="category-popup"
+    id="categoryPopup"
+    aria-hidden="true">
+
+    <div class="category-popup__card">
+        <span>Categoría seleccionada</span>
+
+        <strong id="categoryPopupName"></strong>
+
+        <small>Preparando la pregunta...</small>
     </div>
 
-    <button class="btn-girar" id="btnGirar" onclick="girarRuleta()">
-        🎲 Girar ruleta
-    </button>
-
-    <div class="resultado" id="resultado"></div>
 </div>
 
 <script>
-const categorias = [
-    {{#categorias}}
-    {
-        id: "{{id}}",
-        nombre: "{{nombre}}",
-        color: "{{color}}",
-        icono: obtenerIconoCategoria("{{nombre}}")
-    },
-    {{/categorias}}
-];
+    const categorias = [
+        {{#categorias}}
+        {
+            id: "{{id}}",
+            nombre: "{{nombre}}",
+            color: "{{color}}",
+            icono: obtenerIconoCategoria("{{nombre}}")
+        },
+        {{/categorias}}
+    ];
 
-function obtenerIconoCategoria(nombre) {
-    nombre = nombre.toLowerCase();
+    function obtenerIconoCategoria(nombre) {
+        const nombreNormalizado = nombre.toLowerCase();
 
-    if (nombre.includes("grupo") || nombre.includes("fase")) {
+        if (
+            nombreNormalizado.includes("grupo") ||
+            nombreNormalizado.includes("fase")
+        ) {
+            return "{{baseUrl}}/public/img/iconos/fase.png";
+        }
+
+        if (nombreNormalizado.includes("estadio")) {
+            return "{{baseUrl}}/public/img/iconos/estadios.png";
+        }
+
+        if (nombreNormalizado.includes("jugador")) {
+            return "{{baseUrl}}/public/img/iconos/jugadores.png";
+        }
+
+        if (
+            nombreNormalizado.includes("seleccion") ||
+            nombreNormalizado.includes("selección")
+        ) {
+            return "{{baseUrl}}/public/img/iconos/selecciones.png";
+        }
+
+        if (nombreNormalizado.includes("historia")) {
+            return "{{baseUrl}}/public/img/iconos/historia.png";
+        }
+
+        if (
+            nombreNormalizado.includes("record") ||
+            nombreNormalizado.includes("récord") ||
+            nombreNormalizado.includes("estad")
+        ) {
+            return "{{baseUrl}}/public/img/iconos/estadisticas.png";
+        }
+
         return "{{baseUrl}}/public/img/iconos/fase.png";
     }
-    if (nombre.includes("estadio")) {
-        return "{{baseUrl}}/public/img/iconos/estadios.png";
-    }
-    if (nombre.includes("jugador")) {
-        return "{{baseUrl}}/public/img/iconos/jugadores.png";
-    }
-    if (nombre.includes("seleccion") || nombre.includes("selección")) {
-        return "{{baseUrl}}/public/img/iconos/selecciones.png";
-    }
-    if (nombre.includes("historia")) {
-        return "{{baseUrl}}/public/img/iconos/historia.png";
-    }
-    if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
-        return "{{baseUrl}}/public/img/iconos/estadisticas.png";
-    }
 
-    return "{{baseUrl}}/public/img/iconos/fase.png";
-}
+    const canvas = document.getElementById("ruleta");
+    const ctx = canvas.getContext("2d");
 
-const canvas = document.getElementById('ruleta');
-const ctx = canvas.getContext('2d');
-const cx = canvas.width / 2;
-const cy = canvas.height / 2;
-const radio = cx - 10;
+    const centroX = canvas.width / 2;
+    const centroY = canvas.height / 2;
+    const radio = centroX - 10;
 
-let anguloActual = 0;
-let girando = false;
+    const botonGirar = document.getElementById("btnGirar");
+    const resultado = document.getElementById("resultado");
+    const popup = document.getElementById("categoryPopup");
+    const popupNombre = document.getElementById("categoryPopupName");
 
-const iconosCategorias = {};
-let iconosCargados = 0;
+    let anguloActual = 0;
+    let girando = false;
 
-categorias.forEach(cat => {
-    const img = new Image();
-    img.src = cat.icono;
+    const iconosCategorias = {};
+    let iconosProcesados = 0;
 
-    img.onload = function () {
-        iconosCategorias[cat.id] = img;
-        iconosCargados++;
+    function terminarCargaIcono() {
+        iconosProcesados++;
 
-        if (iconosCargados === categorias.length) {
+        if (iconosProcesados === categorias.length) {
             dibujarRuleta(anguloActual);
         }
-    };
+    }
 
-    img.onerror = function () {
-        iconosCargados++;
+    if (categorias.length === 0) {
+        resultado.textContent = "No hay categorías disponibles.";
+        botonGirar.disabled = true;
+    } else {
+        categorias.forEach(function (categoria) {
+            const imagen = new Image();
 
-        if (iconosCargados === categorias.length) {
-            dibujarRuleta(anguloActual);
+            imagen.src = categoria.icono;
+
+            imagen.onload = function () {
+                iconosCategorias[categoria.id] = imagen;
+                terminarCargaIcono();
+            };
+
+            imagen.onerror = function () {
+                terminarCargaIcono();
+            };
+        });
+    }
+
+    function dibujarRuleta(angulo) {
+        if (categorias.length === 0) {
+            return;
         }
-    };
-});
 
-function dibujarRuleta(angulo) {
-    const total = categorias.length;
-    const slice = (2 * Math.PI) / total;
+        const totalCategorias = categorias.length;
+        const tamañoSector = (2 * Math.PI) / totalCategorias;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    categorias.forEach((cat, i) => {
-        const inicio = angulo + i * slice;
-        const fin = inicio + slice;
+        categorias.forEach(function (categoria, indice) {
+            const anguloInicio = angulo + indice * tamañoSector;
+            const anguloFin = anguloInicio + tamañoSector;
 
+            ctx.beginPath();
+            ctx.moveTo(centroX, centroY);
+            ctx.arc(
+                centroX,
+                centroY,
+                radio,
+                anguloInicio,
+                anguloFin
+            );
+            ctx.closePath();
+
+            ctx.fillStyle = categoria.color;
+            ctx.fill();
+
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const anguloMedio = anguloInicio + tamañoSector / 2;
+            const icono = iconosCategorias[categoria.id];
+
+            if (icono) {
+                ctx.save();
+
+                ctx.translate(centroX, centroY);
+                ctx.rotate(anguloMedio);
+
+                ctx.globalAlpha = 0.55;
+
+                const tamañoIcono = 76;
+
+                ctx.drawImage(
+                    icono,
+                    radio * 0.55 - tamañoIcono / 2,
+                    -tamañoIcono / 2,
+                    tamañoIcono,
+                    tamañoIcono
+                );
+
+                ctx.restore();
+            }
+        });
+
+        dibujarCentro();
+    }
+
+    function dibujarCentro() {
         ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, radio, inicio, fin);
-        ctx.closePath();
-
-        ctx.fillStyle = cat.color;
+        ctx.arc(centroX, centroY, 24, 0, 2 * Math.PI);
+        ctx.fillStyle = "#f8f8f8";
         ctx.fill();
 
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.25)";
+        ctx.lineWidth = 4;
         ctx.stroke();
+    }
 
-        const anguloMedio = inicio + slice / 2;
-        const icono = iconosCategorias[cat.id];
+    function mostrarPopup(categoria) {
+        popupNombre.textContent = categoria.nombre;
 
-        if (icono) {
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.rotate(anguloMedio);
-            ctx.globalAlpha = 0.5;
+        popup.classList.add("category-popup--visible");
+        popup.setAttribute("aria-hidden", "false");
+    }
 
-            const iconSize = 76;
-            ctx.drawImage(
-                icono,
-                radio * 0.55 - iconSize / 2,
-                -iconSize / 2,
-                iconSize,
-                iconSize
-            );
-
-            ctx.globalAlpha = 1;
-            ctx.restore();
+    function girarRuleta() {
+        if (girando || categorias.length === 0) {
+            return;
         }
-    });
-}
 
-function girarRuleta() {
-    if (girando) return;
+        girando = true;
+        botonGirar.disabled = true;
+        resultado.textContent = "";
 
-    girando = true;
+        popup.classList.remove("category-popup--visible");
+        popup.setAttribute("aria-hidden", "true");
 
-    const btn = document.getElementById('btnGirar');
-    btn.disabled = true;
+        const vueltasExtra =
+            (Math.random() * 4 + 6) * 2 * Math.PI;
 
-    document.getElementById('resultado').textContent = '';
+        const duracion = 4000;
+        const tiempoInicio = performance.now();
+        const anguloInicial = anguloActual;
 
-    const vueltasExtra = (Math.random() * 4 + 6) * 2 * Math.PI;
-    const duracion = 4000;
-    const inicio = performance.now();
-    const anguloInicio = anguloActual;
+        function animar(tiempoActual) {
+            const tiempoTranscurrido =
+                tiempoActual - tiempoInicio;
 
-    function animar(ahora) {
-        const transcurrido = ahora - inicio;
-        const progreso = Math.min(transcurrido / duracion, 1);
-        const ease = 1 - Math.pow(1 - progreso, 3);
+            const progreso =
+                Math.min(tiempoTranscurrido / duracion, 1);
 
-        anguloActual = anguloInicio + vueltasExtra * ease;
-        dibujarRuleta(anguloActual);
+            const desaceleracion =
+                1 - Math.pow(1 - progreso, 3);
 
-        if (progreso < 1) {
-            requestAnimationFrame(animar);
-        } else {
+            anguloActual =
+                anguloInicial + vueltasExtra * desaceleracion;
+
+            dibujarRuleta(anguloActual);
+
+            if (progreso < 1) {
+                requestAnimationFrame(animar);
+                return;
+            }
+
             girando = false;
-            btn.disabled = false;
 
-            const slice = (2 * Math.PI) / categorias.length;
-            const flechaAngulo = (3 * Math.PI) / 2;
+            const tamañoSector =
+                (2 * Math.PI) / categorias.length;
 
-            const angNorm = (
-                (flechaAngulo - anguloActual) % (2 * Math.PI) + 2 * Math.PI
+            const anguloFlecha =
+                (3 * Math.PI) / 2;
+
+            const anguloNormalizado = (
+                (anguloFlecha - anguloActual) %
+                (2 * Math.PI) +
+                2 * Math.PI
             ) % (2 * Math.PI);
 
-            const indice = Math.floor(angNorm / slice) % categorias.length;
-            const ganadora = categorias[indice];
+            const indiceGanador =
+                Math.floor(anguloNormalizado / tamañoSector) %
+                categorias.length;
 
-            document.getElementById('resultado').textContent =
-                '¡Te tocó: ' + ganadora.nombre + '!';
+            const ganadora =
+                categorias[indiceGanador];
+
+            mostrarPopup(ganadora);
 
             setTimeout(function () {
                 window.location.href =
-                    '{{baseUrl}}/pregunta/ver?categoria_id=' + ganadora.id;
-            }, 2000);
+                    "{{baseUrl}}/pregunta/ver?categoria_id=" +
+                    encodeURIComponent(ganadora.id);
+            }, 1800);
         }
-    }
 
-    requestAnimationFrame(animar);
-}
+        requestAnimationFrame(animar);
+    }
 </script>
 
 {{>footer}}

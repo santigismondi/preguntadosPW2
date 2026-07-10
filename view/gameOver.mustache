@@ -1,26 +1,27 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>¡Game Over! — Preguntados</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{baseUrl}}/public/css/gameOver.css">
-</head>
-<body>
+{{>header}}
 
-<div class="card-error">
-    <h1 class="display-4 text-danger fw-bold mb-3">❌ ¡Perdiste!</h1>
-    <p class="fs-5 mb-4">{{error}}</p>
+<div class="overlay"></div>
 
-    <div class="mb-4">
-        <p class="text-muted m-0">Tu puntaje total quedó en:</p>
-        <h3 class="text-warning fw-bold">{{puntajeFinal}} Puntos</h3>
-    </div>
+<main class="gameover-page">
+    <section class="gameover-card">
+        <span class="gameover-label">Partida finalizada</span>
 
-    <a href="{{baseUrl}}/lobby/ver" class="btn btn-danger btn-lg w-100 fw-bold py-3">
-        Volver al Lobby a girar
-    </a>
-</div>
+        <h1>No alcanzó esta vez</h1>
 
-</body>
-</html>
+        <p class="gameover-message">
+            {{error}}
+        </p>
+
+        <div class="gameover-score">
+            <span>Puntaje final</span>
+            <strong>{{puntajeFinal}}</strong>
+            <small>puntos</small>
+        </div>
+
+        <a href="{{baseUrl}}/lobby/ver" class="gameover-button">
+    Volver al lobby
+</a>
+    </section>
+</main>
+
+{{>footer}}

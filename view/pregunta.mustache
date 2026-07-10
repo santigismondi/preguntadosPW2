@@ -1,96 +1,280 @@
 {{>header}}
 
-<main class="pregunta-page" style="background-color: {{colorCategoria}};">
+<div class="overlay"></div>
 
-    <section class="pregunta-container">
+<main class="contenido pregunta-page">
 
-        <div class="pregunta-meta">
-            <div class="pregunta-meta-badge" style="--badge-contrast: {{headerCategoryContrastColor}}; color: {{headerCategoryContrastColor}};">
-                <span style="color: {{headerCategoryContrastColor}};">⭐ <strong class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">{{puntaje}}</strong></span>
-                <span style="color: {{headerCategoryContrastColor}};">⏱ <strong id="timer" class="puntaje-numero" style="color: {{headerCategoryContrastColor}};">{{tiempoRestante}}</strong></span>
+    <section
+        class="pregunta-shell"
+        style="--categoria-color: {{colorCategoria}};">
+
+        <div class="pregunta-top">
+
+            <div class="categoria-chip">
+                <img
+                    src="{{iconoCategoria}}"
+                    alt="{{nombreCategoria}}">
+
+                <div>
+                    <span>Categoría</span>
+                    <strong>{{nombreCategoria}}</strong>
+                </div>
             </div>
+
+            <div class="pregunta-meta">
+
+                <div class="meta-pill">
+                    <span>Puntaje</span>
+                    <strong>{{puntaje}}</strong>
+                </div>
+
+                <div class="meta-pill">
+                    <span>Tiempo</span>
+                    <strong id="timer">{{tiempoRestante}}</strong>
+                </div>
+
+            </div>
+
         </div>
 
         <article class="pregunta-card">
+            <span class="eyebrow">Pregunta</span>
             <h2>{{preguntaTexto}}</h2>
         </article>
 
         <div class="respuestas-container">
+
             {{#opciones}}
-                <button type="button"
-                        class="respuesta-btn"
-                        data-opcion-id="{{id}}"
-                        onclick="responder(this, '{{id}}')">
-                    {{texto}}
-                </button>
+            <button
+                type="button"
+                class="respuesta-btn"
+                data-opcion-id="{{id}}"
+                onclick="responder(this, '{{id}}')">
+
+                {{texto}}
+            </button>
             {{/opciones}}
+
         </div>
 
     </section>
 
 </main>
 
+<!-- Popup ubicado FUERA del script -->
+<div
+    class="answer-popup"
+    id="answerPopup"
+    aria-hidden="true">
+
+    <div
+        class="answer-popup__card"
+        id="answerPopupCard">
+
+        <span class="answer-popup__label">
+            Resultado
+        </span>
+
+        <strong id="answerPopupTitle"></strong>
+
+        <p id="answerPopupMessage"></p>
+
+    </div>
+
+</div>
+
 <script>
     let respondido = false;
+    let tiempoRestante = Number("{{tiempoRestante}}");
+
+    const timer = document.getElementById("timer");
+    const botonesRespuesta =
+        document.querySelectorAll(".respuesta-btn");
+
+    function mostrarResultado(esCorrecta) {
+        const popup =
+            document.getElementById("answerPopup");
+
+        const popupCard =
+            document.getElementById("answerPopupCard");
+
+        const popupTitle =
+            document.getElementById("answerPopupTitle");
+
+        const popupMessage =
+            document.getElementById("answerPopupMessage");
+
+        popupCard.classList.remove(
+            "answer-popup__card--correct",
+            "answer-popup__card--wrong"
+        );
+
+        if (esCorrecta) {
+            popupCard.classList.add(
+                "answer-popup__card--correct"
+            );
+
+            popupTitle.textContent =
+                "Respuesta correcta";
+
+            popupMessage.textContent =
+                "Sumaste un punto. Volvemos a la ruleta para continuar.";
+        } else {
+            popupCard.classList.add(
+                "answer-popup__card--wrong"
+            );
+
+            popupTitle.textContent =
+                "Respuesta incorrecta";
+
+            popupMessage.textContent =
+                "La partida terminó. Volvemos al lobby.";
+        }
+
+        popup.classList.add(
+            "answer-popup--visible"
+        );
+
+        popup.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+    }
 
     function responder(boton, opcionId) {
-        if (respondido) return;
-        respondido = true;
+        if (respondido) {
+            return;
+        }
 
-        const botones = document.querySelectorAll('.respuesta-btn');
-        botones.forEach(b => b.disabled = true);
+        respondido = true;
+        clearInterval(intervalo);
+
+        botonesRespuesta.forEach(function (botonRespuesta) {
+            botonRespuesta.disabled = true;
+        });
 
         const datos = new FormData();
-        datos.append('pregunta_id', '{{preguntaId}}');
-        datos.append('opcion_id', opcionId);
-        datos.append('categoria_id', '{{categoriaId}}');
 
-        fetch('index.php?controller=pregunta&method=verificar', {
-            method: 'POST',
-            body: datos
+        datos.append(
+            "pregunta_id",
+            "{{preguntaId}}"
+        );
+
+        datos.append(
+            "opcion_id",
+            opcionId
+        );
+
+        datos.append(
+            "categoria_id",
+            "{{categoriaId}}"
+        );
+
+        fetch(
+            "{{baseUrl}}/pregunta/verificar",
+            {
+                method: "POST",
+                body: datos
+            }
+        )
+        .then(function (respuesta) {
+            if (!respuesta.ok) {
+                throw new Error(
+                    "Error HTTP: " + respuesta.status
+                );
+            }
+
+            return respuesta.text();
         })
-        .then(r => r.json())
-        .then(data => {
-            const correctaBtn = document.querySelector('[data-opcion-id="' + data.correctaId + '"]');
+        .then(function (textoRespuesta) {
+            let data;
+
+            try {
+                data = JSON.parse(textoRespuesta);
+            } catch (error) {
+                console.error(
+                    "El servidor no devolvió JSON:",
+                    textoRespuesta
+                );
+
+                throw new Error(
+                    "La respuesta del servidor no es válida."
+                );
+            }
+
+            const botonCorrecto =
+                document.querySelector(
+                    '[data-opcion-id="' +
+                    data.correctaId +
+                    '"]'
+                );
 
             if (data.correcta) {
-                boton.classList.add('respuesta-correcta');
+                boton.classList.add(
+                    "respuesta-correcta"
+                );
             } else {
-                boton.classList.add('respuesta-incorrecta');
-                if (correctaBtn) {
-                    correctaBtn.classList.add('respuesta-correcta');
+                boton.classList.add(
+                    "respuesta-incorrecta"
+                );
+
+                if (botonCorrecto) {
+                    botonCorrecto.classList.add(
+                        "respuesta-correcta"
+                    );
                 }
             }
 
-            setTimeout(function() {
-                window.location.href = data.redirect;
-            }, 1500);
+            mostrarResultado(data.correcta);
+
+            setTimeout(function () {
+                window.location.href =
+                    data.redirect;
+            }, 1800);
+        })
+        .catch(function (error) {
+            console.error(
+                "Error al verificar la respuesta:",
+                error
+            );
+
+            respondido = false;
+
+            botonesRespuesta.forEach(
+                function (botonRespuesta) {
+                    botonRespuesta.disabled = false;
+                }
+            );
+
+            alert(
+                "No se pudo verificar la respuesta. Revisá la consola."
+            );
         });
     }
-</script>
 
-<script>
-    let tiempoRestante = Number({{tiempoRestante}});
+    timer.textContent =
+        String(tiempoRestante).padStart(2, "0");
 
-    const timer = document.getElementById('timer');
-
-    const intervalo = setInterval(() => {
-
+    const intervalo = setInterval(function () {
         if (respondido) {
             clearInterval(intervalo);
             return;
         }
 
         tiempoRestante--;
-        timer.textContent = tiempoRestante;
+
+        timer.textContent =
+            String(
+                Math.max(tiempoRestante, 0)
+            ).padStart(2, "0");
 
         if (tiempoRestante <= 0) {
             clearInterval(intervalo);
+            respondido = true;
 
             window.location.href =
-                    '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
+                "{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}";
         }
-
     }, 1000);
 </script>
 

@@ -1,0 +1,29 @@
+[20:10:27] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[20:10:27] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[20:47:46] [INFO] UsuarioController::logout
+[20:48:15] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[20:48:15] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[21:14:28] [INFO] UsuarioController::logout
+[21:15:11] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[21:15:11] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[21:17:05] [INFO] UsuarioController::logout
+[21:18:03] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[21:18:03] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[21:24:36] [INFO] UsuarioController::logout
+[21:24:48] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[21:24:48] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[21:28:01] [INFO] UsuarioController::logout
+[21:28:22] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [mora04]
+[21:28:23] [INFO] UsuarioController::procesarLogin - login exitoso id=1

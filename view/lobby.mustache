@@ -2,59 +2,67 @@
 
 <div class="overlay"></div>
 
-<div class="contenido">
-    <h1 class="titulo">⚽ Preguntados Mundial 2026</h1>
+<main class="contenido lobby-page">
+    <section class="hero-card">
+        <div class="hero-copy">
+            <span class="eyebrow">Edición mundial</span>
+            <h1 class="titulo">Preguntados Mundial 2026</h1>
+            <p class="bienvenida">
+                Bienvenido, <strong>{{nombre_usuario}}</strong>. Demostrá cuánto sabés de fútbol y competí en el ranking.
+            </p>
+        </div>
 
-    <p class="bienvenida">
-        Bienvenido, <strong>{{nombre_usuario}}</strong>. ¡Preparado para jugar!
-    </p>
+        <div class="score-card">
+    <span>Tu puntaje</span>
+    <strong>{{puntaje}}</strong>
+    <small>puntos actuales</small>
+</div>
+    </section>
 
-    <div class="puntaje-display">⭐ Puntaje: {{puntaje}}</div>
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span>Mejor puntaje</span>
+            <strong>{{puntajeMaximo}}</strong>
+        </article>
 
-    <div class="alert alert-warning text-center mb-3">
-        🏆 Mejor puntaje: <strong>{{puntajeMaximo}}</strong>
-    </div>
-
-    <div class="alert alert-info text-center mb-3">
-        🏆 Ranking global
-        <br>
-        Tu posición: <strong>#{{posicionRanking}}</strong>
-        <br><br>
-        <a href="{{baseUrl}}/ranking/ver" class="btn btn-warning">
-            Ver ranking completo
-        </a>
-    </div>
+        <article class="stat-card">
+            <span>Ranking global</span>
+            <strong>#{{posicionRanking}}</strong>
+            <a href="{{baseUrl}}/ranking/ver">Ver ranking completo</a>
+        </article>
+    </section>
 
     {{#partidaTerminada}}
-    <div class="modal-gameover" id="modalGameover">
-        <div class="modal-contenido">
-            <h2>💥 ¡Partida terminada!</h2>
+<div class="modal-gameover" id="modalGameover">
+    <div class="modal-contenido">
+        <span class="eyebrow">Partida finalizada</span>
 
-            <p>
-                Obtuviste <strong>{{puntajeFinal}}</strong> punto{{#puntajeFinal}}s{{/puntajeFinal}}
-            </p>
+        <h2>Terminó la partida</h2>
 
-            <p class="respuesta-info">
-                La respuesta correcta era:<br>
-                <strong>{{respuestaCorrecta}}</strong>
-            </p>
+        <p>
+            Obtuviste <strong>{{puntajeFinal}}</strong> puntos.
+        </p>
 
-            <button class="btn-girar" onclick="document.getElementById('modalGameover').style.display='none'">
-                Cerrar
-            </button>
-        </div>
+        <p class="respuesta-info">
+            {{mensajeRespuesta}}
+        </p>
+
+        <a href="{{baseUrl}}/lobby/ver" class="btn-jugar">
+            Volver al lobby
+        </a>
     </div>
-    {{/partidaTerminada}}
-
-    <div class="acciones-lobby">
-    <a href="{{baseUrl}}/lobby/jugar" class="btn-jugar">
-        🎮 Jugar
-    </a>
-
-    <a href="{{baseUrl}}/pregunta/proponer" class="btn-jugar">
-        ➕ Proponer pregunta
-    </a>
 </div>
-</div>
+{{/partidaTerminada}}
+
+    <section class="acciones-lobby">
+        <a href="{{baseUrl}}/lobby/jugar" class="btn-jugar btn-jugar--primary">
+            Jugar ahora
+        </a>
+
+        <a href="{{baseUrl}}/pregunta/proponer" class="btn-jugar btn-jugar--secondary">
+            Proponer pregunta
+        </a>
+    </section>
+</main>
 
 {{>footer}}

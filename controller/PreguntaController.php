@@ -55,11 +55,12 @@ class PreguntaController
 
         $data = [
             'titulo'          => 'Preguntados Mundial - Pregunta',
-            'cssExtra'        => $this->getBaseUrl() . '/public/css/pregunta.css',
+            'cssExtra' => $this->getBaseUrl() . '/public/css/pregunta.css',
             'showAppHeader'   => true,
             'headerVariant'   => 'pregunta',
-            'headerSurfaceStyle' => 'background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10)), ' . $categoria['color'] . ';',
-            'showCategoryBadge' => true,
+            'showBackToLobby' => true,
+            'backToLobbyUrl'  => $this->getBaseUrl() . '/lobby/ver',
+            'showCategoryBadge' => false,
             'headerCategoryName' => $categoria['nombre'],
             'headerCategoryColor' => $categoria['color'],
             'headerCategoryContrastColor' => $this->getContrastingColor($categoria['color']),
@@ -98,25 +99,30 @@ class PreguntaController
         $correctaId = $this->model->getOpcionCorrectaId($preguntaId);
 
         if ($esCorrecta) {
+        unset($_SESSION['pregunta_actual']);
+                  $_SESSION['puntaje']++;
+
+                echo json_encode([
+                    'correcta' => true,
+                    'correctaId' => $correctaId,
+                    'puntaje' => $_SESSION['puntaje'],
+                    'redirect' => $this->getBaseUrl() . '/lobby/jugar'
+                ]);
+            } else {
             unset($_SESSION['pregunta_actual']);
-            $_SESSION['puntaje']++;
-            echo json_encode([
-                'correcta' => true,
-                'correctaId' => $correctaId,
-                'puntaje' => $_SESSION['puntaje'],
-                'redirect' => $this->getBaseUrl() . '/lobby/ver'
-            ]);
-        } else {
-            unset($_SESSION['pregunta_actual']);
+
             $puntajeFinal = $_SESSION['puntaje'];
+
             $this->model->registrarPartida(
                 $_SESSION['usuario_id'],
                 $puntajeFinal
             );
+
             $_SESSION['puntaje'] = 0;
             $_SESSION['partida_terminada'] = true;
             $_SESSION['puntaje_final'] = $puntajeFinal;
-            $_SESSION['respuesta_correcta'] = $this->model->getRespuestaCorrecta($preguntaId);
+            $_SESSION['respuesta_correcta'] =
+                $this->model->getRespuestaCorrecta($preguntaId);
 
             echo json_encode([
                 'correcta' => false,
@@ -124,10 +130,13 @@ class PreguntaController
                 'puntaje' => $puntajeFinal,
                 'redirect' => $this->getBaseUrl() . '/lobby/ver'
             ]);
-        }
-    }
 
-    public function timeout() {
+            return;
+        }
+            }
+
+    public function timeout()
+    {
         unset($_SESSION['pregunta_actual']);
 
         $puntajeFinal = $_SESSION['puntaje'] ?? 0;
@@ -140,30 +149,38 @@ class PreguntaController
         $_SESSION['puntaje'] = 0;
 
         $data = [
-            'error' => '¡Se terminó el tiempo!',
+            'titulo' => 'Partida terminada',
+            'baseUrl' => $this->getBaseUrl(),
+            'cssExtra' => $this->getBaseUrl() . '/public/css/gameOver.css',
+            'showAppHeader' => true,
+            'headerVariant' => 'lobby',
+            'showBackToLobby' => true,
+            'backToLobbyUrl' => $this->getBaseUrl() . '/lobby/ver',
+            'error' => 'Se terminó el tiempo.',
             'puntajeFinal' => $puntajeFinal
         ];
 
         echo $this->renderer->render('gameOver', $data);
     }
-
     public function proponer()
-{
-    Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+    {
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
-    $data = [
-        'titulo'        => 'Proponer pregunta',
-        'cssExtra'      => $this->getBaseUrl() . '/public/css/lobby.css',
+        $data = [
+        'titulo' => 'Proponer pregunta',
+        'baseUrl' => $this->getBaseUrl(),
+        'cssExtra' => $this->getBaseUrl() . '/public/css/lobby.css',
         'showAppHeader' => true,
         'headerVariant' => 'lobby',
-        'categorias'    => $this->model->getCategorias(),
-        'mensaje'       => $_SESSION['mensaje_pregunta'] ?? null
+        'showBackToLobby' => true,
+        'backToLobbyUrl' => $this->getBaseUrl() . '/lobby/ver',
+        'categorias' => $this->model->getCategorias(),
+        'mensaje' => $_SESSION['mensaje_pregunta'] ?? null
     ];
+        unset($_SESSION['mensaje_pregunta']);
 
-    unset($_SESSION['mensaje_pregunta']);
-
-    echo $this->renderer->render("proponerPregunta", $data);
-}
+        echo $this->renderer->render("proponerPregunta", $data);
+    }
 
     public function guardarPropuesta()
     {
