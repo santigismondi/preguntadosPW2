@@ -23,87 +23,43 @@
 
 <body class="auth-body">
 
-<main class="auth-page auth-page--register">
-
-    <section class="auth-card auth-card--register">
-
-        <header class="auth-register-header">
-
-            <div class="auth-logo-container auth-logo-container--small">
-                <img
-                    src="{{baseUrl}}/public/img/logo.png"
-                    alt="Preguntados Mundial 2026"
-                    class="auth-logo">
-            </div>
-
-            <div class="auth-register-copy">
-                <span class="auth-eyebrow">
-                    Nuevo jugador
-                </span>
-
-                <h1>Crear cuenta</h1>
-
-                <p>
-                    Registrate para jugar, sumar puntos y participar del ranking.
-                </p>
-            </div>
-
-        </header>
-
-        {{#error}}
-        <div class="auth-alert" role="alert">
-            {{error}}
-        </div>
-        {{/error}}
-
-        <form
-            action="{{baseUrl}}/usuario/registrar"
-            method="POST"
-            enctype="multipart/form-data"
-            class="auth-form">
-
-            <div class="auth-register-grid">
-
-                <div class="auth-field">
-                    <label for="nombre">
-                        Nombre completo
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nombre"
-                        name="nombre"
-                        placeholder="Ingresá tu nombre completo"
-                        autocomplete="name"
-                        required>
+                <div class="col-12 col-md-4 mb-2">
+                    <label class="form-label fw-semibold">Nombre completo</label>
+                    <input type="text"
+                           class="form-control"
+                           name="nombre"
+                           placeholder="Ingresá tu nombre completo"
+                           value="{{nombre}}"
+                           required>
                 </div>
 
-                <div class="auth-field">
-                    <label for="nombre_usuario">
-                        Usuario
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nombre_usuario"
-                        name="nombre_usuario"
-                        placeholder="Elegí un usuario"
-                        autocomplete="username"
-                        required>
+                <div class="col-12 col-md-4 mb-2">
+                    <label class="form-label fw-semibold">Usuario</label>
+                    <input type="text"
+                           class="form-control"
+                           name="nombre_usuario"
+                           placeholder="Ingresá tu usuario"
+                           value="{{nombre_usuario}}"
+                           required>
                 </div>
 
-                <div class="auth-field">
-                    <label for="email">
-                        Correo electrónico
-                    </label>
+                <div class="col-12 col-md-4 mb-2">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email"
+                           class="form-control"
+                           name="email"
+                           placeholder="Ingresá tu email"
+                           value="{{email}}"
+                           required>
+                </div>
 
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Ingresá tu correo"
-                        autocomplete="email"
-                        required>
+                <div class="col-6 col-md-4 mb-2">
+                    <label class="form-label fw-semibold">Nacimiento</label>
+                    <input type="date"
+                           class="form-control"
+                           name="fecha_nac"
+                           value="{{fecha_nac}}"
+                           required>
                 </div>
 
                 <div class="auth-field">

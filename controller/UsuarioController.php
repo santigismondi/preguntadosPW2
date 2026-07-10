@@ -1,5 +1,9 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../vendor/autoload.php'; // Asegurate de que la ruta al autoload sea correcta según la ubicación de tu controlador
 class UsuarioController
 {
     private $renderer;
@@ -193,59 +197,86 @@ class UsuarioController
             }
         }
 
-        $hash = password_hash(
-            $contrasena,
-            PASSWORD_DEFAULT
-        );
+        // Si la foto se subió con éxito (o quedó la default), recién ahí procedemos a la persistencia
+        $hash = password_hash($contrasena, PASSWORD_DEFAULT);
+        $token = bin2hex(random_bytes(16));
+        $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil, $token);
+        $this->enviarCorreoValidacion($email, $nombre, $token);
+        Log::info("UsuarioController::registrar - registrado exitosamente: $nombre_usuario");
+        echo $this->renderer->render("login", ['mensaje_exito' => 'Registro exitoso. Te enviamos un correo para validar tu cuenta.']);
+    }
 
-        $this->model->registrar(
-            $nombre,
-            $nombreUsuario,
-            $email,
-            $fechaNacimiento,
-            $genero,
-            $coordenadasCiudad,
-            $hash,
-            $fotoPerfil
-        );
+    private function enviarCorreoValidacion($email, $nombre, $token)
+    {
+        $mail = new PHPMailer(true);
+        try {
+            // Configuración de Mailtrap
+            $mail->isSMTP();
+            $mail->Host = 'sandbox.smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Username = (new ConfigParser())->get('mail_user', '13b6c5f52b7e9e');
+            $mail->Password = (new ConfigParser())->get('mail_pass', 'c9041c1603f335');
+            $mail->Port = 2525;
 
-        Log::info(
-            "UsuarioController::registrar - registrado correctamente: $nombreUsuario"
-        );
+            $mail->setFrom('no-reply@preguntadosmundial.com', 'Preguntados Mundial');
+            $mail->addAddress($email, $nombre);
 
-        Redirect::to(
-            $this->getBaseUrl() . '/usuario/login'
-        );
+            $mail->isHTML(true);
+            $mail->Subject = 'Valida tu cuenta para empezar a jugar';
+
+            // Armamos el enlace que el usuario debe clickear
+            $enlace = $this->getBaseUrl() . "/usuario/validar?token=" . $token;
+
+            $mail->Body = "
+                <div style='background: #F8E7A0; padding: 10px 15px; font-family: Arial, sans-serif;'> 
+                    <h2>Hola $nombre! Bienvenido al desafio mundialista.</h2>
+                    <p>Para poder iniciar sesion y empezar a jugar, necesitamos que valides tu correo electronico.</p>
+                    <p>Hace clic en el siguiente enlace:</p>
+                    <a href='$enlace' style='padding: 10px 15px; background: #198754; color: white; text-decoration: none; border-radius: 5px;'>Validar mi cuenta</a>
+                    <p>Si no podes acceder copia este enlace: <b>$enlace</b></p>
+                    <p>y pegalo luego del dominio (/) en tu navegador</p>
+                </div>";
+
+            $mail->send();
+            Log::info("Correo de validación enviado a $email");
+        } catch (Exception $e) {
+            Log::error("No se pudo enviar el correo a $email. Error: {$mail->ErrorInfo}");
+        }
+    }
+
+    // Endpoint que recibe el clic del correo
+    public function validar()
+    {
+        // Asumiendo que tu request puede capturar GET, sino podés usar $_GET['token']
+        $token = $_GET['token'] ?? null;
+
+        if (!$token) {
+            Redirect::to($this->getBaseUrl() . '/usuario/login');
+        }
+
+        $exito = $this->model->validarCuenta($token);
+
+        if ($exito) {
+            Log::info("UsuarioController::validar - Cuenta activada exitosamente con token");
+            echo $this->renderer->render("login", ['mensaje_exito' => '¡Cuenta validada! Ya podés iniciar sesión.']);
+        } else {
+            Log::warning("UsuarioController::validar - Intento de validación fallido (token inválido)");
+            echo $this->renderer->render("login", ['error' => 'El enlace de validación es inválido o la cuenta ya fue activada.']);
+        }
     }
 
     public function procesarLogin()
     {
-        $nombreUsuario = trim(
-            (string) $this->request->post('nombre_usuario')
-        );
+        $nombre_usuario = $this->request->post('nombre_usuario');
+        $contrasena = $this->request->post('contrasena');
 
-        $contrasena = (string) $this->request->post('contrasena');
-
-        if (
-            empty($nombreUsuario) ||
-            empty($contrasena)
-        ) {
-            Log::warning(
-                'UsuarioController::procesarLogin - campos vacíos'
-            );
-
-            $this->renderLogin(
-                'Completá todos los campos.'
-            );
-
+        if (empty($nombre_usuario) || empty($contrasena)) {
+            Log::warning("UsuarioController::procesarLogin - campos vacios");
+            echo $this->renderer->render("login", ['error' => 'Completá todos los campos.']);
             return;
         }
 
-        $usuario =
-            $this->model->getUsuarioPorCredenciales(
-                $nombreUsuario,
-                $contrasena
-            );
+        $usuario = $this->model->getUsuarioPorNombreUsuario($nombre_usuario);
 
         if ($usuario === null) {
             Log::warning(
@@ -256,6 +287,18 @@ class UsuarioController
                 'Usuario o contraseña incorrectos.'
             );
 
+            return;
+        }
+
+        if (!password_verify($contrasena, $usuario['contrasena'])) {
+            Log::warning("UsuarioController::procesarLogin - contrasena incorrecta para: $nombre_usuario");
+            echo $this->renderer->render("login", ['error' => 'La contraseña ingresada es incorrecta.']);
+            return;
+        }
+
+        if ($usuario['cuenta_activa'] == 0) {
+            Log::warning("UsuarioController::procesarLogin - cuenta no validada: $nombre_usuario");
+            echo $this->renderer->render("login", ['error' => 'Por favor, revisá tu correo y validá tu cuenta antes de ingresar.']);
             return;
         }
 

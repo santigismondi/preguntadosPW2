@@ -67,18 +67,51 @@
                     required>
             </div>
 
-            <div class="auth-field">
-                <label for="contrasena">
-                    Contraseña
-                </label>
+            {{#mensaje_exito}}
+                <div class="alert alert-success text-center py-2 fw-semibold">
+                    {{mensaje_exito}}
+                </div>
+            {{/mensaje_exito}}
 
-                <input
-                    type="password"
-                    id="contrasena"
-                    name="contrasena"
-                    placeholder="Ingresá tu contraseña"
-                    autocomplete="current-password"
-                    required>
+            {{#error}}
+                <div class="alert alert-danger text-center py-2 fw-semibold">
+                    {{error}}
+                </div>
+            {{/error}}
+
+            <form action="{{baseUrl}}/usuario/procesarLogin" method="POST">
+                <div class="mb-3">
+                    <label for="nombre_usuario" class="form-label fw-semibold">Usuario</label>
+                    <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="nombre_usuario"
+                        name="nombre_usuario"
+                        placeholder="Ingresá tu usuario"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="contrasena" class="form-label fw-semibold">Contraseña</label>
+                    <input
+                        type="password"
+                        class="form-control form-control-lg"
+                        id="contrasena"
+                        name="contrasena"
+                        placeholder="Ingresá tu contraseña"
+                        required>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+                    Ingresar
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="mb-1 text-muted">¿No tenés cuenta?</p>
+                <a href="{{baseUrl}}/usuario/registro" class="fw-bold text-decoration-none">
+                    Crear cuenta
+                </a>
             </div>
 
             <button
