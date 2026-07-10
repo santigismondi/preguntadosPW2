@@ -424,8 +424,13 @@ body {
     width: min(400px, 90%);
     padding: 2.3rem;
     border-radius: 22px;
-    background: white;
-    color: #172033;
+    color: white;
+    background:
+            linear-gradient(
+                    135deg,
+                    rgba(18, 32, 24, 0.98),
+                    rgba(15, 24, 38, 0.97)
+            );
     text-align: center;
     box-shadow: var(--sombra);
 }
