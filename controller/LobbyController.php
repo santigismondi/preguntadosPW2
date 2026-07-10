@@ -83,7 +83,7 @@ class LobbyController
             'showBackToLobby' => true,
             'backToLobbyUrl'  => $this->getBaseUrl() . '/lobby/ver',
             'showPageTitle'   => true,
-            'headerPageTitle' => 'Lobby',
+            'headerPageTitle' => 'Ruleta',
             'categorias'      => $this->model->getCategorias(),
             'puntaje'         => $_SESSION['puntaje']
         ];

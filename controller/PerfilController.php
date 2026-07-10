@@ -17,54 +17,134 @@ class PerfilController
     {
         Access::allow('profile.view');
 
-        $usuarioId = $this->request->get('id') ?: $_SESSION['usuario_id'];
+        $usuarioIdSolicitado = $this->request->get('id');
+        $usuarioIdSesion = $_SESSION['usuario_id'] ?? null;
+
+        if ($usuarioIdSesion === null) {
+            Redirect::to(
+                $this->getBaseUrl() . '/usuario/login'
+            );
+            return;
+        }
+
+        $usuarioId = $usuarioIdSolicitado ?: $usuarioIdSesion;
+
+        $esPerfilPropio =
+            (int) $usuarioId === (int) $usuarioIdSesion;
 
         $usuario = $this->model->getUsuario($usuarioId);
 
         if ($usuario === null) {
-            Redirect::to($this->getBaseUrl() . '/lobby/ver');
+            Redirect::to(
+                $this->getBaseUrl() . '/lobby/ver'
+            );
             return;
         }
 
-        $usuario['localidad'] = $this->resolverLocalidad($usuario['coordenadas_ciudad']);
+        $usuario['foto_perfil'] =
+            !empty($usuario['foto_perfil'])
+                ? $usuario['foto_perfil']
+                : 'default.png';
 
-        $urlPerfil = $this->getUrlPerfil($usuario['id']);
-        
-        $usuario['foto_perfil'] = !empty($usuario['foto_perfil']) ? $usuario['foto_perfil'] : 'default.png';
+        $usuario['localidad'] =
+            $this->resolverLocalidad(
+                $usuario['coordenadas_ciudad'] ?? null
+            );
 
-        echo $this->renderer->render('perfil', [
-            'titulo' => 'Preguntados Mundial - Perfil',
+        $puntajeMaximo =
+            $this->model->getPuntajeMaximo($usuarioId);
+
+        $cantidadPartidas =
+            $this->model->getCantidadPartidas($usuarioId);
+
+        $partidas =
+            $this->model->getPartidas($usuarioId);
+
+        $urlPerfil =
+            $this->getUrlPerfil($usuario['id']);
+
+        $data = [
+            'titulo' =>
+                $esPerfilPropio
+                    ? 'Preguntados Mundial - Mi perfil'
+                    : 'Preguntados Mundial - Perfil de jugador',
+
+            'tituloPerfil' =>
+                $esPerfilPropio
+                    ? 'Mi perfil'
+                    : 'Perfil de jugador',
+
             'showAppHeader' => true,
             'headerVariant' => 'perfil',
-            'headerSurfaceStyle' => 'background: radial-gradient(circle at top left, rgba(245, 197, 24, 0.18), transparent 28%), radial-gradient(circle at bottom right, rgba(192, 57, 43, 0.22), transparent 30%), linear-gradient(135deg, rgba(11, 18, 32, 0.96), rgba(27, 38, 58, 0.94) 55%, rgba(56, 25, 33, 0.95));',
+
+            'headerSurfaceStyle' =>
+                'background: linear-gradient(
+                    135deg,
+                    rgba(18, 32, 24, 0.94),
+                    rgba(15, 24, 38, 0.92)
+                );',
+
             'showPageTitle' => true,
-            'headerPageTitle' => 'Mi Perfil',
+
+            'headerPageTitle' =>
+                $esPerfilPropio
+                    ? 'Mi perfil'
+                    : 'Perfil de jugador',
+
             'showBackToLobby' => true,
-            'backToLobbyUrl' => $this->getBaseUrl() . '/lobby/ver',
-            'showLogoutButton' => true,
-            'logoutUrl' => $this->getBaseUrl() . '/usuario/logout',
-            'showAdminButton' => $this->isAdmin(),
-            'adminUrl' => $this->getBaseUrl() . '/admin/dashboard',
+            'backToLobbyUrl' =>
+                $this->getBaseUrl() . '/lobby/ver',
+
+            'showLogoutButton' => $esPerfilPropio,
+            'logoutUrl' =>
+                $this->getBaseUrl() . '/usuario/logout',
+
+            'showAdminButton' =>
+                $esPerfilPropio && $this->isAdmin(),
+
+            'adminUrl' =>
+                $this->getBaseUrl() . '/admin/dashboard',
+
+            'esPerfilPropio' => $esPerfilPropio,
+
             'usuario' => $usuario,
-            'puntajeMaximo' => $this->model->getPuntajeMaximo($usuarioId),
-            'cantidadPartidas' => $this->model->getCantidadPartidas($usuarioId),
-            'partidas' => $this->model->getPartidas($usuarioId),
-            'qrUrl' => 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' . urlencode($urlPerfil),
-            'cssExtra' => $this->getBaseUrl() . '/public/css/perfil.css',
-            'baseUrl' => $this->getBaseUrl(),
-        ]);
+            'puntajeMaximo' => $puntajeMaximo,
+            'cantidadPartidas' => $cantidadPartidas,
+            'partidas' => $partidas,
+
+            'qrUrl' =>
+                'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='
+                . urlencode($urlPerfil),
+
+            'cssExtra' =>
+                $this->getBaseUrl() . '/public/css/perfil.css',
+
+            'baseUrl' => $this->getBaseUrl()
+        ];
+
+        echo $this->renderer->render(
+            'perfil',
+            $data
+        );
     }
 
     private function getUrlPerfil($usuarioId)
     {
-        $protocolo = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'];
-        return $protocolo . '://' . $host . $this->getBaseUrl() . '/perfil/ver?id=' . $usuarioId;
-    }
+        $protocolo =
+            isset($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] !== 'off'
+                ? 'https'
+                : 'http';
 
-    private function getBaseUrl()
-    {
-        return (new ConfigParser())->get('baseUrl', '');
+        $host =
+            $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+        return $protocolo
+            . '://'
+            . $host
+            . $this->getBaseUrl()
+            . '/perfil/ver?id='
+            . urlencode((string) $usuarioId);
     }
 
     private function resolverLocalidad($coordenadas)
@@ -73,30 +153,78 @@ class PerfilController
             return 'Ubicación no disponible';
         }
 
-        [$lat, $lng] = explode(',', $coordenadas);
+        $partes = explode(',', $coordenadas);
 
-        $url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='
-            . urlencode(trim($lat))
-            . '&lon=' . urlencode(trim($lng));
+        if (count($partes) !== 2) {
+            return 'Ubicación no disponible';
+        }
 
-        $context = stream_context_create([
+        $latitud = trim($partes[0]);
+        $longitud = trim($partes[1]);
+
+        if (
+            !is_numeric($latitud)
+            || !is_numeric($longitud)
+        ) {
+            return 'Ubicación no disponible';
+        }
+
+        $url =
+            'https://nominatim.openstreetmap.org/reverse'
+            . '?format=jsonv2'
+            . '&lat=' . urlencode($latitud)
+            . '&lon=' . urlencode($longitud);
+
+        $contexto = stream_context_create([
             'http' => [
-                'header' => "User-Agent: PreguntadosMundial/1.0\r\n"
+                'method' => 'GET',
+                'timeout' => 4,
+                'header' =>
+                    "User-Agent: PreguntadosMundial/1.0\r\n"
+                    . "Accept-Language: es\r\n"
             ]
         ]);
 
-        $respuesta = file_get_contents($url, false, $context);
-        $data = json_decode($respuesta, true);
+        $respuesta = @file_get_contents(
+            $url,
+            false,
+            $contexto
+        );
+
+        if ($respuesta === false) {
+            return 'Ubicación no disponible';
+        }
+
+        $data = json_decode(
+            $respuesta,
+            true
+        );
+
+        if (!is_array($data)) {
+            return 'Ubicación no disponible';
+        }
 
         return $data['address']['city']
             ?? $data['address']['town']
             ?? $data['address']['village']
+            ?? $data['address']['municipality']
             ?? $data['address']['state']
             ?? 'Ubicación no disponible';
     }
 
+    private function getBaseUrl()
+    {
+        return (new ConfigParser())->get(
+            'baseUrl',
+            ''
+        );
+    }
+
     private function isAdmin()
     {
-        return isset($_SESSION['rol']) && strtolower((string) $_SESSION['rol']) === 'administrador';
+        return isset($_SESSION['rol'])
+            && strtolower(
+                (string) $_SESSION['rol']
+            ) === 'administrador';
     }
 }

@@ -19,86 +19,180 @@ class UsuarioController
 
     public function login()
     {
-        $this->renderer->render("login", [
-            "titulo" => "Preguntados Mundial - Login"
-        ]);
+        $this->renderLogin();
     }
 
     public function registro()
     {
-        $this->renderer->render("registro", [
-            "titulo" => "Preguntados Mundial - Registro"
-        ]);
+        $this->renderRegistro();
     }
 
     public function registrar()
     {
-        $nombre = $this->request->post('nombre');
-        $nombre_usuario = $this->request->post('nombre_usuario');
-        $email = $this->request->post('email');
-        $fecha_nac = $this->request->post('fecha_nac');
+        $nombre = trim((string) $this->request->post('nombre'));
+        $nombreUsuario = trim((string) $this->request->post('nombre_usuario'));
+        $email = trim((string) $this->request->post('email'));
+        $fechaNacimiento = $this->request->post('fecha_nac');
         $genero = $this->request->post('genero');
-        $contrasena = $this->request->post('contrasena');
-        $confirmar_contrasena = $this->request->post('confirmar_contrasena');
-        $coordenadas_ciudad = $this->request->post('coordenadas_ciudad') ?: '0,0';
+        $contrasena = (string) $this->request->post('contrasena');
+        $confirmarContrasena = (string) $this->request->post('confirmar_contrasena');
 
-        $datosIngresados = [
-            'nombre' => $nombre,
-            'nombre_usuario' => $nombre_usuario,
-            'email' => $email,
-            'fecha_nac' => $fecha_nac,
-            'genero' => $genero,
-        ];
+        $coordenadasCiudad =
+            $this->request->post('coordenadas_ciudad') ?: '0,0';
 
-        if (empty($nombre) || empty($nombre_usuario) || empty($email) || empty($fecha_nac) || empty($genero) || empty($contrasena)) {
-            Log::warning("UsuarioController::registrar - campos vacios");
-            $datosIngresados['error'] = 'Todos los campos son obligatorios.';
-            echo $this->renderer->render("registro", $datosIngresados);
+        if (
+            empty($nombre) ||
+            empty($nombreUsuario) ||
+            empty($email) ||
+            empty($fechaNacimiento) ||
+            empty($genero) ||
+            empty($contrasena) ||
+            empty($confirmarContrasena)
+        ) {
+            Log::warning(
+                'UsuarioController::registrar - campos vacíos'
+            );
+
+            $this->renderRegistro(
+                'Todos los campos son obligatorios.'
+            );
+
             return;
         }
-        if ($contrasena !== $confirmar_contrasena) {
-            Log::warning("UsuarioController::registrar - contrasenas no coinciden");
-            $datosIngresados['error'] = 'Las contraseñas no coinciden.';
-            echo $this->renderer->render("registro", $datosIngresados);
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Log::warning(
+                "UsuarioController::registrar - email inválido: $email"
+            );
+
+            $this->renderRegistro(
+                'Ingresá un correo electrónico válido.'
+            );
+
+            return;
+        }
+
+        if ($contrasena !== $confirmarContrasena) {
+            Log::warning(
+                'UsuarioController::registrar - contraseñas no coinciden'
+            );
+
+            $this->renderRegistro(
+                'Las contraseñas no coinciden.'
+            );
+
             return;
         }
 
         if ($this->model->existeEmail($email)) {
-            Log::warning("UsuarioController::registrar - email ya existe: $email");
-            $datosIngresados['error'] = 'El email ya está registrado.';
-            echo $this->renderer->render("registro", $datosIngresados);
+            Log::warning(
+                "UsuarioController::registrar - email ya existe: $email"
+            );
+
+            $this->renderRegistro(
+                'El correo electrónico ya está registrado.'
+            );
+
             return;
         }
 
-        if ($this->model->existeNombreUsuario($nombre_usuario)) {
-            Log::warning("UsuarioController::registrar - nombre_usuario ya existe: $nombre_usuario");
-            $datosIngresados['error'] = 'El nombre de usuario ya está en uso.';
-            echo $this->renderer->render("registro", $datosIngresados);
+        if ($this->model->existeNombreUsuario($nombreUsuario)) {
+            Log::warning(
+                "UsuarioController::registrar - usuario ya existe: $nombreUsuario"
+            );
+
+            $this->renderRegistro(
+                'El nombre de usuario ya está en uso.'
+            );
+
             return;
         }
 
-        $foto_perfil = 'default.png';
-        if (!empty($_FILES['foto_perfil']['name'])) {
-            $extension = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
-            $foto_perfil = uniqid() . '.' . $extension;
+        $fotoPerfil = 'default.png';
 
-            // 1. Definimos la ruta absoluta apuntando correctamente al directorio público
-            $dir_destino = __DIR__ . '/../public/img/usuarios/';
+        if (
+            isset($_FILES['foto_perfil']) &&
+            !empty($_FILES['foto_perfil']['name'])
+        ) {
+            if ($_FILES['foto_perfil']['error'] !== UPLOAD_ERR_OK) {
+                Log::error(
+                    'UsuarioController::registrar - error al recibir la imagen'
+                );
 
-            // 2. Programación defensiva: si el directorio no existe, lo creamos dinámicamente
-            if (!is_dir($dir_destino)) {
-                if (!mkdir($dir_destino, 0777, true)) {
-                    Log::error("UsuarioController::registrar - No se pudo crear el directorio: $dir_destino");
-                    echo $this->renderer->render("registro", ['error' => 'Error interno del servidor al procesar la imagen.']);
+                $this->renderRegistro(
+                    'No se pudo procesar la foto de perfil.'
+                );
+
+                return;
+            }
+
+            $extension = strtolower(
+                pathinfo(
+                    $_FILES['foto_perfil']['name'],
+                    PATHINFO_EXTENSION
+                )
+            );
+
+            $extensionesPermitidas = [
+                'jpg',
+                'jpeg',
+                'png',
+                'webp'
+            ];
+
+            if (!in_array($extension, $extensionesPermitidas, true)) {
+                $this->renderRegistro(
+                    'La foto debe ser JPG, PNG o WEBP.'
+                );
+
+                return;
+            }
+
+            $fotoPerfil =
+                uniqid('usuario_', true) . '.' . $extension;
+
+            $directorioDestino =
+                __DIR__ . '/../public/img/usuarios/';
+
+            if (!is_dir($directorioDestino)) {
+                $directorioCreado = mkdir(
+                    $directorioDestino,
+                    0777,
+                    true
+                );
+
+                if (!$directorioCreado) {
+                    Log::error(
+                        'UsuarioController::registrar - no se pudo crear: ' .
+                        $directorioDestino
+                    );
+
+                    $this->renderRegistro(
+                        'Error interno al preparar la foto de perfil.'
+                    );
+
                     return;
                 }
             }
 
+            $rutaDestino =
+                $directorioDestino . $fotoPerfil;
 
-            // 3. Control estricto del resultado de la subida física
-            if (!move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $dir_destino . $foto_perfil)) {
-                Log::error("UsuarioController::registrar - Falló move_uploaded_file a: " . $dir_destino . $foto_perfil);
-                echo $this->renderer->render("registro", ['error' => 'No se pudo guardar la foto de perfil de manera segura.']);
+            if (
+                !move_uploaded_file(
+                    $_FILES['foto_perfil']['tmp_name'],
+                    $rutaDestino
+                )
+            ) {
+                Log::error(
+                    'UsuarioController::registrar - falló move_uploaded_file: ' .
+                    $rutaDestino
+                );
+
+                $this->renderRegistro(
+                    'No se pudo guardar la foto de perfil.'
+                );
+
                 return;
             }
         }
@@ -185,8 +279,14 @@ class UsuarioController
         $usuario = $this->model->getUsuarioPorNombreUsuario($nombre_usuario);
 
         if ($usuario === null) {
-            Log::warning("UsuarioController::procesarLogin - credenciales invalidas: $nombre_usuario");
-            echo $this->renderer->render("login", ['error' => 'Usuario o contraseña incorrectos.']);
+            Log::warning(
+                "UsuarioController::procesarLogin - credenciales inválidas: $nombreUsuario"
+            );
+
+            $this->renderLogin(
+                'Usuario o contraseña incorrectos.'
+            );
+
             return;
         }
 
@@ -203,22 +303,83 @@ class UsuarioController
         }
 
         $_SESSION['usuario_id'] = $usuario['id'];
-        $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
-        $_SESSION['rol'] = $usuario['rol'] ?? 'jugador';
+        $_SESSION['nombre_usuario'] =
+            $usuario['nombre_usuario'];
 
-        Log::info("UsuarioController::procesarLogin - login exitoso id={$usuario['id']}");
-        Redirect::to($this->getBaseUrl() . "/lobby/ver");
+        $_SESSION['rol'] =
+            $usuario['rol'] ?? 'jugador';
+
+        $_SESSION['puntaje'] = 0;
+
+        unset(
+            $_SESSION['partida_terminada'],
+            $_SESSION['puntaje_final'],
+            $_SESSION['respuesta_correcta'],
+            $_SESSION['pregunta_actual']
+        );
+
+        Log::info(
+            "UsuarioController::procesarLogin - login exitoso id={$usuario['id']}"
+        );
+
+        Redirect::to(
+            $this->getBaseUrl() . '/lobby/ver'
+        );
     }
 
     public function logout()
     {
+        session_unset();
         session_destroy();
-        Log::info("UsuarioController::logout");
-        Redirect::to($this->getBaseUrl() . '/usuario/login');
+
+        Log::info(
+            'UsuarioController::logout'
+        );
+
+        Redirect::to(
+            $this->getBaseUrl() . '/usuario/login'
+        );
+    }
+
+    private function renderLogin($error = null)
+    {
+        $data = [
+            'titulo' => 'Preguntados Mundial - Iniciar sesión',
+            'baseUrl' => $this->getBaseUrl()
+        ];
+
+        if ($error !== null) {
+            $data['error'] = $error;
+        }
+
+        echo $this->renderer->render(
+            'login',
+            $data
+        );
+    }
+
+    private function renderRegistro($error = null)
+    {
+        $data = [
+            'titulo' => 'Preguntados Mundial - Crear cuenta',
+            'baseUrl' => $this->getBaseUrl()
+        ];
+
+        if ($error !== null) {
+            $data['error'] = $error;
+        }
+
+        echo $this->renderer->render(
+            'registro',
+            $data
+        );
     }
 
     private function getBaseUrl()
     {
-        return (new ConfigParser())->get('baseUrl', '');
+        return (new ConfigParser())->get(
+            'baseUrl',
+            ''
+        );
     }
 }

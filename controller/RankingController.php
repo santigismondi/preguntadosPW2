@@ -13,23 +13,24 @@ class RankingController {
 
     public function ver()
     {
-        Access::allowAnyRole(['Usuario','Editor','Administrador']);
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
         $ranking = $this->model->getRanking();
-
         $posicion = 1;
 
         foreach ($ranking as &$jugador) {
-
-            $jugador["posicion"] = $posicion++;
-
+            $jugador['posicion'] = $posicion++;
         }
 
-        echo $this->renderer->render("ranking",[
-            "titulo"=>"Ranking",
-            "ranking"=>$ranking,
-            "baseUrl"=>$this->getBaseUrl(),
-             "cssExtra" => $this->getBaseUrl() . "/public/css/lobby.css"
+        echo $this->renderer->render('ranking', [
+            'titulo' => 'Ranking global',
+            'ranking' => $ranking,
+            'baseUrl' => $this->getBaseUrl(),
+            'cssExtra' => $this->getBaseUrl() . '/public/css/lobby.css',
+            'showAppHeader' => true,
+            'headerVariant' => 'lobby',
+            'showBackToLobby' => true,
+            'backToLobbyUrl' => $this->getBaseUrl() . '/lobby/ver'
         ]);
     }
 

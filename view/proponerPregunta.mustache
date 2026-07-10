@@ -2,67 +2,87 @@
 
 <div class="overlay"></div>
 
-<div class="contenido">
-    <h1 class="titulo">➕ Proponer pregunta</h1>
+<main class="contenido proponer-page">
+    <section class="page-card form-card">
 
-    <p class="bienvenida">
-        Cargá una pregunta nueva. Quedará pendiente hasta que un editor la apruebe.
-    </p>
+        <h1 class="titulo">Proponer pregunta</h1>
 
-    {{#mensaje}}
-    <div class="alert alert-info text-center mb-3">
-        {{mensaje}}
-    </div>
-    {{/mensaje}}
+        <p class="bienvenida">
+            Cargá una pregunta nueva. Quedará pendiente hasta que un editor la apruebe.
+        </p>
 
-    <form method="POST" action="{{baseUrl}}/pregunta/guardarPropuesta" class="form-pregunta">
-        <label>Pregunta</label>
-        <input type="text" name="texto" required placeholder="Ej: ¿Quién ganó el Mundial 2022?">
+        {{#mensaje}}
+        <div class="form-message">
+            {{mensaje}}
+        </div>
+        {{/mensaje}}
 
-        <label>Categoría</label>
-        <select name="categoria_id" required>
-            <option value="">Seleccioná una categoría</option>
-            {{#categorias}}
-                <option value="{{id}}">{{nombre}}</option>
-            {{/categorias}}
-        </select>
+        <form method="POST"
+              action="{{baseUrl}}/pregunta/guardarPropuesta"
+              class="form-pregunta">
 
-        <label>Opción 1</label>
-        <input type="text" name="opcion_1" required>
-        <label>
-            <input type="radio" name="correcta" value="0" required>
-            Esta es la correcta
-        </label>
+            <label for="texto">Pregunta</label>
+            <input id="texto"
+                   type="text"
+                   name="texto"
+                   required
+                   placeholder="Ej: ¿Quién ganó el Mundial 2022?">
 
-        <label>Opción 2</label>
-        <input type="text" name="opcion_2" required>
-        <label>
-            <input type="radio" name="correcta" value="1">
-            Esta es la correcta
-        </label>
+            <label for="categoria">Categoría</label>
+            <select id="categoria" name="categoria_id" required>
+                <option value="">Seleccioná una categoría</option>
+                {{#categorias}}
+                    <option value="{{id}}">{{nombre}}</option>
+                {{/categorias}}
+            </select>
 
-        <label>Opción 3</label>
-        <input type="text" name="opcion_3" required>
-        <label>
-            <input type="radio" name="correcta" value="2">
-            Esta es la correcta
-        </label>
+            <div class="opciones-grid">
+                <div class="opcion-item">
+                    <label for="opcion1">Opción 1</label>
+                    <input id="opcion1" type="text" name="opcion_1" required>
 
-        <label>Opción 4</label>
-        <input type="text" name="opcion_4" required>
-        <label>
-            <input type="radio" name="correcta" value="3">
-            Esta es la correcta
-        </label>
+                    <label class="radio-correcta">
+                        <input type="radio" name="correcta" value="0" required>
+                        Marcar como correcta
+                    </label>
+                </div>
 
-        <button type="submit" class="btn-girar">
-            Enviar pregunta
-        </button>
+                <div class="opcion-item">
+                    <label for="opcion2">Opción 2</label>
+                    <input id="opcion2" type="text" name="opcion_2" required>
 
-        <a href="{{baseUrl}}/lobby/ver" class="btn-jugar">
-            Volver al lobby
-        </a>
-    </form>
-</div>
+                    <label class="radio-correcta">
+                        <input type="radio" name="correcta" value="1">
+                        Marcar como correcta
+                    </label>
+                </div>
+
+                <div class="opcion-item">
+                    <label for="opcion3">Opción 3</label>
+                    <input id="opcion3" type="text" name="opcion_3" required>
+
+                    <label class="radio-correcta">
+                        <input type="radio" name="correcta" value="2">
+                        Marcar como correcta
+                    </label>
+                </div>
+
+                <div class="opcion-item">
+                    <label for="opcion4">Opción 4</label>
+                    <input id="opcion4" type="text" name="opcion_4" required>
+
+                    <label class="radio-correcta">
+                        <input type="radio" name="correcta" value="3">
+                        Marcar como correcta
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-girar">
+                Enviar pregunta
+            </button>
+        </form>
+    </section>
+</main>
 
 {{>footer}}
