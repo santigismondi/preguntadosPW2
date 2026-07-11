@@ -38,10 +38,20 @@ class UsuarioModel
 
     public function registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $contrasena, $foto_perfil, $token_validacion)
     {
-        $sql = "INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+        // 1. Insertamos el nuevo usuario en la tabla USUARIO
+        $sqlUsuario = "INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
-        Log::info("SQL: $sql [$nombre, $nombre_usuario, $email]");
-        $this->database->execute($sql, [$nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $contrasena, $foto_perfil, $token_validacion]);
+        Log::info("SQL Usuario: $sqlUsuario [$nombre, $nombre_usuario, $email]");
+        $this->database->execute($sqlUsuario, [$nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $contrasena, $foto_perfil, $token_validacion]);
+
+        // 2. Recuperamos el ID del usuario que se acaba de crear
+        $resultadoId = $this->database->query("SELECT LAST_INSERT_ID() AS id");
+        $usuarioId = $resultadoId[0]['id'];
+
+        // 3. Le asignamos automáticamente el rol básico de 'Usuario' en la tabla ROL
+        $sqlRol = "INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario')";
+        Log::info("SQL Rol Automático: $sqlRol [Usuario ID: $usuarioId]");
+        $this->database->execute($sqlRol, [$usuarioId]);
     }
 
     public function validarCuenta($token)

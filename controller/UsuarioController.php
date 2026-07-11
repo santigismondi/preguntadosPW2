@@ -303,11 +303,9 @@ class UsuarioController
         }
 
         $_SESSION['usuario_id'] = $usuario['id'];
-        $_SESSION['nombre_usuario'] =
-            $usuario['nombre_usuario'];
+        $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
 
-        $_SESSION['rol'] =
-            $usuario['rol'] ?? 'jugador';
+        $_SESSION['rol'] = $usuario['rol'] ?? 'Usuario';
 
         $_SESSION['puntaje'] = 0;
 
