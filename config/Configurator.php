@@ -87,6 +87,21 @@ class Configurator {
 
     public function getAdminController()
     {
-        return new AdminController($this->getRenderer());
+        return new AdminController($this->getAdminModel(), $this->getRenderer());
+    }
+
+    private function getAdminModel()
+    {
+        return new AdminModel($this->getDatabase());
+    }
+
+    public function getEditorController()
+    {
+        return new EditorController($this->getEditorModel(), $this->getRenderer());
+    }
+
+    private function getEditorModel()
+    {
+        return new EditorModel($this->getDatabase());
     }
 }
