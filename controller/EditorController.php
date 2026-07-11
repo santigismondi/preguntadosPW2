@@ -18,10 +18,15 @@ class EditorController
         $this->verificarAccesoEditor();
 
         $data = [
-            'titulo' => 'Panel editor',
+            'titulo' => 'Editor',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
             'baseUrl' => $this->getBaseUrl(),
-
+            'showAppHeader' => true,
+            'headerVariant' => 'admin', // Usamos el estilo del admin o podés crear uno nuevo
+            'showLogoutButton' => true,
+            'logoutUrl' => $this->getBaseUrl() . '/usuario/logout',
+            'showPageTitle' => true,
+            'headerPageTitle' => 'Panel de editor',
             'preguntas' => $this->model->getPreguntas(),
             'reportes' => $this->model->getReportesPendientes(),
 
