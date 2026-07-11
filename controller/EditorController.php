@@ -15,6 +15,8 @@ class EditorController
 
     public function ver()
     {
+        $this->verificarAccesoEditor();
+
         $data = [
             'titulo' => 'Panel editor',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
@@ -59,6 +61,8 @@ class EditorController
 
     public function editarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'] ?? null;
 
         $data = [
@@ -73,6 +77,8 @@ class EditorController
 
     public function guardarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_POST['id'];
         $texto = $_POST['texto'];
         $opciones = $_POST['opciones'];
@@ -85,6 +91,8 @@ class EditorController
 
     public function rechazarReporte()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'];
         $this->model->rechazarReporte($id);
 
@@ -93,6 +101,8 @@ class EditorController
 
     public function eliminarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'];
         $this->model->eliminarPregunta($id);
 
@@ -105,6 +115,8 @@ class EditorController
     }
     public function nuevaPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $data = [
             'titulo' => 'Nueva pregunta',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
@@ -118,6 +130,8 @@ class EditorController
 
     public function crearPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $texto = trim($_POST['texto'] ?? '');
         $categoriaId = (int)($_POST['categoria_id'] ?? 0);
         $opciones = $_POST['opciones'] ?? [];
@@ -164,6 +178,14 @@ class EditorController
             '/index.php?controller=editor&method=ver&creada=1'
         );
         exit;
+    }
+
+    private function verificarAccesoEditor()
+    {
+        if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'Editor') {
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+            exit;
+        }
     }
 }
 

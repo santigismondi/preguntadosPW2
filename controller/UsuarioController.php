@@ -320,9 +320,13 @@ class UsuarioController
             "UsuarioController::procesarLogin - login exitoso id={$usuario['id']}"
         );
 
-        Redirect::to(
-            $this->getBaseUrl() . '/lobby/ver'
-        );
+        if ($_SESSION['rol'] === 'Administrador') {
+            Redirect::to($this->getBaseUrl() . '/admin/ver');
+        } elseif ($_SESSION['rol'] === 'Editor') {
+            Redirect::to($this->getBaseUrl() . '/editor/ver');
+        } else {
+            Redirect::to($this->getBaseUrl() . '/lobby/ver');
+        }
     }
 
     public function logout()

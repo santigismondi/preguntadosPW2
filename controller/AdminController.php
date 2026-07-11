@@ -17,6 +17,11 @@ class AdminController
 
     public function dashboard()
     {
+        if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'Administrador') {
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+            exit;
+        }
+
         Access::allow('admin.dashboard');
 
         echo $this->renderer->render('admin', [
@@ -34,6 +39,11 @@ class AdminController
 
     public function ver()
     {
+        if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'Administrador') {
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+            exit;
+        }
+
         $periodo = $_GET['periodo'] ?? 'mes';
 
         $metricas = $this->model->getMetricas($periodo);
