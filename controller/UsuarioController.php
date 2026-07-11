@@ -200,9 +200,9 @@ class UsuarioController
         // Si la foto se subió con éxito (o quedó la default), recién ahí procedemos a la persistencia
         $hash = password_hash($contrasena, PASSWORD_DEFAULT);
         $token = bin2hex(random_bytes(16));
-        $this->model->registrar($nombre, $nombre_usuario, $email, $fecha_nac, $genero, $coordenadas_ciudad, $hash, $foto_perfil, $token);
+        $this->model->registrar($nombre, $nombreUsuario, $email, $fechaNacimiento, $genero, $coordenadasCiudad, $hash, $fotoPerfil, $token);
         $this->enviarCorreoValidacion($email, $nombre, $token);
-        Log::info("UsuarioController::registrar - registrado exitosamente: $nombre_usuario");
+        Log::info("UsuarioController::registrar - registrado exitosamente: $nombreUsuario");
         echo $this->renderer->render("login", ['mensaje_exito' => 'Registro exitoso. Te enviamos un correo para validar tu cuenta.']);
     }
 
@@ -280,7 +280,7 @@ class UsuarioController
 
         if ($usuario === null) {
             Log::warning(
-                "UsuarioController::procesarLogin - credenciales inválidas: $nombreUsuario"
+                "UsuarioController::procesarLogin - credenciales inválidas: $nombre_usuario"
             );
 
             $this->renderLogin(

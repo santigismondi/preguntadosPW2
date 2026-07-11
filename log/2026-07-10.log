@@ -27,3 +27,30 @@
                 LEFT JOIN ROL r ON r.usuario_id = u.id
                 WHERE u.nombre_usuario = ? [mora04]
 [21:28:23] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[23:21:47] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho]
+[23:21:47] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: Nacho
+[23:22:44] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nacho, Nacho00, nacho00@gmail.com]
+[23:22:44] [INFO] UsuarioController::registrar - registrado correctamente: Nacho00
+[23:22:50] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[23:22:50] [INFO] UsuarioController::procesarLogin - login exitoso id=4
+[23:27:50] [INFO] UsuarioController::logout
+[23:28:04] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[23:28:04] [INFO] UsuarioController::procesarLogin - login exitoso id=4
+[23:49:54] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho00]
+[23:49:54] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: Nacho00
+[23:50:25] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) [Nachi, Nacho11, nacho@gmail.com]
+[23:50:25] [INFO] UsuarioController::registrar - registrado correctamente: Nacho11
+[23:50:29] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho11]
+[23:50:29] [INFO] UsuarioController::procesarLogin - login exitoso id=1
