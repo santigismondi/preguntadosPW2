@@ -16,7 +16,17 @@ class LobbyController
 
     public function ver()
     {
-        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+        if (isset($_SESSION['rol'])) {
+            if ($_SESSION['rol'] === 'Administrador') {
+                header('Location: ' . $this->getBaseUrl() . '/admin/ver');
+                exit;
+            } elseif ($_SESSION['rol'] === 'Editor') {
+                header('Location: ' . $this->getBaseUrl() . '/editor/ver');
+                exit;
+            }
+        }
+
+        Access::allowAnyRole(['Usuario']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
@@ -69,7 +79,17 @@ class LobbyController
     }
     public function jugar()
     {
-        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+        if (isset($_SESSION['rol'])) {
+            if ($_SESSION['rol'] === 'Administrador') {
+                header('Location: ' . $this->getBaseUrl() . '/admin/ver');
+                exit;
+            } elseif ($_SESSION['rol'] === 'Editor') {
+                header('Location: ' . $this->getBaseUrl() . '/editor/ver');
+                exit;
+            }
+        }
+
+        Access::allowAnyRole(['Usuario']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;

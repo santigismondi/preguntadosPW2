@@ -733,7 +733,10 @@ img {
     color: #222;
 }
 
-
+.app-header--admin {
+    background: linear-gradient(135deg, rgba(18, 32, 24, 0.96), rgba(15, 24, 38, 0.96));
+    border-bottom: 1px solid rgba(182, 226, 107, 0.2);
+}
 /* =====================================================
    FOOTER GLOBAL
 ===================================================== */

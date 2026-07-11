@@ -63,6 +63,16 @@ class PerfilController
         $urlPerfil =
             $this->getUrlPerfil($usuario['id']);
 
+        // NUEVO: 1. Determinamos la URL de retorno según el rol del usuario en sesión
+        $rol = $_SESSION['rol'] ?? 'Usuario';
+        $urlVolver = $this->getBaseUrl() . '/lobby/ver'; // Ruta por defecto
+
+        if ($rol === 'Administrador') {
+            $urlVolver = $this->getBaseUrl() . '/admin/ver';
+        } elseif ($rol === 'Editor') {
+            $urlVolver = $this->getBaseUrl() . '/editor/ver';
+        }
+
         $data = [
             'titulo' =>
                 $esPerfilPropio
@@ -92,8 +102,12 @@ class PerfilController
                     : 'Perfil de jugador',
 
             'showBackToLobby' => true,
-            'backToLobbyUrl' =>
-                $this->getBaseUrl() . '/lobby/ver',
+
+            // NUEVO: 2. Usamos la variable dinámica en lugar de la ruta fija
+            'backToLobbyUrl' => $urlVolver,
+
+            // NUEVO: 3. Pasamos urlVolver para el botón personalizado en perfil.mustache
+            'urlVolver' => $urlVolver,
 
             'showLogoutButton' => $esPerfilPropio,
             'logoutUrl' =>

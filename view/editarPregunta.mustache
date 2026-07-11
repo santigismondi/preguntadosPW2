@@ -9,12 +9,12 @@
                 <p>Cambiá el texto de la pregunta, sus opciones y la respuesta correcta.</p>
             </div>
 
-            <a class="btn-editor-warning" href="{{baseUrl}}/index.php?controller=editor&method=ver">
+            <a class="btn-editor-warning" href="{{baseUrl}}/editor/ver">
                 Volver
             </a>
         </div>
 
-        <form class="editor-card form-editor" method="POST" action="{{baseUrl}}/index.php?controller=editor&method=guardarPregunta">
+        <form class="editor-card form-editor" method="POST" action="{{baseUrl}}/editor/guardarPregunta">
             <input type="hidden" name="id" value="{{pregunta.id}}">
 
             <label>
@@ -36,7 +36,7 @@
                     Guardar cambios
                 </button>
 
-                <a class="btn-editor-danger" href="{{baseUrl}}/index.php?controller=editor&method=ver">
+                <a class="btn-editor-danger" href="{{baseUrl}}/editor/ver">
                     Cancelar
                 </a>
             </div>

@@ -1,13 +1,13 @@
 {{>header}}
 
-<main class="editor-page">
+<div class="overlay"></div>
+
+<main class="contenido editor-page">
     <section class="editor-container">
 
-        <div class="editor-header">
-            <div>
-                <h1>Panel de Editor</h1>
-                <p>Gestión de preguntas y reportes enviados por los jugadores.</p>
-            </div>
+        <div class="editor-hero">
+            <h1>Panel de Editor</h1>
+            <p>Gestión de preguntas y reportes enviados por los jugadores.</p>
         </div>
 
         <section class="editor-card">
@@ -18,42 +18,49 @@
                 </div>
             </div>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Pregunta</th>
-                    <th>Categoría</th>
-                    <th>Usuario</th>
-                    <th>Motivo</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#reportes}}
+            <div class="table-responsive">
+                <table>
+                    <thead>
                     <tr>
-                        <td>{{pregunta}}</td>
-                        <td>{{categoria}}</td>
-                        <td>{{usuario}}</td>
-                        <td>{{motivo}}</td>
-                        <td>{{fecha}}</td>
-                        <td class="editor-actions">
-                            <a class="btn-editor-primary" href="{{baseUrl}}/index.php?controller=editor&method=editarPregunta&id={{pregunta_id}}">
-                            Editar
-                            </a>
-
-                            <a class="btn-editor-warning" href="{{baseUrl}}/index.php?controller=editor&method=rechazarReporte&id={{reporte_id}}">
-                            Rechazar
-                            </a>
-
-                            <a class="btn-editor-danger" href="{{baseUrl}}/index.php?controller=editor&method=eliminarPregunta&id={{pregunta_id}}">
-                            Eliminar
-                            </a>
-                        </td>
+                        <th>Pregunta</th>
+                        <th>Categoría</th>
+                        <th>Usuario</th>
+                        <th>Motivo</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
                     </tr>
-                {{/reportes}}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {{#reportes}}
+                        <tr>
+                            <td>{{pregunta}}</td>
+                            <td>{{categoria}}</td>
+                            <td>{{usuario}}</td>
+                            <td>{{motivo}}</td>
+                            <td>{{fecha}}</td>
+                            <td class="editor-actions">
+                                <a class="btn-editor-primary" href="{{baseUrl}}/editor/editarPregunta?id={{pregunta_id}}">
+                                Editar
+                                </a>
+
+                                <a class="btn-editor-warning" href="{{baseUrl}}/editor/rechazarReporte?id={{reporte_id}}">
+                                Rechazar
+                                </a>
+
+                                <a class="btn-editor-danger" href="{{baseUrl}}/editor/eliminarPregunta?id={{pregunta_id}}">
+                                Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    {{/reportes}}
+                    {{^reportes}}
+                        <tr>
+                            <td colspan="6" class="tabla-vacia">No hay reportes pendientes para revisar.</td>
+                        </tr>
+                    {{/reportes}}
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section class="editor-card">
@@ -64,44 +71,46 @@
                 </div>
             </div>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Pregunta propuesta</th>
-                    <th>Categoría</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                {{#propuestas}}
-                    <tr id="fila-propuesta-{{id}}">
-                        <td>{{usuario}}</td>
-                        <td>{{pregunta}}</td>
-                        <td>{{categoria}}</td>
-                        <td>{{fecha}}</td>
-                        <td class="editor-actions">
-                            <button
-                                    type="button"
-                                    class="btn-editor-primary"
-                                    onclick="abrirModalPropuesta('modalPropuesta{{id}}')">
-                                Ver propuesta
-                            </button>
-                        </td>
-                    </tr>
-                {{/propuestas}}
-
-                {{^propuestas}}
+            <div class="table-responsive">
+                <table>
+                    <thead>
                     <tr>
-                        <td colspan="5" class="tabla-vacia">
-                            No hay preguntas propuestas pendientes.
-                        </td>
+                        <th>Usuario</th>
+                        <th>Pregunta propuesta</th>
+                        <th>Categoría</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
                     </tr>
-                {{/propuestas}}
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                    {{#propuestas}}
+                        <tr id="fila-propuesta-{{id}}">
+                            <td>{{usuario}}</td>
+                            <td>{{pregunta}}</td>
+                            <td>{{categoria}}</td>
+                            <td>{{fecha}}</td>
+                            <td class="editor-actions">
+                                <button
+                                        type="button"
+                                        class="btn-editor-primary"
+                                        onclick="abrirModalPropuesta('modalPropuesta{{id}}')">
+                                    Ver propuesta
+                                </button>
+                            </td>
+                        </tr>
+                    {{/propuestas}}
+
+                    {{^propuestas}}
+                        <tr>
+                            <td colspan="5" class="tabla-vacia">
+                                No hay preguntas propuestas pendientes.
+                            </td>
+                        </tr>
+                    {{/propuestas}}
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section class="editor-card">
@@ -111,91 +120,70 @@
                     <p>Listado general de preguntas cargadas en el juego.</p>
                 </div>
 
-                <a class="btn-editor-success"
-                   href="{{baseUrl}}/index.php?controller=editor&method=nuevaPregunta">
-                    Nueva pregunta
+                <a class="btn-editor-success" href="{{baseUrl}}/editor/nuevaPregunta">
+                    + Nueva pregunta
                 </a>
             </div>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Pregunta</th>
-                    <th>Respuesta correcta</th>
-                    <th>Categoría</th>
-                    <th>Dificultad</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#preguntas}}
+            <div class="table-responsive">
+                <table>
+                    <thead>
                     <tr>
-                        <td>{{id}}</td>
-
-                        <td>{{texto}}</td>
-
-                        <td>
-        <span class="respuesta-correcta">
-            {{respuesta_correcta}}
-        </span>
-                        </td>
-
-                        <td>{{categoria}}</td>
-
-                        <td>{{dificultad}}</td>
-
-                        <td class="editor-actions">
-                            <a class="btn-editor-primary"
-                               href="{{baseUrl}}/index.php?controller=editor&method=editarPregunta&id={{id}}">
-                            Editar
-                            </a>
-
-                            <a class="btn-editor-danger"
-                               href="{{baseUrl}}/index.php?controller=editor&method=eliminarPregunta&id={{id}}">
-                            Eliminar
-                            </a>
-                        </td>
+                        <th>ID</th>
+                        <th>Pregunta</th>
+                        <th>Respuesta correcta</th>
+                        <th>Categoría</th>
+                        <th>Dificultad</th>
+                        <th>Acciones</th>
                     </tr>
-                {{/preguntas}}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {{#preguntas}}
+                        <tr>
+                            <td>#{{id}}</td>
+                            <td>{{texto}}</td>
+                            <td>
+                                <span class="respuesta-correcta">
+                                    {{respuesta_correcta}}
+                                </span>
+                            </td>
+                            <td>{{categoria}}</td>
+                            <td>{{dificultad}}</td>
+                            <td class="editor-actions">
+                                <a class="btn-editor-primary" href="{{baseUrl}}/editor/editarPregunta?id={{id}}">
+                                Editar
+                                </a>
+
+                                <a class="btn-editor-danger" href="{{baseUrl}}/editor/eliminarPregunta?id={{id}}">
+                                Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    {{/preguntas}}
+                    </tbody>
+                </table>
+            </div>
         </section>
 
     </section>
 </main>
+
 {{#propuestas}}
     <div class="editor-modal" id="modalPropuesta{{id}}">
         <div class="editor-modal-content">
 
-            <button
-                    type="button"
-                    class="editor-modal-close"
-                    onclick="cerrarModalPropuesta('modalPropuesta{{id}}')">
+            <button type="button" class="editor-modal-close" onclick="cerrarModalPropuesta('modalPropuesta{{id}}')">
                 &times;
             </button>
 
-            <span class="editor-modal-badge">
-            Propuesta #{{id}}
-        </span>
+            <span class="editor-modal-badge">Propuesta #{{id}}</span>
 
             <h2>{{pregunta}}</h2>
 
             <div class="editor-modal-info">
-                <p>
-                    <strong>Propuesta por:</strong>
-                    {{usuario}}
-                </p>
-
-                <p>
-                    <strong>Categoría:</strong>
-                    {{categoria}}
-                </p>
-
-                <p>
-                    <strong>Fecha:</strong>
-                    {{fecha}}
-                </p>
+                <p><strong>Propuesta por:</strong> {{usuario}}</p>
+                <p><strong>Categoría:</strong> {{categoria}}</p>
+                <p><strong>Fecha:</strong> {{fecha}}</p>
             </div>
 
             <h3>Opciones de respuesta</h3>
@@ -204,7 +192,6 @@
                 {{#opciones}}
                     <div class="propuesta-opcion {{#correcta}}propuesta-opcion-correcta{{/correcta}}">
                         <span>{{texto}}</span>
-
                         {{#correcta}}
                             <strong>Correcta</strong>
                         {{/correcta}}
@@ -213,25 +200,11 @@
             </div>
 
             <div class="editor-modal-actions">
-                <button
-                        type="button"
-                        class="btn-editor-success"
-                        onclick="resolverPropuesta(
-                            {{id}},
-                                'modalPropuesta{{id}}',
-                                'aprobada'
-                                )">
+                <button type="button" class="btn-editor-success" onclick="resolverPropuesta({{id}}, 'modalPropuesta{{id}}', 'aprobada')">
                     Aprobar
                 </button>
 
-                <button
-                        type="button"
-                        class="btn-editor-danger"
-                        onclick="resolverPropuesta(
-                            {{id}},
-                                'modalPropuesta{{id}}',
-                                'rechazada'
-                                )">
+                <button type="button" class="btn-editor-danger" onclick="resolverPropuesta({{id}}, 'modalPropuesta{{id}}', 'rechazada')">
                     Rechazar
                 </button>
             </div>
@@ -239,27 +212,38 @@
         </div>
     </div>
 {{/propuestas}}
+
+<div class="editor-modal" id="modalResultadoPropuesta">
+    <div class="editor-modal-content editor-modal-resultado">
+        <button type="button" class="editor-modal-close" onclick="cerrarModalResultado()">
+            &times;
+        </button>
+
+        <div class="resultado-icono" id="resultadoIcono"></div>
+        <h2 id="resultadoTitulo"></h2>
+        <p id="resultadoMensaje"></p>
+
+        <div class="editor-modal-actions">
+            <button type="button" class="btn-editor-primary" onclick="cerrarModalResultado()">
+                Aceptar
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
     function abrirModalPropuesta(modalId) {
         const modal = document.getElementById(modalId);
-
-        if (!modal) {
-            return;
-        }
-
+        if (!modal) return;
         modal.classList.add('show');
-        document.body.classList.add('modal-abierto');
+        document.body.style.overflow = 'hidden'; // Evita scrollear el fondo
     }
 
     function cerrarModalPropuesta(modalId) {
         const modal = document.getElementById(modalId);
-
-        if (!modal) {
-            return;
-        }
-
+        if (!modal) return;
         modal.classList.remove('show');
-        document.body.classList.remove('modal-abierto');
+        document.body.style.overflow = '';
     }
 
     function resolverPropuesta(id, modalId, resultado) {
@@ -285,67 +269,41 @@
         }
 
         const fila = document.getElementById('fila-propuesta-' + id);
-
-        if (fila) {
-            fila.remove();
-        }
+        if (fila) fila.remove();
 
         modalResultado.classList.add('show');
-        document.body.classList.add('modal-abierto');
+        document.body.style.overflow = 'hidden';
     }
 
     function cerrarModalResultado() {
         const modal = document.getElementById('modalResultadoPropuesta');
-
         modal.classList.remove('show');
-        document.body.classList.remove('modal-abierto');
+        document.body.style.overflow = '';
     }
 
+    // Cerrar clickeando afuera
     document.querySelectorAll('.editor-modal').forEach(function (modal) {
         modal.addEventListener('click', function (event) {
             if (event.target === modal) {
                 cerrarModalPropuesta(modal.id);
+                if(modal.id === 'modalResultadoPropuesta') cerrarModalResultado();
             }
         });
     });
 
+    // Cerrar con Escape
     document.addEventListener('keydown', function (event) {
-        if (event.key !== 'Escape') {
-            return;
-        }
-
-        const modalAbierto = document.querySelector('.editor-modal.show');
-
-        if (modalAbierto) {
-            cerrarModalPropuesta(modalAbierto.id);
+        if (event.key === 'Escape') {
+            const modalAbierto = document.querySelector('.editor-modal.show');
+            if (modalAbierto) {
+                if(modalAbierto.id === 'modalResultadoPropuesta'){
+                    cerrarModalResultado();
+                } else {
+                    cerrarModalPropuesta(modalAbierto.id);
+                }
+            }
         }
     });
 </script>
-<div class="editor-modal" id="modalResultadoPropuesta">
-    <div class="editor-modal-content editor-modal-resultado">
 
-        <button
-                type="button"
-                class="editor-modal-close"
-                onclick="cerrarModalResultado()">
-            &times;
-        </button>
-
-        <div class="resultado-icono" id="resultadoIcono"></div>
-
-        <h2 id="resultadoTitulo"></h2>
-
-        <p id="resultadoMensaje"></p>
-
-        <div class="editor-modal-actions">
-            <button
-                    type="button"
-                    class="btn-editor-primary"
-                    onclick="cerrarModalResultado()">
-                Aceptar
-            </button>
-        </div>
-
-    </div>
-</div>
 {{>footer}}

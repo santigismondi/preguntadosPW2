@@ -1,5 +1,7 @@
 <?php
-
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 class EditorController
 {
     private $model;
@@ -13,15 +15,22 @@ class EditorController
 
     public function ver()
     {
+        $this->verificarAccesoEditor();
+
         $data = [
-            'titulo' => 'Panel editor',
+            'titulo' => 'Editor',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
             'baseUrl' => $this->getBaseUrl(),
-
+            'showAppHeader' => true,
+            'headerVariant' => 'admin', // Usamos el estilo del admin o podés crear uno nuevo
+            'showLogoutButton' => true,
+            'logoutUrl' => $this->getBaseUrl() . '/usuario/logout',
+            'showPageTitle' => true,
+            'headerPageTitle' => 'Panel de Editor',
             'preguntas' => $this->model->getPreguntas(),
             'reportes' => $this->model->getReportesPendientes(),
 
-            // hardcodeado, luego incorporar logica
+            // TODO: hardcodeado, luego incorporar logica
             'propuestas' => [
                 [
                     'id' => 1,
@@ -57,6 +66,8 @@ class EditorController
 
     public function editarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'] ?? null;
 
         $data = [
@@ -71,6 +82,8 @@ class EditorController
 
     public function guardarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_POST['id'];
         $texto = $_POST['texto'];
         $opciones = $_POST['opciones'];
@@ -78,23 +91,27 @@ class EditorController
 
         $this->model->actualizarPregunta($id, $texto, $opciones, $correcta);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     public function rechazarReporte()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'];
         $this->model->rechazarReporte($id);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     public function eliminarPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $id = $_GET['id'];
         $this->model->eliminarPregunta($id);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     private function getBaseUrl()
@@ -103,6 +120,8 @@ class EditorController
     }
     public function nuevaPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $data = [
             'titulo' => 'Nueva pregunta',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
@@ -116,6 +135,8 @@ class EditorController
 
     public function crearPregunta()
     {
+        $this->verificarAccesoEditor();
+
         $texto = trim($_POST['texto'] ?? '');
         $categoriaId = (int)($_POST['categoria_id'] ?? 0);
         $opciones = $_POST['opciones'] ?? [];
@@ -133,7 +154,7 @@ class EditorController
             header(
                 'Location: ' .
                 $this->getBaseUrl() .
-                '/index.php?controller=editor&method=nuevaPregunta&error=datos'
+                '/editor/nuevaPregunta?error=datos'
             );
             exit;
         }
@@ -143,7 +164,7 @@ class EditorController
                 header(
                     'Location: ' .
                     $this->getBaseUrl() .
-                    '/index.php?controller=editor&method=nuevaPregunta&error=opciones'
+                    '/editor/nuevaPregunta?error=opciones'
                 );
                 exit;
             }
@@ -159,9 +180,17 @@ class EditorController
         header(
             'Location: ' .
             $this->getBaseUrl() .
-            '/index.php?controller=editor&method=ver&creada=1'
+            '/editor/ver?creada=1'
         );
         exit;
+    }
+
+    private function verificarAccesoEditor()
+    {
+        if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'Editor') {
+            header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+            exit;
+        }
     }
 }
 

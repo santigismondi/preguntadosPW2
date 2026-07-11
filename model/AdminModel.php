@@ -69,15 +69,11 @@ class AdminModel
     {
         $filtro = $this->filtroFecha('fecha_creacion', $periodo);
 
-        $sql = "
-        SELECT
-            coordenadas_ciudad AS pais,
-            COUNT(*) AS cantidad
-        FROM USUARIO
-        WHERE $filtro
-        GROUP BY coordenadas_ciudad
-        ORDER BY cantidad DESC
-    ";
+        // Mantenemos esto igual, agrupando por coordenadas para eficiencia
+        $sql = "SELECT coordenadas_ciudad AS pais, COUNT(*) AS cantidad 
+                FROM USUARIO 
+                WHERE $filtro 
+                GROUP BY coordenadas_ciudad";
 
         return $this->database->query($sql);
     }
