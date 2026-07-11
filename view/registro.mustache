@@ -1,207 +1,340 @@
-{{>header}}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
 
-<main class="login-background min-vh-100 d-flex align-items-center justify-content-center px-3 py-3">
-    <section class="card border-0 shadow-lg rounded-4 w-100 registro-card">
-        <div class="card-body p-3 p-md-4">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-        <div class="text-center mb-3 registro-header">
-            <img src="{{baseUrl}}/public/img/logo.png"
-                 alt="Preguntados Mundial"
-                 class="logo-login mb-2">
+    <title>{{titulo}}</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
-            <h1 class="h4 fw-bold mb-1">Crear cuenta</h1>
-            <p class="text-muted mb-0">Sumate al desafío mundialista 2026</p>
-        </div>
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <link
+        rel="stylesheet"
+        href="{{baseUrl}}/public/css/estilos.css">
+</head>
+
+<body class="auth-body">
+
+<main class="auth-page auth-page--register">
+
+    <section class="auth-card auth-card--register">
+
+        <header class="auth-register-header">
+
+            <div class="auth-logo-container auth-logo-container--small">
+                <img
+                        src="{{baseUrl}}/public/img/logo.png"
+                        alt="Preguntados Mundial 2026"
+                        class="auth-logo">
+            </div>
+
+            <div class="auth-register-copy">
+                <span class="auth-eyebrow">
+                    Nuevo jugador
+                </span>
+
+                <h1>Crear cuenta</h1>
+
+                <p>
+                    Registrate para jugar, sumar puntos y participar del ranking.
+                </p>
+            </div>
+
+        </header>
 
         {{#error}}
-            <div class="alert alert-danger text-center py-2">{{error}}</div>
+            <div class="auth-alert" role="alert">
+                {{error}}
+            </div>
         {{/error}}
 
-        <form action="{{baseUrl}}/usuario/registrar"
-              method="POST"
-              enctype="multipart/form-data">
+        <form
+                action="{{baseUrl}}/usuario/registrar"
+                method="POST"
+                enctype="multipart/form-data"
+                class="auth-form">
 
-            <div class="row registro-row">
+            <div class="auth-register-grid">
 
-                <div class="col-12 col-md-4 mb-2">
-                    <label class="form-label fw-semibold">Nombre completo</label>
-                    <input type="text"
-                           class="form-control"
-                           name="nombre"
-                           placeholder="Ingresá tu nombre completo"
-                           required>
-                </div>
+                <div class="auth-field">
+                    <label for="nombre">
+                        Nombre completo
+                    </label>
 
-                <div class="col-12 col-md-4 mb-2">
-                    <label class="form-label fw-semibold">Usuario</label>
-                    <input type="text"
-                           class="form-control"
-                           name="nombre_usuario"
-                           placeholder="Ingresá tu usuario"
-                           required>
-                </div>
-
-                <div class="col-12 col-md-4 mb-2">
-                    <label class="form-label fw-semibold">Email</label>
-                    <input type="email"
-                           class="form-control"
-                           name="email"
-                           placeholder="Ingresá tu email"
-                           required>
-                </div>
-
-                <div class="col-6 col-md-4 mb-2">
-                    <label class="form-label fw-semibold">Nacimiento</label>
-                    <input type="date"
-                           class="form-control"
-                           name="fecha_nac"
-                           required>
-                </div>
-
-                <div class="col-6 col-md-4 mb-2">
-                    <label class="form-label fw-semibold">Género</label>
-                    <select class="form-select"
-                            name="genero"
+                    <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            placeholder="Ingresá tu nombre completo"
+                            autocomplete="name"
                             required>
-                        <option value="">Seleccionar</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                        <option value="N">Prefiero no cargarlo</option>
+                </div>
+
+                <div class="auth-field">
+                    <label for="nombre_usuario">
+                        Usuario
+                    </label>
+
+                    <input
+                            type="text"
+                            id="nombre_usuario"
+                            name="nombre_usuario"
+                            placeholder="Elegí un usuario"
+                            autocomplete="username"
+                            required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="email">
+                        Correo electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Ingresá tu correo"
+                        autocomplete="email"
+                        required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="fecha_nac">
+                        Fecha de nacimiento
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha_nac"
+                        name="fecha_nac"
+                        required>
+                </div>
+
+                <div class="auth-field">
+                    <label for="genero">
+                        Género
+                    </label>
+
+                    <select
+                        id="genero"
+                        name="genero"
+                        required>
+
+                        <option value="">
+                            Seleccioná una opción
+                        </option>
+
+                        <option value="M">
+                            Masculino
+                        </option>
+
+                        <option value="F">
+                            Femenino
+                        </option>
+
+                        <option value="N">
+                            Prefiero no informarlo
+                        </option>
                     </select>
                 </div>
 
-                <div class="col-12 col-md-8 mb-2 ubicacion-registro">
-                    <label class="form-label fw-semibold">Ubicación</label>
+                <div class="auth-field auth-photo-field">
+                    <label>
+                        Foto de perfil
+                    </label>
 
-                    <div id="mapa"></div>
+                    <div class="auth-photo-control">
 
-                    <input type="hidden"
-                           name="coordenadas_ciudad"
-                           id="coordenadas_ciudad"
-                           required>
-                </div>
+                        <div
+                            class="auth-photo-preview"
+                            id="fotoPreview">
 
-                <div class="col-12 col-md-4 mb-2 foto-registro">
-                    <label class="form-label fw-semibold">Foto de perfil</label>
-
-                    <div class="foto-upload">
-                        <div class="foto-preview" id="fotoPreview">
-                            <img src="{{baseUrl}}/public/img/iconos/foto-perfil.png"
-                                 alt="Foto de perfil"
-                                 class="foto-icono">
+                            <img
+                                src="{{baseUrl}}/public/img/usuarios/default.png"
+                                alt="Vista previa de la foto">
                         </div>
 
-                        <input type="file"
-                               id="fotoPerfil"
-                               name="foto_perfil"
-                               accept="image/*"
-                               hidden>
+                        <input
+                            type="file"
+                            id="fotoPerfil"
+                            name="foto_perfil"
+                            accept="image/jpeg,image/png,image/webp"
+                            hidden>
 
-                        <button type="button"
-                                class="btn btn-outline-success btn-foto"
-                                onclick="document.getElementById('fotoPerfil').click()">
-                            Seleccionar foto
+                        <button
+                            type="button"
+                            class="auth-photo-button"
+                            onclick="document.getElementById('fotoPerfil').click()">
+
+                            Seleccionar imagen
                         </button>
+
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6 mb-2">
-                    <label class="form-label fw-semibold">Contraseña</label>
-                    <input type="password"
-                           class="form-control"
-                           name="contrasena"
-                           placeholder="Ingresá tu contraseña"
-                           required>
+                <div class="auth-field auth-map-field">
+
+                    <label>
+                        Ubicación
+                    </label>
+
+                    <small>
+                        Hacé clic sobre el mapa para indicar tu ciudad.
+                    </small>
+
+                    <div
+                        id="mapa"
+                        class="auth-map">
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="coordenadas_ciudad"
+                        id="coordenadas_ciudad">
                 </div>
 
-                <div class="col-12 col-md-6 mb-3">
-                    <label class="form-label fw-semibold">Confirmar contraseña</label>
-                    <input type="password"
-                           class="form-control"
-                           name="confirmar_contrasena"
-                           placeholder="Repetí tu contraseña"
-                           required>
+                <div class="auth-passwords">
+
+                    <div class="auth-field">
+                        <label for="contrasena">
+                            Contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            id="contrasena"
+                            name="contrasena"
+                            placeholder="Ingresá una contraseña"
+                            autocomplete="new-password"
+                            required>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="confirmar_contrasena">
+                            Confirmar contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmar_contrasena"
+                            name="confirmar_contrasena"
+                            placeholder="Repetí la contraseña"
+                            autocomplete="new-password"
+                            required>
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="d-grid mt-2">
-                <button type="submit" class="btn btn-success fw-bold btn-crear">
-                    Crear cuenta
-                </button>
-            </div>
+            <button
+                type="submit"
+                class="auth-submit auth-submit--register">
+
+                Crear cuenta
+            </button>
 
         </form>
 
-        <div class="text-center mt-3">
-            <span class="text-muted">¿Ya tenés cuenta?</span>
-            <a href="{{baseUrl}}/usuario/login"
-               class="fw-bold text-decoration-none">
+        <div class="auth-secondary">
+            <span>¿Ya tenés una cuenta?</span>
+
+            <a href="{{baseUrl}}/usuario/login">
                 Iniciar sesión
             </a>
         </div>
 
-    </div>
-</section>
-```
+    </section>
 
 </main>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-    const inputFoto = document.getElementById('fotoPerfil');
-    const previewFoto = document.getElementById('fotoPreview');
+    const inputFoto =
+        document.getElementById("fotoPerfil");
 
-    if (inputFoto) {
-        inputFoto.addEventListener('change', function () {
+    const previewFoto =
+        document.getElementById("fotoPreview");
+
+    if (inputFoto && previewFoto) {
+        inputFoto.addEventListener("change", function () {
 
             const archivo = this.files[0];
 
-            if (!archivo) return;
+            if (!archivo) {
+                return;
+            }
 
             const reader = new FileReader();
 
-            reader.onload = function (e) {
+            reader.onload = function (evento) {
                 previewFoto.innerHTML =
-                    `<img src="${e.target.result}" alt="Preview">`;
+                    '<img src="' +
+                    evento.target.result +
+                    '" alt="Vista previa de la foto">';
             };
 
             reader.readAsDataURL(archivo);
         });
     }
 
-    const mapaContainer = document.getElementById('mapa');
+    const mapaContainer =
+        document.getElementById("mapa");
 
-    if (mapaContainer && typeof L !== 'undefined') {
+    const coordenadasInput =
+        document.getElementById("coordenadas_ciudad");
 
-        const mapa = L.map('mapa').setView([-34.6037, -58.3816], 12);
+    if (
+        mapaContainer &&
+        coordenadasInput &&
+        typeof L !== "undefined"
+    ) {
+        const mapa = L.map("mapa").setView(
+            [-34.6037, -58.3816],
+            10
+        );
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(mapa);
+        L.tileLayer(
+            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: "&copy; OpenStreetMap"
+            }
+        ).addTo(mapa);
 
-        let marcador;
+        let marcador = null;
 
-        mapa.on('click', function (e) {
+            mapa.on("click", function (evento) {
 
             if (marcador) {
                 mapa.removeLayer(marcador);
             }
 
-            marcador = L.marker(e.latlng).addTo(mapa);
+            marcador =
+                L.marker(evento.latlng).addTo(mapa);
 
-            document.getElementById('coordenadas_ciudad').value =
-                e.latlng.lat + ',' + e.latlng.lng;
+            coordenadasInput.value =
+                evento.latlng.lat +
+                "," +
+                evento.latlng.lng;
         });
 
         setTimeout(function () {
             mapa.invalidateSize();
-        }, 300);
+        }, 250);
     }
 
 });
 </script>
 
-{{>footer}}
-
+</body>
+</html>

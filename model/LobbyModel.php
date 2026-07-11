@@ -22,4 +22,29 @@ class LobbyModel
         $resultado = $this->database->query($sql, [$usuarioId]);
         return (!empty($resultado) && $resultado[0]['max_puntaje'] !== null) ? $resultado[0]['max_puntaje'] : 0;
     }
+
+    public function getRanking()
+    {
+        $sql = "SELECT U.id, U.nombre_usuario, MAX(P.puntaje) AS mejor_puntaje
+            FROM USUARIO U LEFT JOIN PARTIDA P ON U.id = P.usuario_id
+            GROUP BY U.id, U.nombre_usuario
+            ORDER BY mejor_puntaje DESC, U.nombre_usuario ASC";
+
+        return $this->database->query($sql, []);
+    }
+
+    public function getPosicionRanking($usuarioId)
+    {
+        $ranking = $this->getRanking();
+
+        $posicion = 1;
+
+        foreach ($ranking as $jugador) {
+            if ($jugador["id"] == $usuarioId) {
+                return $posicion;
+            }
+            $posicion++;
+        }
+        return null;
+    }
 }

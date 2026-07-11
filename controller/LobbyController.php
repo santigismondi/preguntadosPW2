@@ -16,10 +16,7 @@ class LobbyController
 
     public function ver()
     {
-        if (!isset($_SESSION['usuario_id'])) {
-            header('Location: ' . $this->getBaseUrl() . '/usuario/login');
-            return;
-        }
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
@@ -44,19 +41,54 @@ class LobbyController
             unset($_SESSION['respuesta_correcta']);
         }
 
+        $posicionRanking = $this->model->getPosicionRanking($_SESSION["usuario_id"]);
+
         $data = [
             'titulo'             => 'Preguntados Mundial - Lobby',
             'cssExtra'           => $this->getBaseUrl() . '/public/css/lobby.css',
             'nombre_usuario'     => $_SESSION['nombre_usuario'],
+            'showAppHeader'      => true,
+            'headerVariant'      => 'lobby',
+            'showAppBrand'       => true,
+            'headerLogo'         => $this->getBaseUrl() . '/public/img/logo.png',
+            'headerTitle'        => 'Preguntados Mundial',
+            'headerBrandUrl'     => $this->getBaseUrl() . '/lobby/ver',
+            'showProfileButton'  => true,
+            'profileButtonUrl'   => $this->getBaseUrl() . '/perfil/ver',
+            'profileButtonLabel' => $_SESSION['nombre_usuario'],
             'categorias'         => $categorias,
             'puntaje'            => $_SESSION['puntaje'],
             'partidaTerminada'   => $partidaTerminada,
             'puntajeFinal'       => $puntajeFinal,
             'respuestaCorrecta'  => $respuestaCorrecta,
-            'puntajeMaximo' => $puntajeMaximo
+            'puntajeMaximo' => $puntajeMaximo,
+            'posicionRanking' => $posicionRanking
         ];
 
         echo $this->renderer->render("lobby", $data);
+    }
+    public function jugar()
+    {
+        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+
+        if (!isset($_SESSION['puntaje'])) {
+            $_SESSION['puntaje'] = 0;
+        }
+
+        $data = [
+            'titulo'          => 'Preguntados Mundial - Ruleta',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/lobby.css',
+            'showAppHeader'   => true,
+            'headerVariant'   => 'lobby',
+            'showBackToLobby' => true,
+            'backToLobbyUrl'  => $this->getBaseUrl() . '/lobby/ver',
+            'showPageTitle'   => true,
+            'headerPageTitle' => 'Ruleta',
+            'categorias'      => $this->model->getCategorias(),
+            'puntaje'         => $_SESSION['puntaje']
+        ];
+
+        echo $this->renderer->render("ruleta", $data);
     }
 
     private function getBaseUrl()

@@ -1,165 +1,595 @@
-.perfil-page {
-    min-height: 100vh;
-    padding: 50px 20px;
-    background-image: url('../img/fondo.png');
+/* =====================================================
+   PERFIL
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+.perfil-page{
+    position: relative;
+
+    min-height: calc(100vh - 150px);
+
+    padding: 30px 20px 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    background:
+        linear-gradient(
+            rgba(8,18,20,.55),
+            rgba(8,18,20,.55)
+        ),
+        url("../img/fondo.png");
+
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    position: relative;
+    background-attachment: fixed;
+
+    overflow: hidden;
+}
+
+.perfil-page::before{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(circle at top left,
+        rgba(118,185,71,.10),
+        transparent 35%),
+
+        radial-gradient(circle at bottom right,
+        rgba(27,67,170,.08),
+        transparent 35%);
+
+    backdrop-filter: blur(2px);
+
+    z-index:0;
 }
 
 .perfil-card {
-    position: relative;
-    z-index: 1;
     width: 100%;
-    max-width: 850px;
-    margin: 0 auto;
-    background: rgba(0, 0, 0, 0.58);
-    border-radius: 28px;
-    padding: 35px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.perfil-header {
-    text-align: center;
+/* =====================================================
+   HERO
+===================================================== */
+
+.perfil-hero {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    padding: clamp(1.5rem, 4vw, 2.4rem);
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+
+    border: 1px solid rgba(118, 185, 71, 0.34);
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(18, 32, 24, 0.94),
+            rgba(15, 24, 38, 0.90)
+        );
+
+    box-shadow:
+        0 24px 55px rgba(0, 0, 0, 0.44);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.perfil-hero::before {
+    content: "";
+    position: absolute;
+    top: -180px;
+    right: -150px;
+
+    width: 420px;
+    height: 420px;
+
+    border: 46px solid rgba(118, 185, 71, 0.15);
+    border-radius: 50%;
+
+    box-shadow:
+        inset 0 0 0 24px rgba(17, 55, 140, 0.14);
+
+    pointer-events: none;
+}
+
+.perfil-identidad,
+.perfil-resumen {
+    position: relative;
+    z-index: 1;
+}
+
+.perfil-identidad {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+}
+
+.perfil-foto-wrapper {
+    flex: 0 0 auto;
+
+    width: 142px;
+    height: 142px;
+
+    padding: 5px;
+
+    border: 2px solid rgba(182, 226, 107, 0.46);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 18px 38px rgba(0, 0, 0, 0.34);
 }
 
 .perfil-foto {
-    width: 145px;
-    height: 145px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 5px solid #f5c518;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-    margin-bottom: 15px;
-}
+    width: 100%;
+    height: 100%;
 
-.perfil-header h1 {
-    font-size: 34px;
-    font-weight: 800;
-    text-shadow: 2px 2px 8px #000;
-    margin: 0;
-}
-
-.perfil-header p {
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-.perfil-stats {
-    display: flex;
-    gap: 20px;
-    margin: 30px 0;
-}
-
-.stat-box {
-    flex: 1;
-    background: rgba(0, 0, 0, 0.45);
-    border: 2px solid #f5c518;
-    border-radius: 22px;
-    padding: 22px;
-    text-align: center;
-}
-
-.stat-box span {
     display: block;
-    font-size: 30px;
-    font-weight: 800;
-    color: #f5c518;
+
+    border-radius: 50%;
+
+    object-fit: cover;
 }
 
-.stat-box p {
-    margin: 5px 0 0;
+.perfil-copy {
+    min-width: 0;
 }
 
-.perfil-section {
-    margin-top: 25px;
-    background: rgba(255, 255, 255, 0.92);
-    color: #222;
+.perfil-eyebrow {
+    display: inline-flex;
+    width: fit-content;
+
+    margin-bottom: 0.65rem;
+    padding: 0.35rem 0.75rem;
+
+    border-radius: 999px;
+
+    background: rgba(182, 226, 107, 0.13);
+
+    color: #b6e26b;
+
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.perfil-copy h1 {
+    margin: 0;
+
+    color: #fff9e6;
+
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+
+    overflow-wrap: anywhere;
+}
+
+.perfil-copy p {
+    margin: 0.65rem 0 0;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 1.05rem;
+}
+
+/* =====================================================
+   RESUMEN DE ESTADÍSTICAS
+===================================================== */
+
+.perfil-resumen {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 0.85rem;
+}
+
+.perfil-stat {
+    min-width: 150px;
+    padding: 1rem 1.2rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 20px;
-    padding: 20px;
+
+    background: rgba(3, 13, 38, 0.58);
+
+    text-align: center;
+
+    box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.26);
 }
 
-.perfil-section h2 {
-    font-size: 22px;
-    margin-bottom: 15px;
+.perfil-stat__label {
+    display: block;
+
+    color: #b6e26b;
+
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
+
+.perfil-stat strong {
+    display: block;
+
+    margin: 0.35rem 0 0.2rem;
+
+    color: white;
+
+    font-size: 2.35rem;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.perfil-stat small {
+    color: rgba(255, 255, 255, 0.58);
+}
+
+/* =====================================================
+   GRID PRINCIPAL
+===================================================== */
+
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr;
+    gap: 1rem;
+}
+
+.perfil-panel {
+    padding: 1.35rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(18, 32, 24, 0.88),
+            rgba(15, 24, 38, 0.84)
+        );
+
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.34);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.perfil-panel__header {
+    margin-bottom: 1rem;
+}
+
+.perfil-panel__header span {
+    display: block;
+
+    margin-bottom: 0.3rem;
+
+    color: #b6e26b;
+
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.perfil-panel__header h2 {
+    margin: 0;
+
+    color: #fff9e6;
+
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+.perfil-panel__header--row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* =====================================================
+   DATOS DEL JUGADOR
+===================================================== */
+
+.perfil-info-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.perfil-info-item {
+    padding: 0.85rem 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.perfil-info-item span {
+    color: rgba(255, 255, 255, 0.60);
+
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.perfil-info-item strong {
+    color: white;
+
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   QR
+===================================================== */
 
 .perfil-qr {
     text-align: center;
 }
 
-.perfil-qr img {
+.perfil-qr-box {
+    width: fit-content;
+
+    margin: 0 auto;
+    padding: 0.8rem;
+
+    border-radius: 20px;
+
     background: white;
-    padding: 12px;
-    border-radius: 18px;
+
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.30);
+}
+
+.perfil-qr-box img {
+    display: block;
+
+    width: 165px;
+    height: 165px;
+
+    object-fit: contain;
+}
+
+.perfil-qr-texto {
+    max-width: 290px;
+
+    margin: 0.9rem auto 0;
+
+    color: rgba(255, 255, 255, 0.62);
+
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+/* =====================================================
+   PARTIDAS
+===================================================== */
+
+.perfil-partidas {
+    width: 100%;
+}
+
+.perfil-partidas-total {
+    padding: 0.4rem 0.75rem;
+
+    border-radius: 999px;
+
+    background: rgba(182, 226, 107, 0.12);
+
+    color: #b6e26b;
+
+    font-size: 0.8rem;
+    font-weight: 850;
 }
 
 .partida-card {
-    background: #f3f4f6;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-left: 6px solid #c0392b;
+    width: 100%;
+    padding: 1rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.07);
 }
 
-.partida-card h3 {
-    margin-top: 0;
+.partida-card + .partida-card {
+    margin-top: 0.75rem;
+}
+
+.partida-card__principal,
+.partida-card__dato {
+    min-width: 0;
+}
+
+.partida-card__principal span,
+.partida-card__dato span {
+    display: block;
+
+    margin-bottom: 0.2rem;
+
+    color: rgba(255, 255, 255, 0.56);
+
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.partida-card__principal strong,
+.partida-card__dato strong {
+    color: white;
+
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+}
+
+.partida-resultado {
+    text-transform: capitalize;
 }
 
 .sin-partidas {
-    color: #666;
-    font-style: italic;
+    padding: 1.4rem;
+
+    border: 1px dashed rgba(182, 226, 107, 0.24);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    text-align: center;
 }
 
-.perfil-botones {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
-    flex-wrap: wrap;
+.sin-partidas strong {
+    display: block;
+
+    color: #fff9e6;
+
+    font-size: 1rem;
 }
 
-.btn-perfil {
-    text-decoration: none;
-    padding: 12px 28px;
-    border-radius: 50px;
-    font-weight: 800;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    transition: 0.2s;
+.sin-partidas p {
+    margin: 0.4rem 0 0;
+
+    color: rgba(255, 255, 255, 0.58);
 }
 
-.btn-volver {
-    background: #f5c518;
-    color: #222;
-}
+/* =====================================================
+   TABLET
+===================================================== */
 
-.btn-salir {
-    background: #c0392b;
-    color: white;
-}
-
-.btn-volver:hover,
-.btn-salir:hover {
-    transform: scale(1.05);
-}
-
-.btn-salir:hover {
-    background: #e74c3c;
-}
-
-@media (max-width: 600px) {
-    .perfil-card {
-        padding: 25px;
+@media (max-width: 900px) {
+    .perfil-page {
+        width: min(100% - 24px, 720px);
     }
 
-    .perfil-stats {
+    .perfil-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-resumen {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+    .perfil-page {
+        width: min(100% - 16px, 520px);
+        min-height: auto;
+
+        padding: 0.8rem 0 1rem;
+    }
+
+    .perfil-hero,
+    .perfil-panel {
+        border-radius: 22px;
+    }
+
+    .perfil-hero {
+        padding: 1.2rem;
+    }
+
+    .perfil-identidad {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .perfil-foto-wrapper {
+        width: 112px;
+        height: 112px;
+    }
+
+    .perfil-eyebrow {
+        margin-inline: auto;
+    }
+
+    .perfil-resumen {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+    }
+
+    .perfil-stat {
+        min-width: 0;
+        padding: 0.85rem;
+    }
+
+    .perfil-stat strong {
+        font-size: 1.8rem;
+    }
+
+    .perfil-panel {
+        padding: 1rem;
+    }
+
+    .perfil-info-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .perfil-info-item strong {
+        text-align: left;
+    }
+
+    .perfil-panel__header--row {
+        align-items: flex-start;
         flex-direction: column;
     }
 
-    .perfil-header h1 {
-        font-size: 28px;
+    .partida-card {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+    }
+
+    .perfil-qr-box img {
+        width: 145px;
+        height: 145px;
+    }
+}
+
+@media (max-width: 390px) {
+    .perfil-resumen {
+        grid-template-columns: 1fr;
     }
 }
