@@ -10,3 +10,293 @@
 </main>
 
 {{>footer}}
+<main class="admin-page">
+    <section class="admin-container">
+
+        <div class="admin-header">
+            <div>
+                <h1>Panel de Administrador</h1>
+                <p>Resumen general de jugadores, partidas, preguntas y reportes.</p>
+            </div>
+
+            <button class="btn-print" onclick="imprimirReporte()">
+                🖨️ Imprimir reporte
+            </button>
+        </div>
+
+        <form class="admin-filtros" method="GET" action="{{baseUrl}}/index.php">
+            <input type="hidden" name="controller" value="admin">
+            <input type="hidden" name="method" value="ver">
+
+            <label>
+                Filtrar por período
+                <select name="periodo">
+                    <option value="dia" {{#periodoDia}}selected{{/periodoDia}}>Día</option>
+                    <option value="semana" {{#periodoSemana}}selected{{/periodoSemana}}>Semana</option>
+                    <option value="mes" {{#periodoMes}}selected{{/periodoMes}}>Mes</option>
+                    <option value="anio" {{#periodoAnio}}selected{{/periodoAnio}}>Año</option>
+                </select>
+            </label>
+
+            <button type="submit">Aplicar filtro</button>
+        </form>
+
+        <section class="admin-stats">
+            <article class="stat-card">
+                <span>Jugadores</span>
+                <strong>{{totalJugadores}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Partidas jugadas</span>
+                <strong>{{totalPartidas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Preguntas en juego</span>
+                <strong>{{totalPreguntas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Preguntas creadas</span>
+                <strong>{{preguntasCreadas}}</strong>
+            </article>
+
+            <article class="stat-card">
+                <span>Usuarios nuevos</span>
+                <strong>{{usuariosNuevos}}</strong>
+            </article>
+        </section>
+
+        <section class="admin-grid">
+            <article class="admin-card">
+                <h2>Preguntas correctas por usuario</h2>
+                <div class="chart-box">
+                    <canvas id="chartCorrectas"></canvas>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Correctas</th>
+                        <th>Total</th>
+                        <th>Porcentaje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#correctasPorUsuario}}
+                        <tr>
+                            <td>{{usuario}}</td>
+                            <td>{{correctas}}</td>
+                            <td>{{total}}</td>
+                            <td>{{porcentaje}}%</td>
+                        </tr>
+                    {{/correctasPorUsuario}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por país</h2>
+                <div class="chart-box">
+                    <canvas id="chartPais"></canvas>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>País</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorPais}}
+                        <tr>
+                            <td>{{pais}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorPais}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por sexo</h2>
+                <div class="chart-box">
+                    <canvas id="chartSexo"></canvas>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Sexo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorSexo}}
+                        <tr>
+                            <td>{{sexo}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorSexo}}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-card">
+                <h2>Usuarios por grupo de edad</h2>
+                <div class="chart-box">
+                    <canvas id="chartEdad"></canvas>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Grupo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#usuariosPorEdad}}
+                        <tr>
+                            <td>{{grupo}}</td>
+                            <td>{{cantidad}}</td>
+                        </tr>
+                    {{/usuariosPorEdad}}
+                    </tbody>
+                </table>
+            </article>
+        </section>
+
+    </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labelsCorrectas = [{{#correctasPorUsuario}}"{{usuario}}",{{/correctasPorUsuario}}];
+    const dataCorrectas = [{{#correctasPorUsuario}}{{porcentaje}},{{/correctasPorUsuario}}];
+
+    const labelsPais = [{{#usuariosPorPais}}"{{pais}}",{{/usuariosPorPais}}];
+    const dataPais = [{{#usuariosPorPais}}{{cantidad}},{{/usuariosPorPais}}];
+
+    const labelsSexo = [{{#usuariosPorSexo}}"{{sexo}}",{{/usuariosPorSexo}}];
+    const dataSexo = [{{#usuariosPorSexo}}{{cantidad}},{{/usuariosPorSexo}}];
+
+    const labelsEdad = [{{#usuariosPorEdad}}"{{grupo}}",{{/usuariosPorEdad}}];
+    const dataEdad = [{{#usuariosPorEdad}}{{cantidad}},{{/usuariosPorEdad}}];
+
+    const colores = [
+        '#ffc400',
+        '#53f1c8',
+        '#2563eb',
+        '#dc2626',
+        '#10b981',
+        '#9333ea'
+    ];
+
+    const graficos = [];
+
+    function crearGraficoBarra(id, labels, data, label) {
+        const grafico = new Chart(document.getElementById(id), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: data,
+                    backgroundColor: colores,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,.1)' }
+                    },
+                    y: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,.1)' },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        graficos.push(grafico);
+    }
+
+    function crearGraficoTorta(id, labels, data) {
+        const grafico = new Chart(document.getElementById(id), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colores,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+
+        graficos.push(grafico);
+    }
+
+    crearGraficoBarra('chartCorrectas', labelsCorrectas, dataCorrectas, '% correctas');
+    crearGraficoTorta('chartPais', labelsPais, dataPais);
+    crearGraficoTorta('chartSexo', labelsSexo, dataSexo);
+    crearGraficoBarra('chartEdad', labelsEdad, dataEdad, 'Usuarios');
+
+    function cambiarColorTextoGraficos(colorTexto) {
+        graficos.forEach(grafico => {
+            if (grafico.options.plugins?.legend?.labels) {
+                grafico.options.plugins.legend.labels.color = colorTexto;
+            }
+
+            if (grafico.options.scales?.x?.ticks) {
+                grafico.options.scales.x.ticks.color = colorTexto;
+            }
+
+            if (grafico.options.scales?.y?.ticks) {
+                grafico.options.scales.y.ticks.color = colorTexto;
+            }
+
+            grafico.update();
+            grafico.resize();
+        });
+    }
+
+    function imprimirReporte() {
+        cambiarColorTextoGraficos('#000000');
+
+        setTimeout(() => {
+            window.print();
+        }, 300);
+    }
+
+    window.addEventListener('afterprint', () => {
+        cambiarColorTextoGraficos('#ffffff');
+    });
+</script>
+{{>footer}}

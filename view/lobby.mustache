@@ -36,6 +36,88 @@
 <div class="modal-gameover" id="modalGameover">
     <div class="modal-contenido">
         <span class="eyebrow">Partida finalizada</span>
+let anguloActual = 0;
+let girando = false;
+
+const iconosCategorias = {};
+let iconosCargados = 0;
+
+categorias.forEach(cat => {
+    const img = new Image();
+    img.src = cat.icono;
+    img.onload = function () {
+        iconosCategorias[cat.id] = img;
+        iconosCargados++;
+        if (iconosCargados === categorias.length) {
+            dibujarRuleta(anguloActual);
+        }
+    };
+    img.onerror = function () {
+        iconosCargados++;
+        if (iconosCargados === categorias.length) {
+            dibujarRuleta(anguloActual);
+        }
+    };
+});
+
+function dibujarRuleta(angulo) {
+    const total = categorias.length;
+    const slice = (2 * Math.PI) / total;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    categorias.forEach((cat, i) => {
+        const inicio = angulo + i * slice;
+        const fin = inicio + slice;
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radio, inicio, fin);
+        ctx.closePath();
+        ctx.fillStyle = cat.color;
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const anguloMedio = inicio + slice / 2;
+        const icono = iconosCategorias[cat.id];
+
+        if (icono) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(anguloMedio);
+            ctx.globalAlpha = 0.5;
+            const iconSize = 76;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(icono, radio * 0.55 - iconSize / 2, -iconSize / 2, iconSize, iconSize);
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        }
+    });
+}
+
+function girarRuleta() {
+    if (girando) return;
+    girando = true;
+
+    const btn = document.getElementById('btnGirar');
+    btn.disabled = true;
+    document.getElementById('resultado').textContent = '';
+
+    const vueltasExtra = (Math.random() * 4 + 6) * 2 * Math.PI;
+    const duracion = 4000;
+    const inicio = performance.now();
+    const anguloInicio = anguloActual;
+
+    function animar(ahora) {
+        const transcurrido = ahora - inicio;
+        const progreso = Math.min(transcurrido / duracion, 1);
+        const ease = 1 - Math.pow(1 - progreso, 3);
+
+        anguloActual = anguloInicio + vueltasExtra * ease;
+        dibujarRuleta(anguloActual);
 
         <h2>Terminó la partida</h2>
 

@@ -1,0 +1,47 @@
+{{>header}}
+
+<main class="editor-page">
+    <section class="editor-container">
+
+        <div class="editor-header">
+            <div>
+                <h1>Editar pregunta</h1>
+                <p>Cambiá el texto de la pregunta, sus opciones y la respuesta correcta.</p>
+            </div>
+
+            <a class="btn-editor-warning" href="{{baseUrl}}/index.php?controller=editor&method=ver">
+                Volver
+            </a>
+        </div>
+
+        <form class="editor-card form-editor" method="POST" action="{{baseUrl}}/index.php?controller=editor&method=guardarPregunta">
+            <input type="hidden" name="id" value="{{pregunta.id}}">
+
+            <label>
+                Pregunta
+                <textarea name="texto" rows="4" required>{{pregunta.texto}}</textarea>
+            </label>
+
+            <h2>Opciones</h2>
+
+            {{#opciones}}
+                <div class="opcion-editor">
+                    <input type="radio" name="correcta" value="{{id}}" {{#es_correcta}}checked{{/es_correcta}}>
+                    <input type="text" name="opciones[{{id}}]" value="{{texto}}" required>
+                </div>
+            {{/opciones}}
+
+            <div class="editor-actions form-actions">
+                <button type="submit" class="btn-editor-success">
+                    Guardar cambios
+                </button>
+
+                <a class="btn-editor-danger" href="{{baseUrl}}/index.php?controller=editor&method=ver">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+
+    </section>
+</main>
+{{>footer}}

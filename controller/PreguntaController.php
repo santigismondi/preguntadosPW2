@@ -269,4 +269,34 @@ class PreguntaController
 
         return $luminance > 160 ? '#1F2937' : '#F8E7A0';
     }
+    public function reportar()
+    {
+        if (!isset($_SESSION['usuario_id'])) {
+            header("Location: " . $this->getBaseUrl() . "/usuario/login");
+            return;
+        }
+
+        $preguntaId = $_POST['pregunta_id'] ?? null;
+        $motivo = trim($_POST['motivo'] ?? '');
+
+        if (!$preguntaId) {
+            echo json_encode([
+                "ok" => false,
+                "mensaje" => "Pregunta inválida."
+            ]);
+            return;
+        }
+
+        $this->model->reportarPregunta(
+            $preguntaId,
+            $_SESSION['usuario_id'],
+            $motivo
+        );
+
+        echo json_encode([
+            "ok" => true,
+            "mensaje" => "La pregunta fue reportada correctamente."
+        ]);
+    }
+
 }
