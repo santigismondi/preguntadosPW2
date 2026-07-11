@@ -1,12 +1,16 @@
 <?php
-
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 class AdminController
 {
     private $renderer;
     private $request;
+    private $model;
 
-    public function __construct($renderer, $request)
+    public function __construct($model, $renderer, $request)
     {
+        $this->model = $model;
         $this->renderer = $renderer;
         $this->request = $request;
     }
@@ -26,15 +30,6 @@ class AdminController
             'showPageTitle' => true,
             'headerPageTitle' => 'Panel de administración',
         ]);
-    }
-}
-    private $model;
-    private $renderer;
-
-    public function __construct($model, $renderer)
-    {
-        $this->model = $model;
-        $this->renderer = $renderer;
     }
 
     public function ver()

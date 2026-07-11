@@ -1,5 +1,7 @@
 <?php
-
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 class EditorController
 {
     private $model;
@@ -21,7 +23,7 @@ class EditorController
             'preguntas' => $this->model->getPreguntas(),
             'reportes' => $this->model->getReportesPendientes(),
 
-            // hardcodeado, luego incorporar logica
+            // TODO: hardcodeado, luego incorporar logica
             'propuestas' => [
                 [
                     'id' => 1,
@@ -78,7 +80,7 @@ class EditorController
 
         $this->model->actualizarPregunta($id, $texto, $opciones, $correcta);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     public function rechazarReporte()
@@ -86,7 +88,7 @@ class EditorController
         $id = $_GET['id'];
         $this->model->rechazarReporte($id);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     public function eliminarPregunta()
@@ -94,7 +96,7 @@ class EditorController
         $id = $_GET['id'];
         $this->model->eliminarPregunta($id);
 
-        header('Location: ' . $this->getBaseUrl() . '/index.php?controller=editor&method=ver');
+        header('Location: ' . $this->getBaseUrl() . '/editor/ver');
     }
 
     private function getBaseUrl()

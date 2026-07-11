@@ -4,17 +4,11 @@
 
 <main class="contenido pregunta-page">
 
-    <section
-        class="pregunta-shell"
-        style="--categoria-color: {{colorCategoria}};">
+    <section class="pregunta-shell" style="--categoria-color: {{colorCategoria}};">
 
         <div class="pregunta-top">
-
             <div class="categoria-chip">
-                <img
-                    src="{{iconoCategoria}}"
-                    alt="{{nombreCategoria}}">
-
+                <img src="{{iconoCategoria}}" alt="{{nombreCategoria}}">
                 <div>
                     <span>Categoría</span>
                     <strong>{{nombreCategoria}}</strong>
@@ -22,7 +16,6 @@
             </div>
 
             <div class="pregunta-meta">
-
                 <div class="meta-pill">
                     <span>Puntaje</span>
                     <strong>{{puntaje}}</strong>
@@ -30,22 +23,9 @@
 
                 <div class="meta-pill">
                     <span>Tiempo</span>
-                    <strong id="timer">{{tiempoRestante}}</strong>
+                    <strong id="timer">10</strong>
                 </div>
-
-        <header class="pregunta-header">
-            <div class="categoria-titulo">
-                <img src="{{iconoCategoria}}" alt="{{nombreCategoria}}" class="categoria-icono">
-                <h1>{{nombreCategoria}}</h1>
             </div>
-
-            <div class="puntaje-badge">
-                <span class="puntaje-estrella">⭐</span>
-                <span class="puntaje-numero">{{puntaje}}</span>
-                <span class="ms-3">⏱</span>
-                <span id="timer" class="puntaje-numero">10</span>
-            </div>
-
         </div>
 
         <article class="pregunta-card">
@@ -54,7 +34,6 @@
         </article>
 
         <div class="respuestas-container">
-
             {{#opciones}}
             <button
                 type="button"
@@ -65,21 +44,18 @@
                 {{texto}}
             </button>
             {{/opciones}}
-
         </div>
 
-        <div class="reporte-container">
-            <button type="button"
-                    class="btn-reportar-pregunta"
-                    onclick="reportarPregunta()">
-                🚩 Reportar pregunta
+        <div class="reporte-container" style="display: none; margin-top: 20px; text-align: center;">
+            <button type="button" class="btn-reportar-pregunta" onclick="reportarPregunta()">
+                Reportar pregunta
             </button>
-
             <p id="mensajeReporte" class="mensaje-reporte"></p>
         </div>
 
     </section>
 
+    <!-- Modal de Reporte -->
     <div id="modalReporte" class="modal-reporte">
         <div class="modal-reporte-contenido">
             <h3>Reportar pregunta</h3>
@@ -92,7 +68,6 @@
                 <button type="button" onclick="cerrarModalReporte()" class="btn-modal-cancelar">
                     Cancelar
                 </button>
-
                 <button type="button" onclick="enviarReportePregunta()" class="btn-modal-enviar">
                     Enviar reporte
                 </button>
@@ -102,274 +77,149 @@
 
 </main>
 
-<!-- Popup ubicado FUERA del script -->
-<div
-    class="answer-popup"
-    id="answerPopup"
-    aria-hidden="true">
-
-    <div
-        class="answer-popup__card"
-        id="answerPopupCard">
-
-        <span class="answer-popup__label">
-            Resultado
-        </span>
-
+<!-- Popup de Resultado -->
+<div class="answer-popup" id="answerPopup" aria-hidden="true">
+    <div class="answer-popup__card" id="answerPopupCard">
+        <span class="answer-popup__label">Resultado</span>
         <strong id="answerPopupTitle"></strong>
-
         <p id="answerPopupMessage"></p>
-
     </div>
-
 </div>
 
 <script>
+    // Variables globales unificadas
     let respondido = false;
-    let tiempoRestante = Number("{{tiempoRestante}}");
-
-    const timer = document.getElementById("timer");
-    const botonesRespuesta =
-        document.querySelectorAll(".respuesta-btn");
-
-    function mostrarResultado(esCorrecta) {
-        const popup =
-            document.getElementById("answerPopup");
-
-        const popupCard =
-            document.getElementById("answerPopupCard");
-
-        const popupTitle =
-            document.getElementById("answerPopupTitle");
-
-        const popupMessage =
-            document.getElementById("answerPopupMessage");
-
-        popupCard.classList.remove(
-            "answer-popup__card--correct",
-            "answer-popup__card--wrong"
-        );
-
-        if (esCorrecta) {
-            popupCard.classList.add(
-                "answer-popup__card--correct"
-            );
-
-            popupTitle.textContent =
-                "Respuesta correcta";
-
-            popupMessage.textContent =
-                "Sumaste un punto. Volvemos a la ruleta para continuar.";
-        } else {
-            popupCard.classList.add(
-                "answer-popup__card--wrong"
-            );
-
-            popupTitle.textContent =
-                "Respuesta incorrecta";
-
-            popupMessage.textContent =
-                "La partida terminó. Volvemos al lobby.";
-        }
-
-        popup.classList.add(
-            "answer-popup--visible"
-        );
-
-        popup.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-    }
-
-    function responder(boton, opcionId) {
-        if (respondido) {
-            return;
-        }
     let reportando = false;
     let redirectTimeout = null;
     let tiempoRestante = 10;
-    let intervalo = null;
 
-    const timer = document.getElementById('timer');
+    const timer = document.getElementById("timer");
+    const botonesRespuesta = document.querySelectorAll(".respuesta-btn");
 
-    intervalo = setInterval(function () {
+    // Formatear el timer inicial
+    timer.textContent = String(tiempoRestante).padStart(2, "0");
+
+    // Única declaración del intervalo
+    const intervaloPregunta = setInterval(function () {
         if (respondido) {
-            clearInterval(intervalo);
+            clearInterval(intervaloPregunta);
             return;
         }
 
         tiempoRestante--;
-        timer.textContent = tiempoRestante;
+        timer.textContent = String(Math.max(tiempoRestante, 0)).padStart(2, "0");
 
         if (tiempoRestante <= 0) {
-            clearInterval(intervalo);
-            window.location.href = '{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}';
+            clearInterval(intervaloPregunta);
+            respondido = true;
+            window.location.href = "{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}";
         }
     }, 1000);
 
+    function mostrarResultado(esCorrecta) {
+        const popup = document.getElementById("answerPopup");
+        const popupCard = document.getElementById("answerPopupCard");
+        const popupTitle = document.getElementById("answerPopupTitle");
+        const popupMessage = document.getElementById("answerPopupMessage");
+
+        popupCard.classList.remove("answer-popup__card--correct", "answer-popup__card--wrong");
+
+        if (esCorrecta) {
+            popupCard.classList.add("answer-popup__card--correct");
+            popupTitle.textContent = "Respuesta correcta";
+            popupMessage.textContent = "Sumaste un punto. Volvemos a la ruleta para continuar.";
+        } else {
+            popupCard.classList.add("answer-popup__card--wrong");
+            popupTitle.textContent = "Respuesta incorrecta";
+            popupMessage.textContent = "La partida terminó. Volvemos al lobby.";
+        }
+
+        popup.classList.add("answer-popup--visible");
+        popup.setAttribute("aria-hidden", "false");
+    }
+
+    // Única declaración de la función responder
     function responder(boton, opcionId) {
         if (respondido) return;
 
         respondido = true;
-        clearInterval(intervalo);
+        clearInterval(intervaloPregunta);
 
         botonesRespuesta.forEach(function (botonRespuesta) {
             botonRespuesta.disabled = true;
         });
 
         const datos = new FormData();
+        datos.append("pregunta_id", "{{preguntaId}}");
+        datos.append("opcion_id", opcionId);
+        datos.append("categoria_id", "{{categoriaId}}");
 
-        datos.append(
-            "pregunta_id",
-            "{{preguntaId}}"
-        );
-
-        datos.append(
-            "opcion_id",
-            opcionId
-        );
-
-        datos.append(
-            "categoria_id",
-            "{{categoriaId}}"
-        );
-
-        fetch(
-            "{{baseUrl}}/pregunta/verificar",
-            {
-                method: "POST",
-                body: datos
-            }
-        )
-        .then(function (respuesta) {
-            if (!respuesta.ok) {
-                throw new Error(
-                    "Error HTTP: " + respuesta.status
-                );
-            }
-
-            return respuesta.text();
+        fetch("{{baseUrl}}/pregunta/verificar", {
+            method: "POST",
+            body: datos
         })
-        .then(function (textoRespuesta) {
-            let data;
+                .then(function (respuesta) {
+                    if (!respuesta.ok) {
+                        throw new Error("Error HTTP: " + respuesta.status);
+                    }
+                    return respuesta.text();
+                })
+                .then(function (textoRespuesta) {
+                    let data;
+                    try {
+                        data = JSON.parse(textoRespuesta);
+                    } catch (error) {
+                        console.error("El servidor no devolvió JSON:", textoRespuesta);
+                        throw new Error("La respuesta del servidor no es válida.");
+                    }
 
-            try {
-                data = JSON.parse(textoRespuesta);
-            } catch (error) {
-                console.error(
-                    "El servidor no devolvió JSON:",
-                    textoRespuesta
-                );
+                    const botonCorrecto = document.querySelector('[data-opcion-id="' + data.correctaId + '"]');
 
-                throw new Error(
-                    "La respuesta del servidor no es válida."
-                );
-            }
+                    if (data.correcta) {
+                        boton.classList.add("respuesta-correcta");
+                    } else {
+                        boton.classList.add("respuesta-incorrecta");
+                        if (botonCorrecto) {
+                            botonCorrecto.classList.add("respuesta-correcta");
+                        }
+                    }
 
-            const botonCorrecto =
-                document.querySelector(
-                    '[data-opcion-id="' +
-                    data.correctaId +
-                    '"]'
-                );
+                    // 1. Mostrar botón de reporte al responder (aparece de fondo mientras esperás el cartel)
+                    document.querySelector('.reporte-container').style.display = 'block';
 
-            if (data.correcta) {
-                boton.classList.add(
-                    "respuesta-correcta"
-                );
-            } else {
-                boton.classList.add(
-                    "respuesta-incorrecta"
-                );
+                    setTimeout(function() {
+                        mostrarResultado(data.correcta);
+                    }, 1500);
 
-                if (botonCorrecto) {
-                    botonCorrecto.classList.add(
-                        "respuesta-correcta"
-                    );
-                }
-            }
+                    // 3. Timeout para redirigir si no presiona "Reportar"
+                    // Le ponemos 5000ms (5 segundos) para que te dé tiempo de sobra después de que aparezca el popup
+                    redirectTimeout = setTimeout(function () {
+                        if (!reportando) {
+                            window.location.href = data.redirect;
+                        }
+                    }, 5000);
+                })
+                .catch(function (error) {
+                    console.error("Error al verificar la respuesta:", error);
+                    respondido = false;
 
-            mostrarResultado(data.correcta);
+                    botonesRespuesta.forEach(function (botonRespuesta) {
+                        botonRespuesta.disabled = false;
+                    });
 
-            setTimeout(function () {
-                window.location.href =
-                    data.redirect;
-            }, 1800);
-        })
-        .catch(function (error) {
-            console.error(
-                "Error al verificar la respuesta:",
-                error
-            );
-
-            respondido = false;
-
-            botonesRespuesta.forEach(
-                function (botonRespuesta) {
-                    botonRespuesta.disabled = false;
-                }
-            );
-
-            alert(
-                "No se pudo verificar la respuesta. Revisá la consola."
-            );
-        });
-    }
-
-    timer.textContent =
-        String(tiempoRestante).padStart(2, "0");
-
-    const intervalo = setInterval(function () {
-        if (respondido) {
-            clearInterval(intervalo);
-            return;
-        }
-
-        tiempoRestante--;
-
-        timer.textContent =
-            String(
-                Math.max(tiempoRestante, 0)
-            ).padStart(2, "0");
-
-        if (tiempoRestante <= 0) {
-            clearInterval(intervalo);
-            respondido = true;
-
-            window.location.href =
-                "{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}";
-        }
-    }, 1000);
-                boton.classList.add('respuesta-incorrecta');
-
-                if (correctaBtn) {
-                    correctaBtn.classList.add('respuesta-correcta');
-                }
-            }
-
-            document.querySelector('.reporte-container').style.display = 'block';
-
-            redirectTimeout = setTimeout(function () {
-                if (!reportando) {
-                    window.location.href = data.redirect;
-                }
-            }, 2500);
-        });
+                    alert("No se pudo verificar la respuesta. Revisá la consola.");
+                });
     }
 
     function reportarPregunta() {
         reportando = true;
         clearTimeout(redirectTimeout);
-
         document.getElementById('modalReporte').classList.add('modal-reporte-activo');
     }
 
     function cerrarModalReporte() {
         reportando = false;
-
         document.getElementById('modalReporte').classList.remove('modal-reporte-activo');
-
         redirectTimeout = setTimeout(function () {
             window.location.href = '{{baseUrl}}/lobby/ver';
         }, 200);
@@ -377,36 +227,34 @@
 
     function enviarReportePregunta() {
         const motivo = document.getElementById('motivoReporte').value;
-
         const datos = new FormData();
+
         datos.append('pregunta_id', '{{preguntaId}}');
         datos.append('motivo', motivo.trim() || 'Pregunta reportada por el usuario');
 
-        fetch('index.php?controller=pregunta&method=reportar', {
+        fetch('{{baseUrl}}/pregunta/reportar', {
             method: 'POST',
             body: datos
         })
-        .then(r => r.json())
-        .then(data => {
-            if (data.ok) {
-                document.querySelector('.modal-reporte-contenido').innerHTML = `
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.querySelector('.modal-reporte-contenido').innerHTML = `
                     <div class="modal-reporte-exito">
                         <div class="icono-reporte-exito">✅</div>
                         <h3>¡Reporte enviado!</h3>
-                        <p>
-                            Gracias por ayudarnos a mejorar el juego.<br>
-                            Estaremos revisando esta pregunta.
-                        </p>
+                        <p>Gracias por ayudarnos a mejorar el juego.<br>Estaremos revisando esta pregunta.</p>
                     </div>
                 `;
 
-                setTimeout(function () {
-                    window.location.href = '{{baseUrl}}/lobby/reiniciar';
-                }, 2500);
-            } else {
-                document.getElementById('mensajeReporte').textContent = data.mensaje;
-            }
-        });
+                        setTimeout(function () {
+                            window.location.href = '{{baseUrl}}/lobby/ver';
+                        }, 2500);
+                    } else {
+                        document.getElementById('mensajeReporte').textContent = data.mensaje;
+                    }
+                })
+                .catch(error => console.error("Error enviando reporte:", error));
     }
 </script>
 
