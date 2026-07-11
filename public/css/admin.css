@@ -1,401 +1,304 @@
-:root {
-    --color-white: #ffffff;
-    --color-black: #111111;
-    --color-text-soft: #d9d9d9;
-
-    --color-yellow: #c99a00;
-    --color-yellow-hover: #ffffff;
-
-    --color-blue: #2563eb;
-    --color-blue-hover: #1d4ed8;
-
-    --color-green: #10b981;
-    --color-green-hover: #059669;
-
-    --color-red: #dc2626;
-    --color-red-hover: #b91c1c;
-
-    --color-orange: darkorange;
-
-    --glass-bg: rgba(255, 255, 255, .12);
-    --glass-bg-soft: rgba(255, 255, 255, .08);
-    --glass-border: rgba(255, 255, 255, .14);
-
-    --shadow-card: 0 15px 40px rgba(0, 0, 0, .25);
-    --shadow-modal: 0 25px 80px rgba(0, 0, 0, .55);
-
-    --radius-sm: 14px;
-    --radius-md: 18px;
-    --radius-lg: 22px;
-    --radius-xl: 26px;
-    --radius-pill: 999px;
-
-    --transition-default: transform .25s ease, box-shadow .25s ease, background-color .25s ease, color .25s ease;
-}
-
+/* =====================================================
+   ADMIN - ESTILO GLOBAL (Basado en Editor/Lobby)
+===================================================== */
 .admin-page {
-    min-height: 100vh;
-    padding: 32px 16px;
-    color: var(--color-white);
-    background:
-            linear-gradient(rgba(0, 0, 0, .72), rgba(0, 0, 0, .82)),
-            url("../img/fondo.png") center / cover fixed;
+    position: relative;
+    min-height: calc(100vh - 100px);
+    padding: 30px 20px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1;
+
+    /* Fondo agregado */
+    background-image:
+            linear-gradient(120deg, rgba(2, 8, 24, 0.72), rgba(18, 38, 24, 0.62)),
+            url('../img/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .admin-container {
-    width: min(1200px, 100%);
-    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
 }
 
-.admin-header {
+/* =====================================================
+   HERO CARD
+===================================================== */
+.admin-hero {
+    background: rgba(12, 24, 40, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 22px;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.42);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
-.admin-header h1 {
-    margin: 0;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 900;
-}
-
-.admin-header p {
-    margin: 6px 0 0;
-    color: var(--color-text-soft);
-}
-
-.admin-badge {
-    display: inline-block;
-    margin-bottom: 10px;
-    padding: 6px 14px;
-    border-radius: var(--radius-pill);
-    background: var(--color-yellow);
-    color: var(--color-black);
+.admin-hero h1 {
+    font-size: 2.2rem;
     font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
 }
 
+.admin-hero p {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
 .admin-filtros {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     align-items: flex-end;
-    gap: 16px;
-    margin-bottom: 22px;
-    padding: 18px;
-    border-radius: var(--radius-lg);
-    background: rgba(255, 255, 255, .1);
+    background: rgba(4, 17, 38, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
     backdrop-filter: blur(10px);
+    flex-wrap: wrap;
 }
 
 .admin-filtros label {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    font-weight: 700;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.9rem;
+    font-weight: 600;
+    gap: 0.5rem;
 }
 
 .admin-filtros select {
-    min-width: 220px;
-    padding: 12px 14px;
-    border: 0;
-    border-radius: var(--radius-sm);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(12, 24, 40, 0.8);
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
 }
 
+.admin-filtros select:focus {
+    border-color: #b6e26b;
+}
+
+/* =====================================================
+   TARJETAS DE ESTADÍSTICAS (KPIs)
+===================================================== */
 .admin-stats {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
-    margin-bottom: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
 }
 
 .stat-card {
-    padding: 22px;
-    border-radius: var(--radius-lg);
-    background: var(--glass-bg);
-    box-shadow: var(--shadow-card);
+    background: linear-gradient(135deg, rgba(118, 185, 71, 0.15), rgba(16, 58, 145, 0.15));
+    border: 1px solid rgba(182, 226, 107, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
 }
 
 .stat-card span {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--color-white);
-    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
 }
 
 .stat-card strong {
-    font-size: 2.4rem;
+    font-size: 2.2rem;
+    color: #fff;
     line-height: 1;
-}
-
-.admin-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-}
-
-.admin-card {
-    padding: 22px;
-    border-radius: 24px;
-    background: var(--glass-bg);
-    box-shadow: var(--shadow-card);
-    color: var(--color-white);
-}
-
-.admin-card h2 {
-    margin-bottom: 16px;
-    font-size: 1.25rem;
     font-weight: 900;
 }
 
-.chart-placeholder {
+/* =====================================================
+   ADMIN CARDS (Gráficos y Tablas)
+===================================================== */
+.admin-grid {
     display: grid;
-    place-items: center;
-    height: 220px;
-    margin-bottom: 18px;
-    border: 2px dashed rgba(255, 255, 255, .35);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .06);
-    color: var(--color-white);
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 1.5rem;
+}
+
+.admin-card {
+    background: rgba(4, 17, 38, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 22px;
+    padding: 1.8rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.34);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.admin-card h2 {
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.chart-box {
+    height: 300px;
+    width: 100%;
+    position: relative;
+}
+
+/* =====================================================
+   TABLAS
+===================================================== */
+.table-responsive {
+    overflow-x: auto;
 }
 
 .admin-card table {
     width: 100%;
     border-collapse: collapse;
-    overflow: hidden;
-    border-radius: 16px;
-    color: var(--color-white);
-}
-
-.admin-card th,
-.admin-card td {
-    padding: 12px;
+    color: rgba(255, 255, 255, 0.88);
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, .14);
+    min-width: 400px;
 }
 
 .admin-card th {
-    color: var(--color-yellow);
-    font-weight: 800;
+    padding: 1rem;
+    font-weight: 600;
+    color: #b6e26b;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.03);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
 }
 
 .admin-card td {
-    color: var(--color-white);
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+    font-size: 0.95rem;
 }
 
-.admin-reportes-preguntas {
-    grid-column: 1 / -1;
+.admin-card tr:last-child td {
+    border-bottom: none;
 }
 
-.admin-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 18px;
+.admin-card tr:hover td {
+    background: rgba(182, 226, 107, 0.05);
 }
 
-.admin-card-header p {
-    margin: 6px 0 0;
-    color: #d6d6d6;
-}
-
-.admin-card-header select {
-    min-width: 180px;
-    padding: 10px 14px;
-    border: 0;
-    border-radius: var(--radius-sm);
-}
-
-.btn-print,
-.admin-filtros button {
+/* =====================================================
+   BOTONES
+===================================================== */
+.btn-admin-primary,
+.btn-admin-success {
     display: inline-flex;
-    justify-content: center;
     align-items: center;
-    gap: 6px;
-    min-height: 44px;
-    padding: 10px 18px;
-    border: none;
-    border-radius: var(--radius-pill);
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1;
-    text-decoration: none !important;
-    white-space: nowrap;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
     cursor: pointer;
-    transition: var(--transition-default);
+    border: none;
+    font-size: 0.95rem;
 }
 
-.btn-print:active,
-.admin-filtros button:active{
-    transform: scale(.96);
+.btn-admin-primary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.btn-print {
-    background: var(--color-yellow);
-    color: var(--color-black) !important;
+.btn-admin-primary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-.btn-print:hover {
-    background: var(--color-yellow-hover);
-    color: var(--color-black) !important;
-    box-shadow: 0 1px 22px rgb(234 212 0);
+.btn-admin-success {
+    background: #76b947;
+    color: #0c1828;
 }
 
-@media (max-width: 992px) {
-    .admin-header,
+.btn-admin-success:hover {
+    background: #b6e26b;
+    transform: translateY(-2px);
+}
+
+/* =====================================================
+   IMPRESIÓN (Sobrescribe los colores oscuros al imprimir)
+===================================================== */
+@media print {
+    body, .admin-page {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+    }
+
+    .overlay,
+    .app-header,
+    .app-footer,
+    .admin-hero button,
     .admin-filtros {
-        flex-direction: column;
-        align-items: stretch;
+        display: none !important;
     }
 
-    .admin-stats {
-        grid-template-columns: repeat(2, 1fr);
+    .admin-card, .stat-card {
+        border: 1px solid #ccc !important;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
     }
 
-    .admin-grid {
-        grid-template-columns: 1fr;
+    .admin-card h2,
+    .stat-card strong,
+    .stat-card span,
+    .admin-card th,
+    .admin-card td {
+        color: black !important;
+        border-color: #ccc !important;
+    }
+
+    .admin-card tr:hover td {
+        background: none !important;
+    }
+
+    .chart-box {
+        height: 300px !important;
+        page-break-inside: avoid;
     }
 }
 
 @media (max-width: 768px) {
-    .admin-stats {
+    .admin-grid {
         grid-template-columns: 1fr;
     }
-
-    .admin-card,
-    .chart-placeholder {
-        width: 100%;
-    }
-}
-
-@media (max-width: 576px) {
-    .admin-page {
-        padding: 20px 10px;
-    }
-
-    .admin-card {
-        padding: 16px;
-        border-radius: var(--radius-md);
-        overflow-x: auto;
-    }
-
-    .admin-card h2 {
-        font-size: 1rem;
-    }
-
-    .admin-card table {
-        min-width: 520px;
-    }
-
-    .chart-placeholder {
-        height: 160px;
-        min-width: 100%;
-        border-radius: 16px;
-    }
-
-    .admin-card-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .admin-card-header select {
-        width: 100%;
-    }
-}
-
-
-@media print {
-    body {
-        background: var(--color-white) !important;
-    }
-
-    .admin-page {
-        padding: 0;
-        background: var(--color-white) !important;
-        color: #000000;
-    }
-
-    .admin-header,
-    .admin-filtros,
-    .btn-print,
-    .admin-card-header select {
-        display: none !important;
-    }
-
-    .admin-grid,
-    .admin-stats {
-        display: block;
-    }
-
-    .admin-card,
-    .stat-card {
-        margin-bottom: 20px;
-        border: 1px solid #cccccc;
-        background: var(--color-white);
-        color: #000000;
-        box-shadow: none;
-        page-break-inside: avoid;
-    }
-
-    .admin-card th {
-        color: #000000;
-    }
-
-    .admin-card th,
-    .admin-card td {
-        border-bottom: 1px solid #cccccc;
-        color: #000000;
-    }
-
-    .chart-box {
-        display: block !important;
-        height: 320px !important;
-        background: #fff !important;
-        border: 1px solid #ccc;
-        padding: 15px;
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    .chart-box canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
-}
-
-.chart-box {
-    height: 260px;
-    margin-bottom: 18px;
-    padding: 16px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .06);
-}
-
-.chart-box canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-@media (max-width: 576px) {
-    .chart-box {
-        height: 220px;
-        padding: 12px;
-    }
-}
-
-.admin-filtros button {
-    background: #059e71;
-    color: #fff !important;
-    transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
-}
-
-.admin-filtros button:hover {
-    background: #3bffc1;
-    box-shadow: 0 1px 22px rgb(65 255 195);
-}
-
-.admin-filtros button:active {
-    transform: scale(.96);
 }

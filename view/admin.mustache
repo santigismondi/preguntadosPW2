@@ -1,33 +1,22 @@
 {{>header}}
 
-<main class="container py-5">
-    <section class="card shadow-lg border-0 rounded-4">
-        <div class="card-body p-4 p-md-5 text-dark">
-            <h1 class="mb-3">Panel de administración</h1>
-            <p class="mb-0">Espacio reservado para funciones de administración.</p>
-        </div>
-    </section>
-</main>
+<div class="overlay"></div>
 
-{{>footer}}
-<main class="admin-page">
+<main class="contenido admin-page">
     <section class="admin-container">
 
-        <div class="admin-header">
+        <div class="admin-hero">
             <div>
                 <h1>Panel de Administrador</h1>
                 <p>Resumen general de jugadores, partidas, preguntas y reportes.</p>
             </div>
 
-            <button class="btn-print" onclick="imprimirReporte()">
-                🖨️ Imprimir reporte
+            <button class="btn-admin-primary" onclick="imprimirReporte()">
+                Imprimir reporte
             </button>
         </div>
 
         <form class="admin-filtros" method="GET" action="{{baseUrl}}/admin/ver">
-            <input type="hidden" name="controller" value="admin">
-            <input type="hidden" name="method" value="ver">
-
             <label>
                 Filtrar por período
                 <select name="periodo">
@@ -38,7 +27,7 @@
                 </select>
             </label>
 
-            <button type="submit">Aplicar filtro</button>
+            <button type="submit" class="btn-admin-success">Aplicar filtro</button>
         </form>
 
         <section class="admin-stats">
@@ -75,26 +64,28 @@
                     <canvas id="chartCorrectas"></canvas>
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Correctas</th>
-                        <th>Total</th>
-                        <th>Porcentaje</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#correctasPorUsuario}}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{usuario}}</td>
-                            <td>{{correctas}}</td>
-                            <td>{{total}}</td>
-                            <td>{{porcentaje}}%</td>
+                            <th>Usuario</th>
+                            <th>Correctas</th>
+                            <th>Total</th>
+                            <th>Porcentaje</th>
                         </tr>
-                    {{/correctasPorUsuario}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {{#correctasPorUsuario}}
+                            <tr>
+                                <td>{{usuario}}</td>
+                                <td>{{correctas}}</td>
+                                <td>{{total}}</td>
+                                <td>{{porcentaje}}%</td>
+                            </tr>
+                        {{/correctasPorUsuario}}
+                        </tbody>
+                    </table>
+                </div>
             </article>
 
             <article class="admin-card">
@@ -103,22 +94,24 @@
                     <canvas id="chartPais"></canvas>
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>País</th>
-                        <th>Cantidad</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#usuariosPorPais}}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{pais}}</td>
-                            <td>{{cantidad}}</td>
+                            <th>País</th>
+                            <th>Cantidad</th>
                         </tr>
-                    {{/usuariosPorPais}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {{#usuariosPorPais}}
+                            <tr>
+                                <td>{{pais}}</td>
+                                <td>{{cantidad}}</td>
+                            </tr>
+                        {{/usuariosPorPais}}
+                        </tbody>
+                    </table>
+                </div>
             </article>
 
             <article class="admin-card">
@@ -127,22 +120,24 @@
                     <canvas id="chartSexo"></canvas>
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Sexo</th>
-                        <th>Cantidad</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#usuariosPorSexo}}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{sexo}}</td>
-                            <td>{{cantidad}}</td>
+                            <th>Sexo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    {{/usuariosPorSexo}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {{#usuariosPorSexo}}
+                            <tr>
+                                <td>{{sexo}}</td>
+                                <td>{{cantidad}}</td>
+                            </tr>
+                        {{/usuariosPorSexo}}
+                        </tbody>
+                    </table>
+                </div>
             </article>
 
             <article class="admin-card">
@@ -151,27 +146,30 @@
                     <canvas id="chartEdad"></canvas>
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Grupo</th>
-                        <th>Cantidad</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#usuariosPorEdad}}
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{grupo}}</td>
-                            <td>{{cantidad}}</td>
+                            <th>Grupo</th>
+                            <th>Cantidad</th>
                         </tr>
-                    {{/usuariosPorEdad}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {{#usuariosPorEdad}}
+                            <tr>
+                                <td>{{grupo}}</td>
+                                <td>{{cantidad}}</td>
+                            </tr>
+                        {{/usuariosPorEdad}}
+                        </tbody>
+                    </table>
+                </div>
             </article>
         </section>
 
     </section>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -232,7 +230,6 @@
                 }
             }
         });
-
         graficos.push(grafico);
     }
 
@@ -259,7 +256,6 @@
                 }
             }
         });
-
         graficos.push(grafico);
     }
 
@@ -299,4 +295,5 @@
         cambiarColorTextoGraficos('#ffffff');
     });
 </script>
+
 {{>footer}}

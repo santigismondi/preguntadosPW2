@@ -26,7 +26,7 @@ class EditorController
             'showLogoutButton' => true,
             'logoutUrl' => $this->getBaseUrl() . '/usuario/logout',
             'showPageTitle' => true,
-            'headerPageTitle' => 'Panel de editor',
+            'headerPageTitle' => 'Panel de Editor',
             'preguntas' => $this->model->getPreguntas(),
             'reportes' => $this->model->getReportesPendientes(),
 
