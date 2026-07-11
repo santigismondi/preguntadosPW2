@@ -29,7 +29,7 @@ class AdminController
             'showAppHeader' => true,
             'headerVariant' => 'admin',
             'showBackToLobby' => true,
-            'backToLobbyUrl' => (new ConfigParser())->get('baseUrl', '') . '/lobby/ver',
+            'backToLobbyUrl' => (new ConfigParser())->get('baseUrl', '') . '/admin/ver',
             'showLogoutButton' => true,
             'logoutUrl' => (new ConfigParser())->get('baseUrl', '') . '/usuario/logout',
             'showPageTitle' => true,

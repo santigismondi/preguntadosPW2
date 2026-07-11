@@ -149,7 +149,7 @@ class EditorController
             header(
                 'Location: ' .
                 $this->getBaseUrl() .
-                '/index.php?controller=editor&method=nuevaPregunta&error=datos'
+                '/editor/nuevaPregunta?error=datos'
             );
             exit;
         }
@@ -159,7 +159,7 @@ class EditorController
                 header(
                     'Location: ' .
                     $this->getBaseUrl() .
-                    '/index.php?controller=editor&method=nuevaPregunta&error=opciones'
+                    '/editor/nuevaPregunta?error=opciones'
                 );
                 exit;
             }
@@ -175,7 +175,7 @@ class EditorController
         header(
             'Location: ' .
             $this->getBaseUrl() .
-            '/index.php?controller=editor&method=ver&creada=1'
+            '/editor/ver?creada=1'
         );
         exit;
     }

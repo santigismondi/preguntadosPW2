@@ -38,15 +38,15 @@
                         <td>{{motivo}}</td>
                         <td>{{fecha}}</td>
                         <td class="editor-actions">
-                            <a class="btn-editor-primary" href="{{baseUrl}}/index.php?controller=editor&method=editarPregunta&id={{pregunta_id}}">
+                            <a class="btn-editor-primary" href="{{baseUrl}}/editor/editarPregunta?id={{pregunta_id}}">
                             Editar
                             </a>
 
-                            <a class="btn-editor-warning" href="{{baseUrl}}/index.php?controller=editor&method=rechazarReporte&id={{reporte_id}}">
+                            <a class="btn-editor-warning" href="{{baseUrl}}/editor/rechazarReporte?id={{reporte_id}}">
                             Rechazar
                             </a>
 
-                            <a class="btn-editor-danger" href="{{baseUrl}}/index.php?controller=editor&method=eliminarPregunta&id={{pregunta_id}}">
+                            <a class="btn-editor-danger" href="{{baseUrl}}/editor/eliminarPregunta?id={{pregunta_id}}">
                             Eliminar
                             </a>
                         </td>
@@ -112,7 +112,7 @@
                 </div>
 
                 <a class="btn-editor-success"
-                   href="{{baseUrl}}/index.php?controller=editor&method=nuevaPregunta">
+                   href="{{baseUrl}}/editor/nuevaPregunta">
                     Nueva pregunta
                 </a>
             </div>
@@ -147,12 +147,12 @@
 
                         <td class="editor-actions">
                             <a class="btn-editor-primary"
-                               href="{{baseUrl}}/index.php?controller=editor&method=editarPregunta&id={{id}}">
+                               href="{{baseUrl}}/editor/editarPregunta?id={{id}}">
                             Editar
                             </a>
 
                             <a class="btn-editor-danger"
-                               href="{{baseUrl}}/index.php?controller=editor&method=eliminarPregunta&id={{id}}">
+                               href="{{baseUrl}}/editor/eliminarPregunta?id={{id}}">
                             Eliminar
                             </a>
                         </td>
