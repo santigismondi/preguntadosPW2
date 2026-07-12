@@ -1,0 +1,23 @@
+[23:37:57] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Nacho Pascale, Nacho01, nacho01@gmail.com]
+[23:37:57] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 4]
+[23:38:01] [INFO] Correo de validación enviado a nacho01@gmail.com
+[23:38:01] [INFO] UsuarioController::registrar - registrado exitosamente: Nacho01
+[23:39:33] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho01]
+[23:39:33] [WARNING] UsuarioController::procesarLogin - cuenta no validada: Nacho01
+[23:41:06] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[23:41:06] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: editor
+[23:41:40] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [AA, aa, aa@gmail.com]
+[23:41:40] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 5]
+[23:41:43] [INFO] Correo de validación enviado a aa@gmail.com
+[23:41:43] [INFO] UsuarioController::registrar - registrado exitosamente: aa
+[23:42:11] [INFO] UsuarioController::validar - Cuenta activada exitosamente con token
+[23:42:18] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [aa]
+[23:42:18] [INFO] UsuarioController::procesarLogin - login exitoso id=5
