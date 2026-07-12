@@ -1,0 +1,309 @@
+{{>header}}
+
+<div class="overlay"></div>
+
+<main class="contenido editor-page">
+    <section class="editor-container">
+
+        <div class="editor-hero">
+            <h1>Panel de Editor</h1>
+            <p>Gestión de preguntas y reportes enviados por los jugadores.</p>
+        </div>
+
+        <section class="editor-card">
+            <div class="editor-card-header">
+                <div>
+                    <h2>Reportes pendientes</h2>
+                    <p>Revisá reportes, rechazalos o gestioná la pregunta asociada.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Pregunta</th>
+                        <th>Categoría</th>
+                        <th>Usuario</th>
+                        <th>Motivo</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#reportes}}
+                        <tr>
+                            <td>{{pregunta}}</td>
+                            <td>{{categoria}}</td>
+                            <td>{{usuario}}</td>
+                            <td>{{motivo}}</td>
+                            <td>{{fecha}}</td>
+                            <td class="editor-actions">
+                                <a class="btn-editor-primary" href="{{baseUrl}}/editor/editarPregunta?id={{pregunta_id}}">
+                                Editar
+                                </a>
+
+                                <a class="btn-editor-warning" href="{{baseUrl}}/editor/rechazarReporte?id={{reporte_id}}">
+                                Rechazar
+                                </a>
+
+                                <a class="btn-editor-danger" href="{{baseUrl}}/editor/eliminarPregunta?id={{pregunta_id}}">
+                                Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    {{/reportes}}
+                    {{^reportes}}
+                        <tr>
+                            <td colspan="6" class="tabla-vacia">No hay reportes pendientes para revisar.</td>
+                        </tr>
+                    {{/reportes}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="editor-card">
+            <div class="editor-card-header">
+                <div>
+                    <h2>Preguntas propuestas por usuarios</h2>
+                    <p>Revisá las preguntas sugeridas antes de incorporarlas al juego.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Pregunta propuesta</th>
+                        <th>Categoría</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {{#propuestas}}
+                        <tr id="fila-propuesta-{{id}}">
+                            <td>{{usuario}}</td>
+                            <td>{{pregunta}}</td>
+                            <td>{{categoria}}</td>
+                            <td>{{fecha}}</td>
+                            <td class="editor-actions">
+                                <button
+                                        type="button"
+                                        class="btn-editor-primary"
+                                        onclick="abrirModalPropuesta('modalPropuesta{{id}}')">
+                                    Ver propuesta
+                                </button>
+                            </td>
+                        </tr>
+                    {{/propuestas}}
+
+                    {{^propuestas}}
+                        <tr>
+                            <td colspan="5" class="tabla-vacia">
+                                No hay preguntas propuestas pendientes.
+                            </td>
+                        </tr>
+                    {{/propuestas}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="editor-card">
+            <div class="editor-card-header">
+                <div>
+                    <h2>ABM de preguntas</h2>
+                    <p>Listado general de preguntas cargadas en el juego.</p>
+                </div>
+
+                <a class="btn-editor-success" href="{{baseUrl}}/editor/nuevaPregunta">
+                    + Nueva pregunta
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pregunta</th>
+                        <th>Respuesta correcta</th>
+                        <th>Categoría</th>
+                        <th>Dificultad</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#preguntas}}
+                        <tr>
+                            <td>#{{id}}</td>
+                            <td>{{texto}}</td>
+                            <td>
+                                <span class="respuesta-correcta">
+                                    {{respuesta_correcta}}
+                                </span>
+                            </td>
+                            <td>{{categoria}}</td>
+                            <td>{{dificultad}}</td>
+                            <td class="editor-actions">
+                                <a class="btn-editor-primary" href="{{baseUrl}}/editor/editarPregunta?id={{id}}">
+                                Editar
+                                </a>
+
+                                <a class="btn-editor-danger" href="{{baseUrl}}/editor/eliminarPregunta?id={{id}}">
+                                Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    {{/preguntas}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+{{#propuestas}}
+    <div class="editor-modal" id="modalPropuesta{{id}}">
+        <div class="editor-modal-content">
+
+            <button type="button" class="editor-modal-close" onclick="cerrarModalPropuesta('modalPropuesta{{id}}')">
+                &times;
+            </button>
+
+            <span class="editor-modal-badge">Propuesta #{{id}}</span>
+
+            <h2>{{pregunta}}</h2>
+
+            <div class="editor-modal-info">
+                <p><strong>Propuesta por:</strong> {{usuario}}</p>
+                <p><strong>Categoría:</strong> {{categoria}}</p>
+                <p><strong>Fecha:</strong> {{fecha}}</p>
+            </div>
+
+            <h3>Opciones de respuesta</h3>
+
+            <div class="propuesta-opciones">
+                {{#opciones}}
+                    <div class="propuesta-opcion {{#correcta}}propuesta-opcion-correcta{{/correcta}}">
+                        <span>{{texto}}</span>
+                        {{#correcta}}
+                            <strong>Correcta</strong>
+                        {{/correcta}}
+                    </div>
+                {{/opciones}}
+            </div>
+
+            <div class="editor-modal-actions">
+                <button type="button" class="btn-editor-success" onclick="resolverPropuesta({{id}}, 'modalPropuesta{{id}}', 'aprobada')">
+                    Aprobar
+                </button>
+
+                <button type="button" class="btn-editor-danger" onclick="resolverPropuesta({{id}}, 'modalPropuesta{{id}}', 'rechazada')">
+                    Rechazar
+                </button>
+            </div>
+
+        </div>
+    </div>
+{{/propuestas}}
+
+<div class="editor-modal" id="modalResultadoPropuesta">
+    <div class="editor-modal-content editor-modal-resultado">
+        <button type="button" class="editor-modal-close" onclick="cerrarModalResultado()">
+            &times;
+        </button>
+
+        <div class="resultado-icono" id="resultadoIcono"></div>
+        <h2 id="resultadoTitulo"></h2>
+        <p id="resultadoMensaje"></p>
+
+        <div class="editor-modal-actions">
+            <button type="button" class="btn-editor-primary" onclick="cerrarModalResultado()">
+                Aceptar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModalPropuesta(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Evita scrollear el fondo
+    }
+
+    function cerrarModalPropuesta(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function resolverPropuesta(id, modalId, resultado) {
+        cerrarModalPropuesta(modalId);
+
+        const modalResultado = document.getElementById('modalResultadoPropuesta');
+        const titulo = document.getElementById('resultadoTitulo');
+        const mensaje = document.getElementById('resultadoMensaje');
+        const icono = document.getElementById('resultadoIcono');
+
+        icono.className = 'resultado-icono';
+
+        if (resultado === 'aprobada') {
+            titulo.textContent = 'Propuesta aprobada';
+            mensaje.textContent = 'La pregunta fue aprobada correctamente y quedó incorporada al juego.';
+            icono.textContent = '✓';
+            icono.classList.add('resultado-aprobado');
+        } else {
+            titulo.textContent = 'Propuesta rechazada';
+            mensaje.textContent = 'La propuesta fue rechazada y dejará de aparecer entre las pendientes.';
+            icono.textContent = '✕';
+            icono.classList.add('resultado-rechazado');
+        }
+
+        const fila = document.getElementById('fila-propuesta-' + id);
+        if (fila) fila.remove();
+
+        modalResultado.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalResultado() {
+        const modal = document.getElementById('modalResultadoPropuesta');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    // Cerrar clickeando afuera
+    document.querySelectorAll('.editor-modal').forEach(function (modal) {
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                cerrarModalPropuesta(modal.id);
+                if(modal.id === 'modalResultadoPropuesta') cerrarModalResultado();
+            }
+        });
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            const modalAbierto = document.querySelector('.editor-modal.show');
+            if (modalAbierto) {
+                if(modalAbierto.id === 'modalResultadoPropuesta'){
+                    cerrarModalResultado();
+                } else {
+                    cerrarModalPropuesta(modalAbierto.id);
+                }
+            }
+        }
+    });
+</script>
+
+{{>footer}}

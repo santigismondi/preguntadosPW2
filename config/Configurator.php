@@ -25,16 +25,6 @@ class Configurator {
         return new PreguntaController($this->getPreguntaModel(), $this->getRenderer());
     }
 
-    public function getAdminController()
-    {
-        return new AdminController($this->getRenderer(), new Request());
-    }
-
-    public function getReporteController()
-    {
-        return new ReporteController($this->getReporteModel(), $this->getRenderer(), new Request());
-    }
-
     private function getRankingModel(){
         return new RankingModel($this->getDatabase());
     }
@@ -46,11 +36,6 @@ class Configurator {
     private function getPreguntaModel()
     {
         return new PreguntaModel($this->getDatabase());
-    }
-
-    private function getReporteModel()
-    {
-        return new UsuarioReportModel($this->getDatabase());
     }
 
     private function getUsuarioModel()
@@ -72,7 +57,7 @@ class Configurator {
     {
         // Detectamos si estamos en XAMPP o en producción
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            $baseUrl = '/preguntadosPW2/'; // La carpeta en tu PC
+            $baseUrl = '/preguntadosPW2'; // La carpeta en tu PC
         } else {
             $baseUrl = ''; // La raíz en InfinityFree
         }
@@ -104,5 +89,25 @@ class Configurator {
         private function getPerfilModel()
     {
         return new PerfilModel($this->getDatabase());
+    }
+
+    public function getAdminController()
+    {
+        return new AdminController($this->getAdminModel(), $this->getRenderer(), new Request());
+    }
+
+    private function getAdminModel()
+    {
+        return new AdminModel($this->getDatabase());
+    }
+
+    public function getEditorController()
+    {
+        return new EditorController($this->getEditorModel(), $this->getRenderer());
+    }
+
+    private function getEditorModel()
+    {
+        return new EditorModel($this->getDatabase());
     }
 }

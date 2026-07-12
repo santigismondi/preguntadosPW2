@@ -2,197 +2,63 @@
 
 <div class="overlay"></div>
 
-<div class="contenido">
-    <h1 class="titulo">⚽ Preguntados Mundial 2026</h1>
-    <p class="bienvenida">Bienvenido, <strong>{{nombre_usuario}}</strong>. ¡Girá la ruleta para elegir tu categoría!</p>
+<main class="contenido lobby-page">
+    <section class="hero-card">
+        <div class="hero-copy">
+            <span class="eyebrow">Edición mundial</span>
+            <h1 class="titulo">Preguntados Mundial 2026</h1>
+            <p class="bienvenida">
+                Bienvenido, <strong>{{nombre_usuario}}</strong>. Demostrá cuánto sabés de fútbol y competí en el ranking.
+            </p>
+        </div>
 
-    <div class="puntaje-display">⭐ Puntaje: {{puntaje}}</div>
+        <div class="score-card">
+            <span>Tu puntaje</span>
+            <strong>{{puntaje}}</strong>
+            <small>puntos actuales</small>
+        </div>
+    </section>
 
-    <div class="alert alert-warning text-center mb-3">
-        🏆 Mejor puntaje: <strong>{{puntajeMaximo}}</strong>
-    </div>
+    <section class="stats-grid">
+        <article class="stat-card">
+            <span>Mejor puntaje</span>
+            <strong>{{puntajeMaximo}}</strong>
+        </article>
 
-    <div class="alert alert-info text-center mb-3">
-        🏆 Ranking global
-        <br>
-
-        Tu posición:
-        <strong>#{{posicionRanking}}</strong>
-
-        <br><br>
-
-        <a href="{{baseUrl}}/ranking/ver" class="btn btn-warning">
-            Ver ranking completo
-        </a>
-    </div>
+        <article class="stat-card">
+            <span>Ranking global</span>
+            <strong>#{{posicionRanking}}</strong>
+            <a href="{{baseUrl}}/ranking/ver">Ver ranking completo</a>
+        </article>
+    </section>
 
     {{#partidaTerminada}}
-    <div class="modal-gameover" id="modalGameover">
-        <div class="modal-contenido">
-            <h2>💥 ¡Partida terminada!</h2>
-            <p>Obtuviste <strong>{{puntajeFinal}}</strong> punto{{#puntajeFinal}}s{{/puntajeFinal}}</p>
-            <p class="respuesta-info">La respuesta correcta era:<br><strong>{{respuestaCorrecta}}</strong></p>
-            <button class="btn-girar" onclick="document.getElementById('modalGameover').style.display='none'">Jugar de nuevo</button>
-        </div>
+        <div class="modal-gameover" id="modalGameover">
+            <div class="modal-contenido">
+                <span class="eyebrow">Partida finalizada</span>
+
+        <h2>Terminó la partida</h2>
+
+        <p>
+            Obtuviste <strong>{{puntajeFinal}}</strong> puntos.
+        </p>
+
+        <a href="{{baseUrl}}/lobby/ver" class="btn-jugar">
+            Volver al lobby
+        </a>
     </div>
-    {{/partidaTerminada}}
+</div>
+{{/partidaTerminada}}
 
-    <div class="ruleta-wrapper">
-        <div class="flecha">▼</div>
-        <canvas id="ruleta" width="400" height="400"></canvas>
-    </div>
+    <section class="acciones-lobby">
+        <a href="{{baseUrl}}/lobby/jugar" class="btn-jugar btn-jugar--primary">
+            Jugar ahora
+        </a>
 
-    <button class="btn-girar" id="btnGirar" onclick="girarRuleta()">
-        🎲 Girar ruleta
-    </button>
-
-    <div class="resultado" id="resultado"></div>
-
-<script>
-const categorias = [
-    {{#categorias}}
-    {
-        id: "{{id}}",
-        nombre: "{{nombre}}",
-        color: "{{color}}",
-        icono: obtenerIconoCategoria("{{nombre}}")
-    },
-    {{/categorias}}
-];
-
-function obtenerIconoCategoria(nombre) {
-    nombre = nombre.toLowerCase();
-
-    if (nombre.includes("grupo") || nombre.includes("fase")) {
-        return "{{baseUrl}}/public/img/iconos/fase.png";
-    }
-    if (nombre.includes("estadio")) {
-        return "{{baseUrl}}/public/img/iconos/estadios.png";
-    }
-    if (nombre.includes("jugador")) {
-        return "{{baseUrl}}/public/img/iconos/jugadores.png";
-    }
-    if (nombre.includes("seleccion") || nombre.includes("selección")) {
-        return "{{baseUrl}}/public/img/iconos/selecciones.png";
-    }
-    if (nombre.includes("historia")) {
-        return "{{baseUrl}}/public/img/iconos/historia.png";
-    }
-    if (nombre.includes("record") || nombre.includes("récord") || nombre.includes("estad")) {
-        return "{{baseUrl}}/public/img/iconos/estadisticas.png";
-    }
-    return "{{baseUrl}}/public/img/iconos/fase.png";
-}
-
-const canvas = document.getElementById('ruleta');
-const ctx = canvas.getContext('2d');
-const cx = canvas.width / 2;
-const cy = canvas.height / 2;
-const radio = cx - 10;
-
-let anguloActual = 0;
-let girando = false;
-
-const iconosCategorias = {};
-let iconosCargados = 0;
-
-categorias.forEach(cat => {
-    const img = new Image();
-    img.src = cat.icono;
-    img.onload = function () {
-        iconosCategorias[cat.id] = img;
-        iconosCargados++;
-        if (iconosCargados === categorias.length) {
-            dibujarRuleta(anguloActual);
-        }
-    };
-    img.onerror = function () {
-        iconosCargados++;
-        if (iconosCargados === categorias.length) {
-            dibujarRuleta(anguloActual);
-        }
-    };
-});
-
-function dibujarRuleta(angulo) {
-    const total = categorias.length;
-    const slice = (2 * Math.PI) / total;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    categorias.forEach((cat, i) => {
-        const inicio = angulo + i * slice;
-        const fin = inicio + slice;
-
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, radio, inicio, fin);
-        ctx.closePath();
-        ctx.fillStyle = cat.color;
-        ctx.fill();
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        const anguloMedio = inicio + slice / 2;
-        const icono = iconosCategorias[cat.id];
-
-        if (icono) {
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.rotate(anguloMedio);
-            ctx.globalAlpha = 0.5;
-            const iconSize = 76;
-            ctx.drawImage(icono, radio * 0.55 - iconSize / 2, -iconSize / 2, iconSize, iconSize);
-            ctx.globalAlpha = 1;
-            ctx.restore();
-        }
-    });
-}
-
-function girarRuleta() {
-    if (girando) return;
-    girando = true;
-
-    const btn = document.getElementById('btnGirar');
-    btn.disabled = true;
-    document.getElementById('resultado').textContent = '';
-
-    const vueltasExtra = (Math.random() * 4 + 6) * 2 * Math.PI;
-    const duracion = 4000;
-    const inicio = performance.now();
-    const anguloInicio = anguloActual;
-
-    function animar(ahora) {
-        const transcurrido = ahora - inicio;
-        const progreso = Math.min(transcurrido / duracion, 1);
-        const ease = 1 - Math.pow(1 - progreso, 3);
-
-        anguloActual = anguloInicio + vueltasExtra * ease;
-        dibujarRuleta(anguloActual);
-
-        if (progreso < 1) {
-            requestAnimationFrame(animar);
-        } else {
-            girando = false;
-            btn.disabled = false;
-
-            const slice = (2 * Math.PI) / categorias.length;
-            const flechaAngulo = (3 * Math.PI) / 2;
-            const angNorm = ((flechaAngulo - anguloActual) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-            const indice = Math.floor(angNorm / slice) % categorias.length;
-            const ganadora = categorias[indice];
-
-            document.getElementById('resultado').textContent = '¡Te tocó: ' + ganadora.nombre + '!';
-
-            setTimeout(function() {
-                window.location.href = '{{baseUrl}}/pregunta/ver?categoria_id=' + ganadora.id;
-            }, 2000);
-        }
-    }
-
-    requestAnimationFrame(animar);
-}
-</script>
+        <a href="{{baseUrl}}/pregunta/proponer" class="btn-jugar btn-jugar--secondary">
+            Proponer pregunta
+        </a>
+    </section>
+</main>
 
 {{>footer}}

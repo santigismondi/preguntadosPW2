@@ -1,54 +1,49 @@
 {{>header}}
 
-<div class="container mt-5">
+<div class="overlay"></div>
 
-    <h1 class="text-center mb-4">
-        🏆 Ranking Global
-    </h1>
+<main class="contenido ranking-page">
+    <section class="page-card ranking-card">
+        <div class="ranking-header">
+            <span class="eyebrow">Clasificación general</span>
+            <h1 class="titulo">Ranking global</h1>
+            <p class="bienvenida">
+                Los mejores puntajes de Preguntados Mundial 2026.
+            </p>
+        </div>
 
-    <table class="table table-striped">
+        <div class="ranking-table-wrapper">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Jugador</th>
+                        <th>Mejor puntaje</th>
+                    </tr>
+                </thead>
 
-        <thead>
+                <tbody>
+                    {{#ranking}}
+                    <tr>
+                        <td>
+                            <span class="ranking-position">#{{posicion}}</span>
+                        </td>
 
-        <tr>
-            <th>Posición</th>
-            <th>Jugador</th>
-            <th>Mejor puntaje</th>
-        </tr>
+                        <td>
+                            <a href="{{baseUrl}}/perfil/ver?id={{id}}" class="ranking-player">
+                                {{nombre_usuario}}
+                            </a>
+                        </td>
 
-        </thead>
-
-        <tbody>
-
-        {{#ranking}}
-
-            <tr>
-
-                <td>#{{posicion}}</td>
-
-                <td>{{nombre_usuario}}</td>
-
-                <td>{{mejor_puntaje}}</td>
-
-            </tr>
-
-        {{/ranking}}
-
-        </tbody>
-
-    </table>
-
-    <div class="text-center">
-
-        <a href="{{baseUrl}}/lobby/ver"
-           class="btn btn-primary">
-
-            Volver
-
-        </a>
-
-    </div>
-
-</div>
+                        <td>
+                            <strong class="ranking-score">{{mejor_puntaje}}</strong>
+                        </td>
+                    </tr>
+                    {{/ranking}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
 
 {{>footer}}

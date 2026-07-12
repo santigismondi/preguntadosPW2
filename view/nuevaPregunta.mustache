@@ -1,0 +1,144 @@
+{{>header}}
+
+<main class="editor-page">
+    <section class="editor-container">
+
+        <div class="editor-header">
+            <div>
+                <h1>Nueva pregunta</h1>
+                <p>
+                    Creá una pregunta, seleccioná su categoría
+                    y definí la respuesta correcta.
+                </p>
+            </div>
+
+            <a class="btn-editor-warning"
+               href="{{baseUrl}}/editor/ver">
+                Volver
+            </a>
+        </div>
+
+        <form
+                class="editor-card form-editor form-nueva-pregunta"
+                method="POST"
+                action="{{baseUrl}}/editor/crearPregunta">
+
+            <label>
+                Pregunta
+
+                <textarea
+                        name="texto"
+                        rows="4"
+                        maxlength="255"
+                        placeholder="Escribí la pregunta..."
+                        required></textarea>
+            </label>
+
+            <label>
+                Categoría
+
+                <select name="categoria_id" required>
+                    <option value="" selected disabled>
+                        Seleccioná una categoría
+                    </option>
+
+                    {{#categorias}}
+                        <option value="{{id}}">
+                            {{nombre}}
+                        </option>
+                    {{/categorias}}
+                </select>
+            </label>
+
+            <div class="nueva-pregunta-encabezado">
+                <div>
+                    <h2>Opciones de respuesta</h2>
+                    <p>
+                        Marcá el círculo de la opción correcta.
+                    </p>
+                </div>
+            </div>
+
+            <div class="opcion-editor opcion-nueva">
+                <input
+                        type="radio"
+                        name="correcta"
+                        value="0"
+                        aria-label="Marcar opción 1 como correcta"
+                        required>
+
+                <input
+                        type="text"
+                        name="opciones[]"
+                        maxlength="255"
+                        placeholder="Opción 1"
+                        required>
+            </div>
+
+            <div class="opcion-editor opcion-nueva">
+                <input
+                        type="radio"
+                        name="correcta"
+                        value="1"
+                        aria-label="Marcar opción 2 como correcta"
+                        required>
+
+                <input
+                        type="text"
+                        name="opciones[]"
+                        maxlength="255"
+                        placeholder="Opción 2"
+                        required>
+            </div>
+
+            <div class="opcion-editor opcion-nueva">
+                <input
+                        type="radio"
+                        name="correcta"
+                        value="2"
+                        aria-label="Marcar opción 3 como correcta"
+                        required>
+
+                <input
+                        type="text"
+                        name="opciones[]"
+                        maxlength="255"
+                        placeholder="Opción 3"
+                        required>
+            </div>
+
+            <div class="opcion-editor opcion-nueva">
+                <input
+                        type="radio"
+                        name="correcta"
+                        value="3"
+                        aria-label="Marcar opción 4 como correcta"
+                        required>
+
+                <input
+                        type="text"
+                        name="opciones[]"
+                        maxlength="255"
+                        placeholder="Opción 4"
+                        required>
+            </div>
+
+            <div class="editor-actions form-actions">
+                <button
+                        type="submit"
+                        class="btn-editor-success">
+                    Crear pregunta
+                </button>
+
+                <a class="btn-editor-danger"
+                   href="{{baseUrl}}/editor/ver">
+                    Cancelar
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+</main>
+
+{{>footer}}

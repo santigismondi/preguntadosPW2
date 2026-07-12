@@ -8,7 +8,13 @@ class PreguntaModel
     {
         $this->database = $database;
     }
+    public function getPreguntaPorId($preguntaId){
+        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE id = ?";
 
+        $resultado = $this->database->query($sql, [$preguntaId]);
+
+        return !empty($resultado) ? $resultado[0] : null;
+    }
     public function getPreguntaRandom($categoriaId, $nivelJugador)
     {
         $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND dificultad = ? AND estado = 'aprobada'
@@ -143,4 +149,45 @@ class PreguntaModel
 
         $this->database->execute($sql,[$dificultad,$preguntaId]);
     }
+
+    public function crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex)
+    {
+        $sql = "
+            INSERT INTO PREGUNTA(texto, dificultad, categoria_id, estado)
+            VALUES (?, 1, ?, 'pendiente')
+        ";
+
+        $this->database->execute($sql, [$texto, $categoriaId]);
+
+        $resultado = $this->database->query("SELECT LAST_INSERT_ID() AS id");
+        $preguntaId = $resultado[0]['id'];
+
+        foreach ($opciones as $index => $opcionTexto) {
+            $esCorrecta = ($index == $correctaIndex) ? 1 : 0;
+
+            $sql = "
+                INSERT INTO OPCION(pregunta_id, texto, es_correcta)
+                VALUES (?, ?, ?)
+            ";
+
+            $this->database->execute($sql, [$preguntaId, $opcionTexto, $esCorrecta]);
+        }
+
+        return $preguntaId;
+    }
+
+    public function getCategorias()
+    {
+        $sql = "SELECT id, nombre, color FROM CATEGORIA";
+        return $this->database->query($sql);
+    }
+    
+    public function reportarPregunta($preguntaId, $usuarioId, $motivo)
+    {
+        $sql = "INSERT INTO REPORTE_PREGUNTA (pregunta_id, usuario_id, motivo)
+            VALUES (?, ?, ?)";
+
+        return $this->database->execute($sql, [$preguntaId, $usuarioId, $motivo]);
+    }
+
 }

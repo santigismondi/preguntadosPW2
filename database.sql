@@ -265,3 +265,28 @@ VALUES (26, '14 goles', false),
        (30, '2', false),
        (30, '3', true),
        (30, '4', false);
+
+CREATE TABLE REPORTE_PREGUNTA
+(
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    pregunta_id INT NOT NULL,
+    usuario_id  INT NOT NULL,
+    motivo      VARCHAR(255),
+    estado      VARCHAR(20) NOT NULL DEFAULT 'pendiente',
+    fecha       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (pregunta_id) REFERENCES PREGUNTA(id),
+    FOREIGN KEY (usuario_id) REFERENCES USUARIO(id)
+);
+
+ALTER TABLE USUARIO
+    ADD fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE PARTIDA
+    ADD fecha_partida DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE PREGUNTA
+    ADD fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE USUARIO
+    ADD pais VARCHAR(100) NULL AFTER coordenadas_ciudad;

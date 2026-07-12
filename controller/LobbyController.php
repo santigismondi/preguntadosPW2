@@ -16,7 +16,17 @@ class LobbyController
 
     public function ver()
     {
-        Access::allowAnyRole(['Usuario', 'Editor', 'Administrador']);
+        if (isset($_SESSION['rol'])) {
+            if ($_SESSION['rol'] === 'Administrador') {
+                header('Location: ' . $this->getBaseUrl() . '/admin/ver');
+                exit;
+            } elseif ($_SESSION['rol'] === 'Editor') {
+                header('Location: ' . $this->getBaseUrl() . '/editor/ver');
+                exit;
+            }
+        }
+
+        Access::allowAnyRole(['Usuario']);
 
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
@@ -67,9 +77,51 @@ class LobbyController
 
         echo $this->renderer->render("lobby", $data);
     }
+    public function jugar()
+    {
+        if (isset($_SESSION['rol'])) {
+            if ($_SESSION['rol'] === 'Administrador') {
+                header('Location: ' . $this->getBaseUrl() . '/admin/ver');
+                exit;
+            } elseif ($_SESSION['rol'] === 'Editor') {
+                header('Location: ' . $this->getBaseUrl() . '/editor/ver');
+                exit;
+            }
+        }
+
+        Access::allowAnyRole(['Usuario']);
+
+        if (!isset($_SESSION['puntaje'])) {
+            $_SESSION['puntaje'] = 0;
+        }
+
+        $data = [
+            'titulo'          => 'Preguntados Mundial - Ruleta',
+            'cssExtra'        => $this->getBaseUrl() . '/public/css/lobby.css',
+            'showAppHeader'   => true,
+            'headerVariant'   => 'lobby',
+            'showBackToLobby' => true,
+            'backToLobbyUrl'  => $this->getBaseUrl() . '/lobby/ver',
+            'showPageTitle'   => true,
+            'headerPageTitle' => 'Ruleta',
+            'categorias'      => $this->model->getCategorias(),
+            'puntaje'         => $_SESSION['puntaje']
+        ];
+
+        echo $this->renderer->render("ruleta", $data);
+    }
 
     private function getBaseUrl()
     {
         return (new ConfigParser())->get('baseUrl', '');
+    }
+
+    public function reiniciar()
+    {
+        $_SESSION['puntaje'] = 0;
+        $_SESSION['preguntas_respondidas'] = [];
+
+        header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
+        exit;
     }
 }

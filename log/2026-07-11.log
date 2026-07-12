@@ -1,0 +1,49 @@
+[00:15:53] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho11]
+[00:15:53] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[15:04:23] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Nacho11]
+[15:04:23] [WARNING] UsuarioController::procesarLogin - cuenta no validada: Nacho11
+[15:07:32] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Nach, , nachipascale@gmail.com]
+[15:09:07] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [nach, , nachipascale@gmail.com]
+[15:14:40] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [nach, nach, nachipascale@gmail.com]
+[15:14:43] [INFO] Correo de validación enviado a nachipascale@gmail.com
+[15:14:43] [INFO] UsuarioController::registrar - registrado exitosamente: nach
+[15:14:56] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach]
+[15:14:56] [WARNING] UsuarioController::procesarLogin - cuenta no validada: nach
+[15:15:37] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach]
+[15:15:37] [WARNING] UsuarioController::procesarLogin - cuenta no validada: nach
+[15:18:05] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach]
+[15:18:05] [WARNING] UsuarioController::procesarLogin - cuenta no validada: nach
+[15:33:39] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [nacho, nacho, nacho@gmail.com]
+[15:33:42] [INFO] Correo de validación enviado a nacho@gmail.com
+[15:33:42] [INFO] UsuarioController::registrar - registrado exitosamente: nacho
+[15:36:02] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nach]
+[15:36:02] [WARNING] UsuarioController::procesarLogin - cuenta no validada: nach
+[15:36:13] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nacho]
+[15:36:13] [WARNING] UsuarioController::procesarLogin - cuenta no validada: nacho
+[15:40:34] [INFO] SQL: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [na, nac, na@gmail.com]
+[15:40:37] [INFO] Correo de validación enviado a na@gmail.com
+[15:40:37] [INFO] UsuarioController::registrar - registrado exitosamente: nac
+[15:43:34] [INFO] UsuarioController::validar - Cuenta activada exitosamente con token
+[15:43:42] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [nac]
+[15:43:42] [INFO] UsuarioController::procesarLogin - login exitoso id=3
