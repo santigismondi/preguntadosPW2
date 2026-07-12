@@ -184,4 +184,44 @@ class EditorModel
 
         return $preguntaId;
     }
+
+    public function getPropuestasPendientes()
+    {
+        $sql = "
+            SELECT 
+                p.id,
+                p.texto AS pregunta,
+                DATE_FORMAT(p.fecha_creacion, '%d/%m/%Y %H:%i') AS fecha,
+                c.nombre AS categoria,
+                IFNULL(u.nombre_usuario, 'Anónimo') AS usuario
+            FROM PREGUNTA p
+            INNER JOIN CATEGORIA c ON c.id = p.categoria_id
+            LEFT JOIN USUARIO u ON u.id = p.usuario_id
+            WHERE p.estado = 'pendiente'
+            ORDER BY p.fecha_creacion ASC
+        ";
+
+        $propuestas = $this->database->query($sql);
+
+        // Buscamos las opciones que pertenecen a cada propuesta
+        foreach ($propuestas as &$propuesta) {
+            $sqlOpciones = "SELECT texto, es_correcta AS correcta FROM OPCION WHERE pregunta_id = ?";
+            $opciones = $this->database->query($sqlOpciones, [$propuesta['id']]);
+
+            // Transformamos el 1 o 0 de la base de datos a un booleano para Mustache
+            foreach ($opciones as &$opcion) {
+                $opcion['correcta'] = (bool) $opcion['correcta'];
+            }
+            $propuesta['opciones'] = $opciones;
+        }
+
+        return $propuestas;
+    }
+
+    public function resolverPropuesta($preguntaId, $estado)
+    {
+        // Actualizamos el estado a 'aprobada' o 'eliminada'
+        $sql = "UPDATE PREGUNTA SET estado = ? WHERE id = ?";
+        return $this->database->execute($sql, [$estado, $preguntaId]);
+    }
 }

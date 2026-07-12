@@ -245,6 +245,7 @@
     transform: translateY(20px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    color: #dadada;
 }
 
 .editor-modal.show .editor-modal-content {
@@ -266,5 +267,123 @@
 .editor-modal-close:hover {
     color: white;
 }
+/* =====================================================
+   FORMULARIOS (Nueva / Editar Pregunta)
+===================================================== */
+.form-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: white;
+}
 
-.editor-modal
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-left: 0.2rem;
+}
+
+.form-editor textarea,
+.form-editor select,
+.form-editor input[type="text"] {
+    background: rgba(12, 24, 40, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    outline: none;
+    width: 100%;
+}
+
+.form-editor textarea:focus,
+.form-editor select:focus,
+.form-editor input[type="text"]:focus {
+    border-color: #b6e26b;
+    background: rgba(12, 24, 40, 0.85);
+    box-shadow: 0 0 0 3px rgba(182, 226, 107, 0.15);
+}
+
+.form-editor select option {
+    background: #0c1828;
+    color: white;
+}
+
+/* Grilla para las 4 opciones */
+.opciones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .opciones-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cada tarjeta de opción */
+.opcion-editor {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.opcion-editor:hover,
+.opcion-editor:focus-within {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Radio buttons personalizados */
+.opcion-editor input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.opcion-editor input[type="radio"]:checked {
+    border-color: #b6e26b;
+    background: rgba(118, 185, 71, 0.2);
+}
+
+.opcion-editor input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: #b6e26b;
+    border-radius: 50%;
+}
+
+.opcion-editor input[type="text"] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0.5rem !important;
+    box-shadow: none !important;
+}
