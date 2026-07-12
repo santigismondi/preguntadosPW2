@@ -203,16 +203,16 @@ class UsuarioController
         $this->model->registrar($nombre, $nombreUsuario, $email, $fechaNacimiento, $genero, $coordenadasCiudad, $hash, $fotoPerfil, $token);
 
         //BYPASS PARA MAILTRAP - SOLO IMPLEMENTAR EN MAIN
-        //$this->enviarCorreoValidacion($email, $nombre, $token);
-        $enlaceValidacion = $this->getBaseUrl() . "/usuario/validar?token=" . $token;
+        $this->enviarCorreoValidacion($email, $nombre, $token);
+//        $enlaceValidacion = $this->getBaseUrl() . "/usuario/validar?token=" . $token;
 
         Log::info("UsuarioController::registrar - registrado exitosamente: $nombreUsuario");
-        echo $this->renderer->render("login", [
-            'baseUrl' => $this->getBaseUrl(),
-            'mensaje_exito' => '¡Registro exitoso! Por las restricciones de InfintyFree, simulamos el correo. Validá tu cuenta haciendo clic en el siguiente enlace:',
-            'link_validacion' => $enlaceValidacion
-        ]);
-        //echo $this->renderer->render("login", ['mensaje_exito' => 'Registro exitoso. Te enviamos un correo para validar tu cuenta.']);
+//        echo $this->renderer->render("login", [
+//            'baseUrl' => $this->getBaseUrl(),
+//            'mensaje_exito' => '¡Registro exitoso! Por las restricciones de InfintyFree, simulamos el correo. Validá tu cuenta haciendo clic en el siguiente enlace:',
+//            'link_validacion' => $enlaceValidacion
+//        ]);
+        echo $this->renderer->render("login", ['mensaje_exito' => 'Registro exitoso. Te enviamos un correo para validar tu cuenta.']);
     }
 
     private function enviarCorreoValidacion($email, $nombre, $token)
