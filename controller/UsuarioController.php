@@ -201,8 +201,17 @@ class UsuarioController
         $hash = password_hash($contrasena, PASSWORD_DEFAULT);
         $token = bin2hex(random_bytes(16));
         $this->model->registrar($nombre, $nombreUsuario, $email, $fechaNacimiento, $genero, $coordenadasCiudad, $hash, $fotoPerfil, $token);
+
+        //BYPASS PARA MAILTRAP - SOLO IMPLEMENTAR EN MAIN
         $this->enviarCorreoValidacion($email, $nombre, $token);
+//        $enlaceValidacion = $this->getBaseUrl() . "/usuario/validar?token=" . $token;
+
         Log::info("UsuarioController::registrar - registrado exitosamente: $nombreUsuario");
+//        echo $this->renderer->render("login", [
+//            'baseUrl' => $this->getBaseUrl(),
+//            'mensaje_exito' => '¡Registro exitoso! Por las restricciones de InfintyFree, simulamos el correo. Validá tu cuenta haciendo clic en el siguiente enlace:',
+//            'link_validacion' => $enlaceValidacion
+//        ]);
         echo $this->renderer->render("login", ['mensaje_exito' => 'Registro exitoso. Te enviamos un correo para validar tu cuenta.']);
     }
 

@@ -247,32 +247,52 @@
     }
 
     function resolverPropuesta(id, modalId, resultado) {
-        cerrarModalPropuesta(modalId);
+        const accion = resultado === 'aprobada' ? 'aprobar' : 'rechazar';
 
-        const modalResultado = document.getElementById('modalResultadoPropuesta');
-        const titulo = document.getElementById('resultadoTitulo');
-        const mensaje = document.getElementById('resultadoMensaje');
-        const icono = document.getElementById('resultadoIcono');
+        fetch('{{baseUrl}}/editor/procesarPropuesta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id, accion: accion })
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        cerrarModalPropuesta(modalId);
 
-        icono.className = 'resultado-icono';
+                        const modalResultado = document.getElementById('modalResultadoPropuesta');
+                        const titulo = document.getElementById('resultadoTitulo');
+                        const mensaje = document.getElementById('resultadoMensaje');
+                        const icono = document.getElementById('resultadoIcono');
 
-        if (resultado === 'aprobada') {
-            titulo.textContent = 'Propuesta aprobada';
-            mensaje.textContent = 'La pregunta fue aprobada correctamente y quedó incorporada al juego.';
-            icono.textContent = '✓';
-            icono.classList.add('resultado-aprobado');
-        } else {
-            titulo.textContent = 'Propuesta rechazada';
-            mensaje.textContent = 'La propuesta fue rechazada y dejará de aparecer entre las pendientes.';
-            icono.textContent = '✕';
-            icono.classList.add('resultado-rechazado');
-        }
+                        icono.className = 'resultado-icono';
 
-        const fila = document.getElementById('fila-propuesta-' + id);
-        if (fila) fila.remove();
+                        if (resultado === 'aprobada') {
+                            titulo.textContent = 'Propuesta aprobada';
+                            mensaje.textContent = 'La pregunta fue aprobada y ya está en el juego.';
+                            icono.textContent = '✓';
+                            icono.classList.add('resultado-aprobado');
+                        } else {
+                            titulo.textContent = 'Propuesta rechazada';
+                            mensaje.textContent = 'La propuesta fue descartada exitosamente.';
+                            icono.textContent = '✕';
+                            icono.classList.add('resultado-rechazado');
+                        }
 
-        modalResultado.classList.add('show');
-        document.body.style.overflow = 'hidden';
+                        const fila = document.getElementById('fila-propuesta-' + id);
+                        if (fila) fila.remove();
+
+                        modalResultado.classList.add('show');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        alert('Error del servidor: ' + data.mensaje);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al comunicarse con el servidor. Revisá tu conexión.');
+                });
     }
 
     function cerrarModalResultado() {
