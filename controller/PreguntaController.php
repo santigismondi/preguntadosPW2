@@ -188,6 +188,7 @@ class PreguntaController
 
         $texto = trim($_POST['texto'] ?? '');
         $categoriaId = $_POST['categoria_id'] ?? null;
+        $usuarioId = $_SESSION['usuario_id'];
 
         $opciones = [
             trim($_POST['opcion_1'] ?? ''),
@@ -204,7 +205,7 @@ class PreguntaController
             return;
         }
 
-        $this->model->crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex);
+        $this->model->crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex, $usuarioId);
 
         $_SESSION['mensaje_pregunta'] = '¡Pregunta enviada! Quedó pendiente de aprobación.';
         header('Location: ' . $this->getBaseUrl() . '/pregunta/proponer');

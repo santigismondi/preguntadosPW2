@@ -29,37 +29,8 @@ class EditorController
             'headerPageTitle' => 'Panel de Editor',
             'preguntas' => $this->model->getPreguntas(),
             'reportes' => $this->model->getReportesPendientes(),
-
-            // TODO: hardcodeado, luego incorporar logica
-            'propuestas' => [
-                [
-                    'id' => 1,
-                    'usuario' => 'joaco',
-                    'pregunta' => '¿Quién convirtió el gol de Argentina en la final del Mundial 2014?',
-                    'categoria' => 'Historia del Mundial',
-                    'fecha' => '10/07/2026 18:20',
-                    'opciones' => [
-                        ['texto' => 'Lionel Messi'],
-                        ['texto' => 'Gonzalo Higuaín'],
-                        ['texto' => 'Ningún jugador argentino', 'correcta' => true],
-                        ['texto' => 'Ángel Di María']
-                    ]
-                ],
-                [
-                    'id' => 2,
-                    'usuario' => 'santi',
-                    'pregunta' => '¿Qué selección ganó el Mundial de Francia 1998?',
-                    'categoria' => 'Selecciones',
-                    'fecha' => '10/07/2026 19:45',
-                    'opciones' => [
-                        ['texto' => 'Brasil'],
-                        ['texto' => 'Francia', 'correcta' => true],
-                        ['texto' => 'Italia'],
-                        ['texto' => 'Alemania']
-                    ]
-                ]
-            ]
-        ];
+            'propuestas' => $this->model->getPropuestasPendientes()
+            ];
 
         $this->renderer->render('editor', $data);
     }
@@ -191,6 +162,30 @@ class EditorController
             header('Location: ' . $this->getBaseUrl() . '/lobby/ver');
             exit;
         }
+    }
+
+    public function procesarPropuesta()
+    {
+        $this->verificarAccesoEditor();
+        header('Content-Type: application/json'); // Respondemos JSON porque es AJAX
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $id = $data['id'] ?? null;
+        $accion = $data['accion'] ?? null;
+
+        if (!$id || !in_array($accion, ['aprobar', 'rechazar'])) {
+            echo json_encode(['ok' => false, 'mensaje' => 'Datos inválidos']);
+            return;
+        }
+
+        // Si se aprueba, entra al juego. Si se rechaza, la marcamos como eliminada.
+        $nuevoEstado = $accion === 'aprobar' ? 'aprobada' : 'eliminada';
+
+        $this->model->resolverPropuesta($id, $nuevoEstado);
+
+        echo json_encode(['ok' => true]);
     }
 }
 
