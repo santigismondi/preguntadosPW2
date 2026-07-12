@@ -92,10 +92,17 @@ class EditorController
     public function nuevaPregunta()
     {
         $this->verificarAccesoEditor();
-
+        $urlVolver = $this->getBaseUrl() . '/editor/ver';
         $data = [
             'titulo' => 'Nueva pregunta',
             'cssExtra' => $this->getBaseUrl() . '/public/css/editor.css',
+            'showAppHeader' => true,
+            'headerVariant' => 'admin', // Usamos el estilo del admin o podés crear uno nuevo
+            'showPageTitle' => true,
+            'headerPageTitle' => 'Panel de Editor - Nueva pregunta',
+            'showBackToLobby' => true,
+            'backToLobbyUrl' => $urlVolver,
+            'urlVolver' => $urlVolver,
             'baseUrl' => $this->getBaseUrl(),
             'categorias' => $this->model->getCategorias()
         ];
