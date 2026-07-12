@@ -150,14 +150,14 @@ class PreguntaModel
         $this->database->execute($sql,[$dificultad,$preguntaId]);
     }
 
-    public function crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex)
+    public function crearPreguntaSugerida($texto, $categoriaId, $opciones, $correctaIndex, $usuarioId)
     {
         $sql = "
-            INSERT INTO PREGUNTA(texto, dificultad, categoria_id, estado)
-            VALUES (?, 1, ?, 'pendiente')
+            INSERT INTO PREGUNTA(texto, dificultad, categoria_id, estado, usuario_id)
+            VALUES (?, 1, ?, 'pendiente', ?)
         ";
 
-        $this->database->execute($sql, [$texto, $categoriaId]);
+        $this->database->execute($sql, [$texto, $categoriaId, $usuarioId]);
 
         $resultado = $this->database->query("SELECT LAST_INSERT_ID() AS id");
         $preguntaId = $resultado[0]['id'];
