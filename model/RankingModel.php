@@ -7,10 +7,24 @@ class RankingModel {
     }
     public function getRanking()
     {
-        $sql = "SELECT U.id, U.nombre_usuario, COALESCE(MAX(P.puntaje),0) AS mejor_puntaje
-                FROM USUARIO U LEFT JOIN PARTIDA P ON U.id = P.usuario_id
-                GROUP BY U.id, U.nombre_usuario
-                ORDER BY mejor_puntaje DESC, U.nombre_usuario";
+        $sql = "
+        SELECT
+            u.id,
+            u.nombre_usuario,
+            COALESCE(MAX(p.puntaje), 0) AS mejor_puntaje
+        FROM USUARIO u
+        INNER JOIN ROL r
+            ON r.usuario_id = u.id
+        LEFT JOIN PARTIDA p
+            ON p.usuario_id = u.id
+        WHERE r.descripcion = 'Usuario'
+        GROUP BY
+            u.id,
+            u.nombre_usuario
+        ORDER BY
+            mejor_puntaje DESC,
+            u.nombre_usuario ASC
+    ";
 
         return $this->database->query($sql, []);
     }

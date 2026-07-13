@@ -64,9 +64,14 @@ class AdminModel
 
         FROM USUARIO u
 
+        INNER JOIN ROL rol
+            ON rol.usuario_id = u.id
+
         LEFT JOIN RESPUESTA_USUARIO r
             ON r.usuario_id = u.id
             AND $filtro
+
+        WHERE rol.descripcion = 'Usuario'
 
         GROUP BY
             u.id,
@@ -85,7 +90,6 @@ class AdminModel
 
             $fila['correctas'] = $correctas;
             $fila['total'] = $total;
-
             $fila['porcentaje'] = $total > 0
                 ? round(($correctas * 100) / $total)
                 : 0;
