@@ -1,0 +1,104 @@
+[00:46:29] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Joaquin, Joacogie, joaquingielis05@gmail.com]
+[00:46:29] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 1]
+[00:46:32] [INFO] Correo de validación enviado a joaquingielis05@gmail.com
+[00:46:32] [INFO] UsuarioController::registrar - registrado exitosamente: Joacogie
+[00:46:51] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joacogie]
+[00:46:51] [WARNING] UsuarioController::procesarLogin - cuenta no validada: Joacogie
+[00:50:11] [WARNING] UsuarioController::registrar - email ya existe: joaquingielis05@gmail.com
+[00:50:35] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joacogie]
+[00:50:35] [WARNING] UsuarioController::procesarLogin - cuenta no validada: Joacogie
+[00:50:43] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[00:50:43] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: admin
+[00:51:49] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[00:51:49] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: admin
+[01:09:42] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Lionel Messi, leomessi, leomessi@yahoo.com]
+[01:09:42] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 1]
+[01:09:45] [INFO] Correo de validación enviado a leomessi@yahoo.com
+[01:09:45] [INFO] UsuarioController::registrar - registrado exitosamente: leomessi
+[01:11:04] [INFO] UsuarioController::validar - Cuenta activada exitosamente con token
+[01:11:12] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [leomessi]
+[01:11:12] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[01:48:09] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Joaquin Ramiro, Joaco7, joacogie@gmail.com]
+[01:48:09] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 1]
+[01:48:09] [INFO] UsuarioController::registrar - registrado exitosamente: Joaco7
+[01:48:10] [INFO] UsuarioController::validar - Cuenta activada exitosamente con token
+[01:48:17] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joaco7]
+[01:48:17] [INFO] UsuarioController::procesarLogin - login exitoso id=1
+[01:57:04] [INFO] UsuarioController::logout
+[01:57:11] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[01:57:11] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: editor
+[01:57:19] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[01:57:19] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: editor
+[01:58:09] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[01:58:09] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: editor
+[01:58:21] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[01:58:21] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: editor
+[02:00:11] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[02:00:11] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: admin
+[02:03:48] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[02:03:48] [WARNING] UsuarioController::procesarLogin - contrasena incorrecta para: editor
+[02:03:58] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[02:03:58] [WARNING] UsuarioController::procesarLogin - contrasena incorrecta para: editor
+[02:04:00] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [editor]
+[02:04:00] [WARNING] UsuarioController::procesarLogin - contrasena incorrecta para: editor
+[02:08:41] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[02:08:41] [WARNING] UsuarioController::procesarLogin - contrasena incorrecta para: admin
+[02:08:52] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joaco7]
+[02:08:52] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: Joaco7
+[02:08:58] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [Joaco7]
+[02:08:58] [WARNING] UsuarioController::procesarLogin - credenciales inválidas: Joaco7
+[02:09:35] [INFO] SQL Usuario: INSERT INTO USUARIO (nombre, nombre_usuario, email, fecha_nac, genero, coordenadas_ciudad, contrasena, foto_perfil, token_validacion, cuenta_activa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0) [Joaquin, joaco123, joaco@gmail.com]
+[02:09:35] [INFO] SQL Rol Automático: INSERT INTO ROL (usuario_id, descripcion) VALUES (?, 'Usuario') [Usuario ID: 3]
+[02:09:35] [INFO] UsuarioController::registrar - registrado exitosamente: joaco123
+[02:09:36] [INFO] UsuarioController::validar - Cuenta activada exitosamente con token
+[02:09:41] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [joaco123]
+[02:09:41] [INFO] UsuarioController::procesarLogin - login exitoso id=3
+[02:10:41] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [admin]
+[02:10:41] [WARNING] UsuarioController::procesarLogin - contrasena incorrecta para: admin
+[02:39:17] [INFO] SQL: SELECT u.*, r.descripcion as rol FROM USUARIO u
+                LEFT JOIN ROL r ON r.usuario_id = u.id
+                WHERE u.nombre_usuario = ? [joaco123]
+[02:39:17] [INFO] UsuarioController::procesarLogin - login exitoso id=3
+[03:52:26] [INFO] UsuarioController::logout

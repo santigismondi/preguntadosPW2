@@ -41,25 +41,58 @@ class AdminModel
 
     public function getCorrectasPorUsuario($periodo)
     {
-        $filtro = $this->filtroFecha('p.fecha_partida', $periodo);
+        $filtro = $this->filtroFecha(
+            'r.fecha_respuesta',
+            $periodo
+        );
 
         $sql = "
-        SELECT 
+        SELECT
             u.nombre_usuario AS usuario,
-            SUM(CASE WHEN p.resultado = 'ganada' THEN 1 ELSE 0 END) AS correctas,
-            COUNT(p.id) AS total
+
+            COALESCE(
+                SUM(
+                    CASE
+                        WHEN r.es_correcta = 1 THEN 1
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS correctas,
+
+            COUNT(r.id) AS total
+
         FROM USUARIO u
-        LEFT JOIN PARTIDA p ON p.usuario_id = u.id AND $filtro
-        GROUP BY u.id, u.nombre_usuario
+
+        INNER JOIN ROL rol
+            ON rol.usuario_id = u.id
+
+        LEFT JOIN RESPUESTA_USUARIO r
+            ON r.usuario_id = u.id
+            AND $filtro
+
+        WHERE rol.descripcion = 'Usuario'
+
+        GROUP BY
+            u.id,
+            u.nombre_usuario
+
+        ORDER BY correctas DESC
+
         LIMIT 10
     ";
 
         $datos = $this->database->query($sql);
 
         foreach ($datos as &$fila) {
-            $total = (int)$fila['total'];
-            $correctas = (int)$fila['correctas'];
-            $fila['porcentaje'] = $total > 0 ? round(($correctas * 100) / $total) : 0;
+            $correctas = (int) $fila['correctas'];
+            $total = (int) $fila['total'];
+
+            $fila['correctas'] = $correctas;
+            $fila['total'] = $total;
+            $fila['porcentaje'] = $total > 0
+                ? round(($correctas * 100) / $total)
+                : 0;
         }
 
         return $datos;

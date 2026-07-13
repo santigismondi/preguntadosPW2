@@ -15,31 +15,90 @@ class PreguntaModel
 
         return !empty($resultado) ? $resultado[0] : null;
     }
-    public function getPreguntaRandom($categoriaId, $nivelJugador)
-    {
-        $sql = "SELECT id, texto, categoria_id FROM PREGUNTA WHERE categoria_id = ? AND dificultad = ? AND estado = 'aprobada'
-        ORDER BY RAND()
-        LIMIT 1 ";
+    public function getPreguntaRandom(
+        $categoriaId,
+        $nivelJugador,
+        array $preguntasExcluidas = []
+    ) {
+        $parametros = [$categoriaId, $nivelJugador];
 
-        $resultado = $this->database->query($sql, [$categoriaId, $nivelJugador]);
+        $sql = "
+        SELECT id, texto, categoria_id
+        FROM PREGUNTA
+        WHERE categoria_id = ?
+          AND dificultad = ?
+          AND estado = 'aprobada'
+    ";
+
+        if (!empty($preguntasExcluidas)) {
+            $marcadores = implode(
+                ',',
+                array_fill(0, count($preguntasExcluidas), '?')
+            );
+
+            $sql .= " AND id NOT IN ($marcadores)";
+
+            $parametros = array_merge(
+                $parametros,
+                $preguntasExcluidas
+            );
+        }
+
+        $sql .= "
+        ORDER BY RAND()
+        LIMIT 1
+    ";
+
+        $resultado = $this->database->query(
+            $sql,
+            $parametros
+        );
 
         if (!empty($resultado)) {
             return $resultado[0];
         }
 
-        //Esta linea lo que hace es que al empezar a jugar si no hay preguntas con dificultad aun cargadas
-        //Llama a cualquier pregunta disponible.
+        /*
+         * Si no quedan preguntas de la dificultad actual,
+         * buscamos cualquier dificultad de la misma categoría,
+         * pero todavía evitando las preguntas ya vistas.
+         */
+        $parametros = [$categoriaId];
 
-        $sql = "SELECT id,texto,categoria_id
-            FROM PREGUNTA
-            WHERE categoria_id=?
-            AND estado='aprobada'
-            ORDER BY RAND()
-            LIMIT 1";
+        $sql = "
+        SELECT id, texto, categoria_id
+        FROM PREGUNTA
+        WHERE categoria_id = ?
+          AND estado = 'aprobada'
+    ";
 
-        $resultado = $this->database->query($sql, [$categoriaId]);
+        if (!empty($preguntasExcluidas)) {
+            $marcadores = implode(
+                ',',
+                array_fill(0, count($preguntasExcluidas), '?')
+            );
 
-        return !empty($resultado) ? $resultado[0] : null;
+            $sql .= " AND id NOT IN ($marcadores)";
+
+            $parametros = array_merge(
+                $parametros,
+                $preguntasExcluidas
+            );
+        }
+
+        $sql .= "
+        ORDER BY RAND()
+        LIMIT 1
+    ";
+
+        $resultado = $this->database->query(
+            $sql,
+            $parametros
+        );
+
+        return !empty($resultado)
+            ? $resultado[0]
+            : null;
     }
 
     public function getOpciones($preguntaId)
@@ -181,13 +240,54 @@ class PreguntaModel
         $sql = "SELECT id, nombre, color FROM CATEGORIA";
         return $this->database->query($sql);
     }
-    
-    public function reportarPregunta($preguntaId, $usuarioId, $motivo)
-    {
-        $sql = "INSERT INTO REPORTE_PREGUNTA (pregunta_id, usuario_id, motivo)
-            VALUES (?, ?, ?)";
 
-        return $this->database->execute($sql, [$preguntaId, $usuarioId, $motivo]);
+    public function reportarPregunta(
+        int $preguntaId,
+        int $usuarioId,
+        string $motivo
+    ): int {
+        $sql = "
+        INSERT INTO REPORTE_PREGUNTA
+            (pregunta_id, usuario_id, motivo)
+        VALUES
+            (?, ?, ?)
+    ";
+
+        return $this->database->execute(
+            $sql,
+            [
+                $preguntaId,
+                $usuarioId,
+                $motivo
+            ]
+        );
+    }
+    public function registrarRespuestaUsuario(
+        int $usuarioId,
+        int $preguntaId,
+        int $opcionId,
+        bool $esCorrecta
+    ) {
+        $sql = "
+        INSERT INTO RESPUESTA_USUARIO
+            (
+                usuario_id,
+                pregunta_id,
+                opcion_id,
+                es_correcta
+            )
+        VALUES (?, ?, ?, ?)
+    ";
+
+        return $this->database->execute(
+            $sql,
+            [
+                $usuarioId,
+                $preguntaId,
+                $opcionId,
+                $esCorrecta ? 1 : 0
+            ]
+        );
     }
 
 }
