@@ -30,11 +30,44 @@ class PreguntaController
         if (isset($_SESSION['pregunta_actual']) && $_SESSION['pregunta_actual']['categoria'] == $categoriaId) {
             $pregunta = $this->model->getPreguntaPorId($_SESSION['pregunta_actual']['id']);
         } else {
-        $pregunta = $this->model->getPreguntaRandom($categoriaId, $nivelJugador);
-            if ($pregunta) {$_SESSION['pregunta_actual'] =
-                ['id' => $pregunta['id'],
-                'categoria' => $categoriaId,
-                'inicio' => microtime(true)];
+            if (!isset($_SESSION['preguntas_vistas'])) {
+                $_SESSION['preguntas_vistas'] = [];
+            }
+
+            if (!isset($_SESSION['preguntas_vistas'][$categoriaId])) {
+                $_SESSION['preguntas_vistas'][$categoriaId] = [];
+            }
+
+            $preguntasVistas = $_SESSION['preguntas_vistas'][$categoriaId];
+
+            $pregunta = $this->model->getPreguntaRandom(
+                $categoriaId,
+                $nivelJugador,
+                $preguntasVistas
+            );
+
+            /*
+             * Si ya se mostraron todas las preguntas disponibles de esa categoría,
+             * se reinicia solamente el historial de esa categoría.
+             */
+            if (!$pregunta && !empty($preguntasVistas)) {
+                $_SESSION['preguntas_vistas'][$categoriaId] = [];
+
+                $pregunta = $this->model->getPreguntaRandom(
+                    $categoriaId,
+                    $nivelJugador,
+                    []
+                );
+            }
+
+            if ($pregunta) {
+                $_SESSION['preguntas_vistas'][$categoriaId][] = (int) $pregunta['id'];
+
+                $_SESSION['pregunta_actual'] = [
+                    'id' => $pregunta['id'],
+                    'categoria' => $categoriaId,
+                    'inicio' => microtime(true)
+                ];
             }
         }
 
@@ -95,8 +128,22 @@ class PreguntaController
         }
 
         $esCorrecta = $this->model->esRespuestaCorrecta($opcionId);
-        $this->model->actualizarEstadisticasPregunta($preguntaId, $esCorrecta);
-        $correctaId = $this->model->getOpcionCorrectaId($preguntaId);
+
+        $this->model->registrarRespuestaUsuario(
+            (int) $_SESSION['usuario_id'],
+            (int) $preguntaId,
+            (int) $opcionId,
+            $esCorrecta
+        );
+
+        $this->model->actualizarEstadisticasPregunta(
+            $preguntaId,
+            $esCorrecta
+        );
+
+        $correctaId = $this->model->getOpcionCorrectaId(
+            $preguntaId
+        );
 
         if ($esCorrecta) {
         unset($_SESSION['pregunta_actual']);
@@ -272,32 +319,70 @@ class PreguntaController
     }
     public function reportar()
     {
+        header('Content-Type: application/json; charset=utf-8');
+
         if (!isset($_SESSION['usuario_id'])) {
-            header("Location: " . $this->getBaseUrl() . "/usuario/login");
+            http_response_code(401);
+
+            echo json_encode([
+                'ok' => false,
+                'mensaje' => 'La sesión expiró. Volvé a iniciar sesión.'
+            ]);
+
             return;
         }
 
-        $preguntaId = $_POST['pregunta_id'] ?? null;
+        $preguntaId = isset($_POST['pregunta_id'])
+            ? (int) $_POST['pregunta_id']
+            : 0;
+
+        $usuarioId = (int) $_SESSION['usuario_id'];
         $motivo = trim($_POST['motivo'] ?? '');
 
-        if (!$preguntaId) {
+        if ($preguntaId <= 0) {
+            http_response_code(400);
+
             echo json_encode([
-                "ok" => false,
-                "mensaje" => "Pregunta inválida."
+                'ok' => false,
+                'mensaje' => 'La pregunta recibida no es válida.'
             ]);
+
             return;
         }
 
-        $this->model->reportarPregunta(
-            $preguntaId,
-            $_SESSION['usuario_id'],
-            $motivo
-        );
+        if ($motivo === '') {
+            $motivo = 'Pregunta reportada por el usuario';
+        }
 
-        echo json_encode([
-            "ok" => true,
-            "mensaje" => "La pregunta fue reportada correctamente."
-        ]);
+        try {
+            $filasAfectadas = $this->model->reportarPregunta(
+                $preguntaId,
+                $usuarioId,
+                $motivo
+            );
+
+            if ($filasAfectadas !== 1) {
+                throw new RuntimeException(
+                    'El reporte no pudo insertarse en la base de datos.'
+                );
+            }
+
+            echo json_encode([
+                'ok' => true,
+                'mensaje' => 'La pregunta fue reportada correctamente.'
+            ]);
+        } catch (Throwable $error) {
+            http_response_code(500);
+
+            error_log(
+                'Error al guardar reporte: ' .
+                $error->getMessage()
+            );
+
+            echo json_encode([
+                'ok' => false,
+                'mensaje' => $error->getMessage()
+            ]);
+        }
     }
-
 }

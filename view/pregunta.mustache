@@ -45,44 +45,76 @@
             </button>
             {{/opciones}}
         </div>
-
-        <div class="reporte-container" style="display: none; margin-top: 20px; text-align: center;">
-            <button type="button" class="btn-reportar-pregunta" onclick="reportarPregunta()">
-                Reportar pregunta
-            </button>
-            <p id="mensajeReporte" class="mensaje-reporte"></p>
-        </div>
-
     </section>
 
     <!-- Modal de Reporte -->
-    <div id="modalReporte" class="modal-reporte">
+    <div id="modalReporte" class="modal-reporte" aria-hidden="true">
         <div class="modal-reporte-contenido">
             <h3>Reportar pregunta</h3>
-            <p>Contanos por qué esta pregunta debería ser revisada.</p>
 
-            <textarea id="motivoReporte"
-                      placeholder="Ejemplo: la respuesta correcta está mal, la pregunta está repetida, etc."></textarea>
+            <p>
+                Contanos por qué esta pregunta debería ser revisada.
+            </p>
+
+            <textarea
+                    id="motivoReporte"
+                    placeholder="Ejemplo: la respuesta correcta está mal, la pregunta está repetida, etc."></textarea>
+
+            <p id="mensajeReporte" class="mensaje-reporte"></p>
 
             <div class="modal-reporte-acciones">
-                <button type="button" onclick="cerrarModalReporte()" class="btn-modal-cancelar">
+                <button
+                        type="button"
+                        onclick="cerrarModalReporte()"
+                        class="btn-modal-cancelar">
+
                     Cancelar
                 </button>
-                <button type="button" onclick="enviarReportePregunta()" class="btn-modal-enviar">
+
+                <button
+                        type="button"
+                        id="btnEnviarReporte"
+                        onclick="enviarReportePregunta()"
+                        class="btn-modal-enviar">
+
                     Enviar reporte
                 </button>
             </div>
         </div>
     </div>
-
 </main>
 
 <!-- Popup de Resultado -->
 <div class="answer-popup" id="answerPopup" aria-hidden="true">
     <div class="answer-popup__card" id="answerPopupCard">
-        <span class="answer-popup__label">Resultado</span>
+
+        <span class="answer-popup__label">
+            Resultado
+        </span>
+
         <strong id="answerPopupTitle"></strong>
+
         <p id="answerPopupMessage"></p>
+
+        <div class="answer-popup__actions">
+
+            <button
+                    type="button"
+                    class="btn-reportar-pregunta"
+                    onclick="reportarPregunta()">
+
+                Reportar pregunta
+            </button>
+
+            <button
+                    type="button"
+                    class="btn-continuar-respuesta"
+                    onclick="continuarRespuesta()">
+
+                Continuar
+            </button>
+
+        </div>
     </div>
 </div>
 
@@ -91,15 +123,14 @@
     let respondido = false;
     let reportando = false;
     let redirectTimeout = null;
+    let redirectRespuesta = null;
     let tiempoRestante = Number({{tiempoRestante}});
 
     const timer = document.getElementById("timer");
     const botonesRespuesta = document.querySelectorAll(".respuesta-btn");
 
-    // Formatear el timer inicial
     timer.textContent = String(tiempoRestante).padStart(2, "0");
 
-    // Única declaración del intervalo
     const intervaloPregunta = setInterval(function () {
         if (respondido) {
             clearInterval(intervaloPregunta);
@@ -107,14 +138,20 @@
         }
 
         tiempoRestante--;
-        timer.textContent = String(Math.max(tiempoRestante, 0)).padStart(2, "0");
+
+        timer.textContent = String(
+                Math.max(tiempoRestante, 0)
+        ).padStart(2, "0");
 
         if (tiempoRestante <= 0) {
             clearInterval(intervaloPregunta);
             respondido = true;
-            window.location.href = "{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}";
+
+            window.location.href =
+                    "{{baseUrl}}/pregunta/timeout?categoria_id={{categoriaId}}";
         }
     }, 1000);
+
 
     function mostrarResultado(esCorrecta) {
         const popup = document.getElementById("answerPopup");
@@ -122,27 +159,51 @@
         const popupTitle = document.getElementById("answerPopupTitle");
         const popupMessage = document.getElementById("answerPopupMessage");
 
-        popupCard.classList.remove("answer-popup__card--correct", "answer-popup__card--wrong");
+        popupCard.classList.remove(
+                "answer-popup__card--correct",
+                "answer-popup__card--wrong"
+        );
 
         if (esCorrecta) {
-            popupCard.classList.add("answer-popup__card--correct");
-            popupTitle.textContent = "Respuesta correcta";
-            popupMessage.textContent = "Sumaste un punto. Volvemos a la ruleta para continuar.";
+            popupCard.classList.add(
+                    "answer-popup__card--correct"
+            );
+
+            popupTitle.textContent =
+                    "Respuesta correcta";
+
+            popupMessage.textContent =
+                    "Sumaste un punto. Podés continuar o reportar la pregunta.";
         } else {
-            popupCard.classList.add("answer-popup__card--wrong");
-            popupTitle.textContent = "Respuesta incorrecta";
-            popupMessage.textContent = "La partida terminó. Volvemos al lobby.";
+            popupCard.classList.add(
+                    "answer-popup__card--wrong"
+            );
+
+            popupTitle.textContent =
+                    "Respuesta incorrecta";
+
+            popupMessage.textContent =
+                    "La partida terminó. Podés continuar o reportar la pregunta.";
         }
 
-        popup.classList.add("answer-popup--visible");
-        popup.setAttribute("aria-hidden", "false");
+        popup.classList.add(
+                "answer-popup--visible"
+        );
+
+        popup.setAttribute(
+                "aria-hidden",
+                "false"
+        );
     }
 
-    // Única declaración de la función responder
+
     function responder(boton, opcionId) {
-        if (respondido) return;
+        if (respondido) {
+            return;
+        }
 
         respondido = true;
+
         clearInterval(intervaloPregunta);
 
         botonesRespuesta.forEach(function (botonRespuesta) {
@@ -150,111 +211,376 @@
         });
 
         const datos = new FormData();
-        datos.append("pregunta_id", "{{preguntaId}}");
-        datos.append("opcion_id", opcionId);
-        datos.append("categoria_id", "{{categoriaId}}");
 
-        fetch("{{baseUrl}}/pregunta/verificar", {
-            method: "POST",
-            body: datos
-        })
-                .then(function (respuesta) {
-                    if (!respuesta.ok) {
-                        throw new Error("Error HTTP: " + respuesta.status);
-                    }
-                    return respuesta.text();
-                })
-                .then(function (textoRespuesta) {
+        datos.append(
+                "pregunta_id",
+                "{{preguntaId}}"
+        );
+
+        datos.append(
+                "opcion_id",
+                opcionId
+        );
+
+        datos.append(
+                "categoria_id",
+                "{{categoriaId}}"
+        );
+
+        fetch(
+                "{{baseUrl}}/pregunta/verificar",
+                {
+                    method: "POST",
+                    body: datos
+                }
+        )
+                .then(async function (respuesta) {
+                    const textoRespuesta =
+                            await respuesta.text();
+
                     let data;
+
                     try {
-                        data = JSON.parse(textoRespuesta);
+                        data = JSON.parse(
+                                textoRespuesta
+                        );
                     } catch (error) {
-                        console.error("El servidor no devolvió JSON:", textoRespuesta);
-                        throw new Error("La respuesta del servidor no es válida.");
+                        console.error(
+                                "Respuesta no JSON:",
+                                textoRespuesta
+                        );
+
+                        throw new Error(
+                                "El servidor devolvió una respuesta inválida."
+                        );
                     }
 
-                    const botonCorrecto = document.querySelector('[data-opcion-id="' + data.correctaId + '"]');
+                    if (!respuesta.ok || data.error) {
+                        throw new Error(
+                                data.mensaje ||
+                                "No se pudo verificar la respuesta."
+                        );
+                    }
+
+                    return data;
+                })
+                .then(function (data) {
+                    redirectRespuesta = data.redirect;
+
+                    const botonCorrecto =
+                            document.querySelector(
+                                    '[data-opcion-id="' +
+                                    data.correctaId +
+                                    '"]'
+                            );
 
                     if (data.correcta) {
-                        boton.classList.add("respuesta-correcta");
+                        boton.classList.add(
+                                "respuesta-correcta"
+                        );
                     } else {
-                        boton.classList.add("respuesta-incorrecta");
+                        boton.classList.add(
+                                "respuesta-incorrecta"
+                        );
+
                         if (botonCorrecto) {
-                            botonCorrecto.classList.add("respuesta-correcta");
+                            botonCorrecto.classList.add(
+                                    "respuesta-correcta"
+                            );
                         }
                     }
 
-                    // 1. Mostrar botón de reporte al responder (aparece de fondo mientras esperás el cartel)
-                    document.querySelector('.reporte-container').style.display = 'block';
+                    setTimeout(function () {
+                        mostrarResultado(
+                                data.correcta
+                        );
+                    }, 900);
 
-                    setTimeout(function() {
-                        mostrarResultado(data.correcta);
-                    }, 1500);
+                    redirectTimeout =
+                            setTimeout(function () {
+                                if (!reportando &&
+                                        redirectRespuesta) {
 
-                    // 3. Timeout para redirigir si no presiona "Reportar"
-                    // Le ponemos 5000ms (5 segundos) para que te dé tiempo de sobra después de que aparezca el popup
-                    redirectTimeout = setTimeout(function () {
-                        if (!reportando) {
-                            window.location.href = data.redirect;
-                        }
-                    }, 5000);
+                                    window.location.href =
+                                            redirectRespuesta;
+                                }
+                            }, 10000);
                 })
                 .catch(function (error) {
-                    console.error("Error al verificar la respuesta:", error);
+                    console.error(
+                            "Error al verificar:",
+                            error
+                    );
+
                     respondido = false;
 
-                    botonesRespuesta.forEach(function (botonRespuesta) {
-                        botonRespuesta.disabled = false;
-                    });
+                    botonesRespuesta.forEach(
+                            function (botonRespuesta) {
+                                botonRespuesta.disabled = false;
+                            }
+                    );
 
-                    alert("No se pudo verificar la respuesta. Revisá la consola.");
+                    alert(error.message);
                 });
     }
 
+
     function reportarPregunta() {
         reportando = true;
-        clearTimeout(redirectTimeout);
-        document.getElementById('modalReporte').classList.add('modal-reporte-activo');
+
+        clearTimeout(
+                redirectTimeout
+        );
+
+        const popup =
+                document.getElementById(
+                        "answerPopup"
+                );
+
+        const modal =
+                document.getElementById(
+                        "modalReporte"
+                );
+
+        const textarea =
+                document.getElementById(
+                        "motivoReporte"
+                );
+
+        const mensaje =
+                document.getElementById(
+                        "mensajeReporte"
+                );
+
+        mensaje.textContent = "";
+
+        popup.classList.remove(
+                "answer-popup--visible"
+        );
+
+        popup.setAttribute(
+                "aria-hidden",
+                "true"
+        );
+
+        modal.classList.add(
+                "modal-reporte-activo"
+        );
+
+        modal.setAttribute(
+                "aria-hidden",
+                "false"
+        );
+
+        setTimeout(function () {
+            textarea.focus();
+        }, 100);
     }
+
 
     function cerrarModalReporte() {
         reportando = false;
-        document.getElementById('modalReporte').classList.remove('modal-reporte-activo');
-        redirectTimeout = setTimeout(function () {
-            window.location.href = '{{baseUrl}}/lobby/ver';
-        }, 200);
+
+        const modal =
+                document.getElementById(
+                        "modalReporte"
+                );
+
+        const popup =
+                document.getElementById(
+                        "answerPopup"
+                );
+
+        modal.classList.remove(
+                "modal-reporte-activo"
+        );
+
+        modal.setAttribute(
+                "aria-hidden",
+                "true"
+        );
+
+        popup.classList.add(
+                "answer-popup--visible"
+        );
+
+        popup.setAttribute(
+                "aria-hidden",
+                "false"
+        );
+
+        redirectTimeout =
+                setTimeout(function () {
+                    if (redirectRespuesta) {
+                        window.location.href =
+                                redirectRespuesta;
+                    }
+                }, 10000);
     }
 
+
+    function continuarRespuesta() {
+        clearTimeout(
+                redirectTimeout
+        );
+
+        if (redirectRespuesta) {
+            window.location.href =
+                    redirectRespuesta;
+        }
+    }
+
+
     function enviarReportePregunta() {
-        const motivo = document.getElementById('motivoReporte').value;
+        const motivoInput =
+                document.getElementById(
+                        "motivoReporte"
+                );
+
+        const mensajeReporte =
+                document.getElementById(
+                        "mensajeReporte"
+                );
+
+        const botonEnviar =
+                document.getElementById(
+                        "btnEnviarReporte"
+                );
+
+        const motivo =
+                motivoInput.value.trim();
+
+        mensajeReporte.textContent = "";
+        mensajeReporte.classList.remove(
+                "mensaje-reporte--error"
+        );
+
+        if (motivo.length < 3) {
+            mensajeReporte.textContent =
+                    "Escribí un motivo de al menos 3 caracteres.";
+
+            mensajeReporte.classList.add(
+                    "mensaje-reporte--error"
+            );
+
+            return;
+        }
+
+        botonEnviar.disabled = true;
+        botonEnviar.textContent =
+                "Enviando...";
+
         const datos = new FormData();
 
-        datos.append('pregunta_id', '{{preguntaId}}');
-        datos.append('motivo', motivo.trim() || 'Pregunta reportada por el usuario');
+        datos.append(
+                "pregunta_id",
+                "{{preguntaId}}"
+        );
 
-        fetch('{{baseUrl}}/pregunta/reportar', {
-            method: 'POST',
-            body: datos
-        })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.ok) {
-                        document.querySelector('.modal-reporte-contenido').innerHTML = `
-                    <div class="modal-reporte-exito">
-                        <div class="icono-reporte-exito">✅</div>
-                        <h3>¡Reporte enviado!</h3>
-                        <p>Gracias por ayudarnos a mejorar el juego.<br>Estaremos revisando esta pregunta.</p>
-                    </div>
-                `;
+        datos.append(
+                "motivo",
+                motivo
+        );
 
-                        setTimeout(function () {
-                            window.location.href = '{{baseUrl}}/lobby/ver';
-                        }, 2500);
-                    } else {
-                        document.getElementById('mensajeReporte').textContent = data.mensaje;
+        fetch(
+                "{{baseUrl}}/pregunta/reportar",
+                {
+                    method: "POST",
+                    body: datos
+                }
+        )
+                .then(async function (respuesta) {
+                    const textoRespuesta =
+                            await respuesta.text();
+
+                    let data;
+
+                    try {
+                        data = JSON.parse(
+                                textoRespuesta
+                        );
+                    } catch (error) {
+                        console.error(
+                                "Respuesta no JSON:",
+                                textoRespuesta
+                        );
+
+                        throw new Error(
+                                "El servidor devolvió una respuesta inválida."
+                        );
                     }
+
+                    if (!respuesta.ok || !data.ok) {
+                        throw new Error(
+                                data.mensaje ||
+                                "No se pudo guardar el reporte."
+                        );
+                    }
+
+                    return data;
                 })
-                .catch(error => console.error("Error enviando reporte:", error));
+                .then(function () {
+                    mostrarReporteEnviado();
+                })
+                .catch(function (error) {
+                    console.error(
+                            "Error enviando reporte:",
+                            error
+                    );
+
+                    mensajeReporte.textContent =
+                            error.message;
+
+                    mensajeReporte.classList.add(
+                            "mensaje-reporte--error"
+                    );
+
+                    botonEnviar.disabled = false;
+                    botonEnviar.textContent =
+                            "Enviar reporte";
+                });
+    }
+
+
+    function mostrarReporteEnviado() {
+        const contenido =
+                document.querySelector(
+                        ".modal-reporte-contenido"
+                );
+
+        contenido.innerHTML = `
+        <div class="modal-reporte-exito">
+
+            <div class="icono-reporte-exito">
+                ✅
+            </div>
+
+            <h3>
+                ¡Reporte enviado!
+            </h3>
+
+            <p>
+                Gracias por ayudarnos a mejorar el juego.
+                La pregunta será revisada por un editor.
+            </p>
+
+            <button
+                type="button"
+                class="btn-modal-continuar"
+                onclick="finalizarReporte()">
+
+                Continuar
+            </button>
+
+        </div>
+    `;
+    }
+
+
+    function finalizarReporte() {
+        window.location.href =
+                redirectRespuesta ||
+                "{{baseUrl}}/lobby/ver";
     }
 </script>
 

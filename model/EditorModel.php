@@ -24,6 +24,7 @@ class EditorModel
         LEFT JOIN OPCION oc 
             ON oc.pregunta_id = p.id 
             AND oc.es_correcta = 1
+        WHERE p.estado = 'aprobada'
         ORDER BY p.id ASC
     ";
 

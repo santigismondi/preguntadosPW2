@@ -387,3 +387,7 @@
     padding: 0.5rem !important;
     box-shadow: none !important;
 }
+.editor-header h1,
+.editor-header p {
+    color: #ffffff;
+}
