@@ -290,3 +290,23 @@ ALTER TABLE PREGUNTA
 
 ALTER TABLE USUARIO
     ADD pais VARCHAR(100) NULL AFTER coordenadas_ciudad;
+
+
+CREATE TABLE RESPUESTA_USUARIO
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    pregunta_id INT NOT NULL,
+    opcion_id INT NOT NULL,
+    es_correcta BOOLEAN NOT NULL,
+    fecha_respuesta DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES USUARIO(id),
+
+    FOREIGN KEY (pregunta_id)
+        REFERENCES PREGUNTA(id),
+
+    FOREIGN KEY (opcion_id)
+        REFERENCES OPCION(id)
+);
